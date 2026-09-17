@@ -123,6 +123,18 @@
       tone(300, 0, 0.18, { type: 'sawtooth', vol: 0.06, slide: 160 });
       tone(N.C5, 0.14, 0.2, { type: 'triangle', vol: 0.15 });
     },
+    /* 小黄鸭：嘎嘎 */
+    squeak() {
+      if (muted()) return;
+      tone(880, 0, 0.09, { type: 'square', vol: 0.08, slide: 340 });
+      tone(760, 0.12, 0.1, { type: 'square', vol: 0.08, slide: 300 });
+    },
+    /* 水泡：咕噜 */
+    blub() {
+      if (muted()) return;
+      tone(200, 0, 0.16, { type: 'sine', vol: 0.16, slide: 160 });
+      tone(260, 0.12, 0.16, { type: 'sine', vol: 0.14, slide: 180 });
+    },
 
     /* 中文语音夸奖（TTS 可用才说，不可用静默） */
     praise(text) {
