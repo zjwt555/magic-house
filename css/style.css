@@ -126,6 +126,87 @@ html, body {
 .btn-home:active { transform: translateY(4px); box-shadow: 0 1px 0 #e0728e; }
 .btn-home svg { width: 38px; height: 38px; }
 
+/* 换房间按钮 */
+.btn-rooms {
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
+  border: 4px solid #fff;
+  background: #7ec8e3;
+  box-shadow: 0 5px 0 #4f9cc0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform .12s;
+}
+.btn-rooms:active { transform: translateY(4px); box-shadow: 0 1px 0 #4f9cc0; }
+.btn-rooms svg { width: 38px; height: 38px; }
+
+/* 房间切换弹出条 */
+.room-picker {
+  position: absolute;
+  inset: 0;
+  background: rgba(70, 50, 95, .45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+.room-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  background: rgba(255, 253, 248, .97);
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(40, 20, 60, .4);
+  max-width: 96vw;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.room-pick {
+  width: 92px;
+  height: 110px;
+  border-radius: 24px;
+  border: 4px solid #fff;
+  background: #fff3e0;
+  box-shadow: 0 4px 0 #e3c9a8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform .15s cubic-bezier(.34,1.56,.64,1);
+}
+.room-pick:active { transform: scale(1.08); }
+.room-pick svg { width: 50px; height: 50px; }
+.room-pick span { font-size: 13px; font-weight: 800; color: #a4607a; }
+.room-pick.active { background: #ffd98e; box-shadow: 0 4px 0 #dca63e; }
+.room-pick-close {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: #ff9eb5;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  box-shadow: 0 3px 0 #d97a97;
+  cursor: pointer;
+}
+
+/* 主界面大门：呼吸光效 */
+.door-big {
+  filter: drop-shadow(0 0 0px rgba(255, 211, 77, 0));
+  animation: doorGlow 2.8s ease-in-out infinite;
+}
+@keyframes doorGlow {
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 211, 77, .0)); }
+  50% { filter: drop-shadow(0 0 14px rgba(255, 211, 77, .75)); }
+}
+
 .game-stage {
   position: relative;
   flex: 1 1 auto;
