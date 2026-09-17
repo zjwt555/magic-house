@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="魔法小屋">
+<meta name="theme-color" content="#ff9eb5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<title>魔法小屋</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <!-- 主界面：一栋大房子，三扇门 -->
+  <div class="screen active" id="screen-home"></div>
+  <!-- 衣帽间：换装 -->
+  <div class="screen" id="screen-dressup"></div>
+  <!-- 卧室：装饰 -->
+  <div class="screen" id="screen-room"></div>
+  <!-- 厨房：做饭 -->
+  <div class="screen" id="screen-kitchen"></div>
+</div>
+<script src="js/store.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/assets-doll.js"></script>
+<script src="js/assets-room.js"></script>
+<script src="js/assets-kitchen.js"></script>
+<script src="js/dressup.js"></script>
+<script src="js/room.js"></script>
+<script src="js/kitchen.js"></script>
+<script src="js/main.js"></script>
+<script>
+/* PWA：注册离线缓存（本地 file:// 打开时自动跳过） */
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () { /* 注册失败不影响游玩 */ });
+  });
+}
+</script>
+</body>
+</html>

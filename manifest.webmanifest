@@ -1,0 +1,17 @@
+{
+  "name": "魔法小屋",
+  "short_name": "魔法小屋",
+  "description": "给小朋友的装扮小天地：换装、布置房间、做好吃的",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#bde8ff",
+  "theme_color": "#ff9eb5",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

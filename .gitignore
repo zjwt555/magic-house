@@ -1,0 +1,7 @@
+# 本地临时文件
+.chrome-test*/
+shot-*.png
+test-dom.txt
+node_modules/
+*.log
+.zcode/
