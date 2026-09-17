@@ -1,8 +1,10 @@
-/* ============ 存档模块：装扮/房间布局自动保存 ============ */
+/* ============ 存档模块：装扮/多房间布局/引导记录 自动保存 ============ */
 (function () {
   'use strict';
 
   const KEY = 'magic-house-v1';
+
+  const DEFAULT_ROOM = () => ({ wall: 0, floor: 0, items: [] });
 
   const DEFAULT_STATE = {
     doll: {
@@ -13,12 +15,13 @@
       acc: 'crown',      // 配件 id
       catAcc: 'bow'      // 小猫配件 id
     },
-    room: {
-      wall: 0,           // 墙纸索引
-      floor: 0,          // 地板索引
-      items: []          // [{ id, x, y, size }] x/y 为 0~1 相对坐标
+    rooms: {                          // 各装饰房间的独立布局
+      bedroom: DEFAULT_ROOM(),        // 卧室（迁移自旧版单房间存档）
+      living: { wall: 4, floor: 5, items: [] },   // 客厅（默认蜜桃墙+蜂蜜地板）
+      bathroom: { wall: 6, floor: 6, items: [] }  // 卫生间（默认白瓷砖）
     },
-    hints: {},           // 已播过的首次引导 { screenId: true }
+    lastRoom: 'room',      // 上次玩的房间（存屏幕 id：room/living/bathroom/kitchen/dressup）
+    hints: {},            // 已播过的首次引导 { screenId: true }
     sound: true
   };
 
@@ -32,15 +35,24 @@
     } catch (e) {
       state = JSON.parse(JSON.stringify(DEFAULT_STATE));
     }
-    // 补齐新增字段（老存档升级）
+    /* 老存档迁移：v0.2 的单 room → rooms.bedroom */
+    if (state.room && !state.rooms) {
+      state.rooms = JSON.parse(JSON.stringify(DEFAULT_STATE.rooms));
+      state.rooms.bedroom = state.room;
+    }
+    delete state.room;
+    /* 补齐新增字段 */
     for (const k of Object.keys(DEFAULT_STATE)) {
       if (state[k] === undefined) state[k] = JSON.parse(JSON.stringify(DEFAULT_STATE[k]));
     }
     for (const k of Object.keys(DEFAULT_STATE.doll)) {
       if (state.doll[k] === undefined) state.doll[k] = DEFAULT_STATE.doll[k];
     }
-    for (const k of Object.keys(DEFAULT_STATE.room)) {
-      if (state.room[k] === undefined) state.room[k] = DEFAULT_STATE.room[k];
+    for (const rk of Object.keys(DEFAULT_STATE.rooms)) {
+      if (!state.rooms[rk]) state.rooms[rk] = DEFAULT_ROOM();
+      for (const f of ['wall', 'floor', 'items']) {
+        if (state.rooms[rk][f] === undefined) state.rooms[rk][f] = JSON.parse(JSON.stringify(DEFAULT_STATE.rooms[rk][f]));
+      }
     }
     return state;
   }
