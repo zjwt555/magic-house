@@ -190,7 +190,7 @@
     init(root) {
       el = root;
       el.innerHTML = `
-        <div class="game-top">${window.homeButtonHTML}</div>
+        <div class="game-top">${window.homeButtonHTML}${window.roomsButtonHTML}</div>
         <div class="game-stage">
           <div class="recipe-stage"></div>
           <div class="cook-stage hidden">
