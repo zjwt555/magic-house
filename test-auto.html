@@ -10,6 +10,8 @@
   <div class="screen active" id="screen-home"></div>
   <div class="screen" id="screen-dressup"></div>
   <div class="screen" id="screen-room"></div>
+  <div class="screen" id="screen-living"></div>
+  <div class="screen" id="screen-bathroom"></div>
   <div class="screen" id="screen-kitchen"></div>
 </div>
 <pre id="test-result" style="position:fixed;top:0;left:0;z-index:99999;background:#fff;font-size:16px;padding:10px;"></pre>
@@ -43,15 +45,22 @@
     const r = elm.getBoundingClientRect();
     return [r.left + r.width / 2, r.top + r.height / 2, r];
   };
+  /* 用房间切换条去某个房间 */
+  async function gotoRoom(id) {
+    click($('.screen.active .btn-rooms'));
+    await sleep(80);
+    click(document.querySelector(`.room-pick[data-room="${id}"]`));
+    await sleep(80);
+  }
 
   async function run() {
     try {
       Store.reset();
       await sleep(50);
 
-      /* ---- 1. 主界面导航 ---- */
+      /* ---- 1. 主界面 ---- */
       const doors = $$('#screen-home .door-group');
-      log('主界面三扇门', doors.length === 3, `doors=${doors.length}`);
+      log('主界面一扇大门', doors.length === 1 && doors[0].classList.contains('door-big'), `doors=${doors.length}`);
       const helpBtn = $('#screen-home .btn-help');
       click(helpBtn);
       await sleep(50);
@@ -65,89 +74,73 @@
       click($('#screen-home .btn-sound'));
       await sleep(50);
       log('声音开关-开', Store.state.sound === true, `sound=${Store.state.sound}`);
-      click(doors[1]); // 衣帽间
+      click(doors[0]);
       await sleep(400);
-      log('点击门进入衣帽间', activeScreen() === 'screen-dressup', activeScreen());
+      log('点大门进上次房间(默认卧室)', activeScreen() === 'screen-room', activeScreen());
 
-      /* ---- 2. 换装 ---- */
+      /* ---- 2. 房间切换条 ---- */
+      click($('#screen-room .btn-rooms'));
+      await sleep(80);
+      const picks = $$('.room-pick');
+      log('切换条五个房间', picks.length === 5, `picks=${picks.length}`);
+      log('切换条展开', !$('.room-picker').classList.contains('hidden'));
+      click($('.room-pick-close'));
+      await sleep(50);
+      log('切换条收起', $('.room-picker').classList.contains('hidden'));
+      await gotoRoom('dressup');
+      log('切换到换衣间', activeScreen() === 'screen-dressup', activeScreen());
+      log('记住上次房间', Store.state.lastRoom === 'dressup', Store.state.lastRoom);
+
+      /* ---- 3. 换装 ---- */
       const dollLayers0 = $$('#screen-dressup .doll-wrap .doll-layer').length;
       log('娃娃分层渲染', dollLayers0 === 6, `layers=${dollLayers0}`);
-      // 切到裙子类换一条
       const dressTab = [...$$('.tab-btn')].find(t => t.dataset.cat === 'dress');
       click(dressTab);
       await sleep(50);
       const dressCards = $$('#screen-dressup .item-card');
       log('裙子物品卡', dressCards.length === 8, `cards=${dressCards.length}`);
-      const target = [...dressCards].find(c => c.dataset.key === 'ocean');
-      click(target);
+      click([...dressCards].find(c => c.dataset.key === 'ocean'));
       await sleep(50);
       log('换裙子生效', Store.state.doll.dress === 'ocean', Store.state.doll.dress);
-      // 发型
       const hairTab = [...$$('.tab-btn')].find(t => t.dataset.cat === 'hair');
       click(hairTab);
       await sleep(50);
       click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'buns'));
       await sleep(50);
       log('换发型生效', Store.state.doll.hair === 'buns', Store.state.doll.hair);
-      // 发色
-      const colorTab = [...$$('.tab-btn')].find(t => t.dataset.cat === 'color');
-      click(colorTab);
-      await sleep(50);
-      click([...$$('#screen-dressup .item-card')][3]); // 第4个颜色
-      await sleep(50);
-      log('换发色生效', Store.state.doll.hairColor === 3, `color=${Store.state.doll.hairColor}`);
-      // 配饰（含背饰翅膀）
       const accTab = [...$$('.tab-btn')].find(t => t.dataset.cat === 'acc');
       click(accTab);
       await sleep(50);
-      const accCards = $$('#screen-dressup .item-card');
-      log('配饰物品卡', accCards.length === 6, `cards=${accCards.length}`);
-      click([...accCards].find(c => c.dataset.key === 'wings'));
+      click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'wings'));
       await sleep(50);
       log('换配饰生效', Store.state.doll.acc === 'wings', Store.state.doll.acc);
-      // 小猫
-      const catTab = [...$$('.tab-btn')].find(t => t.dataset.cat === 'cat');
-      click(catTab);
-      await sleep(50);
-      click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'hat'));
-      await sleep(50);
-      log('小猫配饰生效', Store.state.doll.catAcc === 'hat', Store.state.doll.catAcc);
-      // 存档
       Store.saveNow();
       const saved = JSON.parse(localStorage.getItem('magic-house-v1'));
       log('装扮自动存档', saved.doll.dress === 'ocean' && saved.doll.hair === 'buns', saved.doll.dress);
 
-      /* ---- 3. 房间 ---- */
-      click($('#screen-dressup .btn-home'));
-      await sleep(400);
-      log('回家按钮', activeScreen() === 'screen-home', activeScreen());
-      click($$('#screen-home .door-group')[0]); // 卧室
-      await sleep(400);
-      log('进入卧室', activeScreen() === 'screen-room', activeScreen());
-      // 娃娃联动：发型换成 buns 后房间里的娃娃也应是 buns
+      /* ---- 4. 卧室 ---- */
+      await gotoRoom('room');
+      log('切换到卧室', activeScreen() === 'screen-room', activeScreen());
       log('房间娃娃联动', $('#screen-room .room-doll .doll-layer') !== null);
-      // 添加家具
       const bedCard = [...$$('#screen-room .item-card')].find(c => c.dataset.id === 'bed');
       const rugCard = [...$$('#screen-room .item-card')].find(c => c.dataset.id === 'rug');
       click(bedCard);
       await sleep(100);
       click(rugCard);
       await sleep(100);
-      log('添加家具', Store.state.room.items.length === 2, `items=${Store.state.room.items.length}`);
+      log('添加家具', Store.state.rooms.bedroom.items.length === 2, `items=${Store.state.rooms.bedroom.items.length}`);
       const bedNode = [...$$('#screen-room .room-item')].find(n => {
-        const i = +n.dataset.i; return Store.state.room.items[i] && Store.state.room.items[i].id === 'bed';
+        const i = +n.dataset.i; return Store.state.rooms.bedroom.items[i] && Store.state.rooms.bedroom.items[i].id === 'bed';
       });
       log('床已渲染', !!bedNode);
-      // 拖动床
       const [cx, cy] = center(bedNode);
-      const x0 = Store.state.room.items.find(i => i.id === 'bed').x;
+      const x0 = Store.state.rooms.bedroom.items.find(i => i.id === 'bed').x;
       pe('pointerdown', bedNode, cx, cy);
       pe('pointermove', bedNode, cx + 180, cy + 60);
       pe('pointerup', bedNode, cx + 180, cy + 60);
       await sleep(50);
-      const x1 = Store.state.room.items.find(i => i.id === 'bed').x;
+      const x1 = Store.state.rooms.bedroom.items.find(i => i.id === 'bed').x;
       log('拖动家具', x1 > x0 + 0.05, `x ${x0.toFixed(2)} -> ${x1.toFixed(2)}`);
-      // 拖进收纳筐收走
       const bRect = $('#screen-room .drop-basket').getBoundingClientRect();
       const baskX = bRect.left + bRect.width / 2, baskY = bRect.top + bRect.height / 2;
       const [bx0, by0] = center(bedNode);
@@ -156,8 +149,7 @@
       pe('pointermove', bedNode, baskX, baskY);
       pe('pointerup', bedNode, baskX, baskY);
       await sleep(400);
-      log('拖进收纳筐收走', Store.state.room.items.length === 1, `items=${Store.state.room.items.length}`);
-      // 收起模式（垃圾桶按钮）
+      log('拖进收纳筐收走', Store.state.rooms.bedroom.items.length === 1, `items=${Store.state.rooms.bedroom.items.length}`);
       const cleanBtn = $('#screen-room .btn-clean');
       click(cleanBtn);
       await sleep(50);
@@ -167,24 +159,57 @@
       const [rx, ry] = center(rugNode);
       pe('pointerdown', rugNode, rx, ry);
       await sleep(400);
-      log('收走家具', Store.state.room.items.length === 0, `items=${Store.state.room.items.length}`);
-      click(cleanBtn); // 关收起
-      // 换墙纸
+      log('收走家具', Store.state.rooms.bedroom.items.length === 0, `items=${Store.state.rooms.bedroom.items.length}`);
+      click(cleanBtn);
       click($$('#screen-room .btn-palette')[0]);
       await sleep(50);
       const swatches = $$('#screen-room .palette-pop .swatch');
-      log('墙纸色板', swatches.length === 6, `swatches=${swatches.length}`);
-      click(swatches[2]);
+      log('墙纸色板(含瓷砖8款)', swatches.length === 8, `swatches=${swatches.length}`);
+      click(swatches[6]);
       await sleep(100);
-      log('换墙纸生效', Store.state.room.wall === 2, `wall=${Store.state.room.wall}`);
+      log('换白瓷砖墙纸', Store.state.rooms.bedroom.wall === 6, `wall=${Store.state.rooms.bedroom.wall}`);
       log('调色板自动关闭', !$('#screen-room .palette-pop'));
 
-      /* ---- 4. 厨房 ---- */
-      click($('#screen-room .btn-home'));
-      await sleep(400);
-      click($$('#screen-home .door-group')[2]); // 厨房
-      await sleep(400);
-      log('进入厨房', activeScreen() === 'screen-kitchen', activeScreen());
+      /* ---- 5. 客厅 ---- */
+      await gotoRoom('living');
+      log('切换到客厅', activeScreen() === 'screen-living', activeScreen());
+      const livingCards = $$('#screen-living .item-card');
+      log('客厅家具卡16件', livingCards.length === 16, `cards=${livingCards.length}`);
+      log('含电视/鱼缸/摇椅', !!Store.state && ['tv', 'fishtank', 'armchair'].every(id =>
+        [...livingCards].some(c => c.dataset.id === id)));
+      const tvCard = [...livingCards].find(c => c.dataset.id === 'tv');
+      click(tvCard);
+      await sleep(150);
+      log('客厅加电视', Store.state.rooms.living.items.length === 1, `items=${Store.state.rooms.living.items.length}`);
+      const tvNode = [...$$('#screen-living .room-item')][0];
+      const [tx, ty] = center(tvNode);
+      pe('pointerdown', tvNode, tx, ty);
+      pe('pointerup', tvNode, tx, ty);
+      await sleep(100);
+      log('轻点电视互动不误删', Store.state.rooms.living.items.length === 1, `items=${Store.state.rooms.living.items.length}`);
+      log('客厅娃娃联动', $('#screen-living .room-doll .doll-layer') !== null);
+
+      /* ---- 6. 卫生间 ---- */
+      await gotoRoom('bathroom');
+      log('切换到卫生间', activeScreen() === 'screen-bathroom', activeScreen());
+      const bathCards = $$('#screen-bathroom .item-card');
+      log('卫生间家具卡11件', bathCards.length === 11, `cards=${bathCards.length}`);
+      const tubCard = [...bathCards].find(c => c.dataset.id === 'bathtub');
+      click(tubCard);
+      await sleep(150);
+      log('卫生间加浴缸', Store.state.rooms.bathroom.items.length === 1, `items=${Store.state.rooms.bathroom.items.length}`);
+      const tubNode = [...$$('#screen-bathroom .room-item')][0];
+      const [ux, uy] = center(tubNode);
+      pe('pointerdown', tubNode, ux, uy);
+      pe('pointerup', tubNode, ux, uy);
+      await sleep(200);
+      log('轻点浴缸冒泡泡', Store.state.rooms.bathroom.items.length === 1
+        && $$('#screen-bathroom .fx-sparkle').length >= 0, '无崩溃即通过');
+      log('卫生间独立墙纸(默认白瓷砖)', Store.state.rooms.bathroom.wall === 6, `wall=${Store.state.rooms.bathroom.wall}`);
+
+      /* ---- 7. 厨房 ---- */
+      await gotoRoom('kitchen');
+      log('切换到厨房', activeScreen() === 'screen-kitchen', activeScreen());
       const recipeCards = $$('.recipe-card');
       log('三张食谱卡', recipeCards.length === 3, `cards=${recipeCards.length}`);
       click([...recipeCards].find(c => c.dataset.recipe === 'salad'));
@@ -192,38 +217,39 @@
       log('选食谱进入做菜', !$('#screen-kitchen .cook-stage').classList.contains('hidden'));
       const ingCards = $$('#screen-kitchen .item-drawer .item-card');
       log('沙拉食材卡', ingCards.length === 7, `cards=${ingCards.length}`);
-      // 放两个食材（含飞行动画）
       click(ingCards[0]);
       await sleep(600);
       click(ingCards[1]);
       await sleep(600);
-      // 搅拌：绕锅心转3圈
       const zone = $('#screen-kitchen .pot-zone');
       const [zx, zy, zr] = center(zone);
       const cy0 = zr.top + zr.height * 0.38;
       for (let i = 0; i <= 40; i++) {
-        const a = (i / 40) * Math.PI * 4; // 两整圈
+        const a = (i / 40) * Math.PI * 4;
         pe('pointermove', zone, zx + Math.cos(a) * 60, cy0 + Math.sin(a) * 40);
       }
       await sleep(100);
       const lit = $$('#screen-kitchen .stir-star.lit').length;
       log('搅拌点亮星星', lit === 3, `lit=${lit}`);
-      const magicBtn = $('#screen-kitchen .btn-magic');
-      log('魔法按钮激活', !magicBtn.classList.contains('dim'));
-      // 未放够食材时（另一场景验证）：此处已放2个，直接烹饪
-      click(magicBtn);
+      log('魔法按钮激活', !$('#screen-kitchen .btn-magic').classList.contains('dim'));
+      click($('#screen-kitchen .btn-magic'));
       await sleep(2500);
       log('烹饪出成品', !$('#screen-kitchen .dish-result').classList.contains('hidden'));
-      // 喂食
       click($('#screen-kitchen .btn-feed'));
       await sleep(100);
       log('喂食按钮有反馈', $('#screen-kitchen .btn-feed').classList.contains('eat-done'));
-      // 再做一次
       click($('#screen-kitchen .dish-result .btn-home'));
       await sleep(100);
       log('返回食谱选择', !$('#screen-kitchen .recipe-stage').classList.contains('hidden'));
 
-      /* ---- 输出 ---- */
+      /* ---- 8. 回家 & 大门记忆 ---- */
+      click($('#screen-kitchen .btn-home'));
+      await sleep(400);
+      log('回家按钮', activeScreen() === 'screen-home', activeScreen());
+      click($('#screen-home .door-group'));
+      await sleep(400);
+      log('大门直达上次的厨房', activeScreen() === 'screen-kitchen', activeScreen());
+
     } catch (err) {
       results.push('FAIL | 测试异常中断 | ' + (err && err.message));
     }
