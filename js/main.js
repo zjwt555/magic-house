@@ -5,6 +5,7 @@
   /* ---------- 屏幕管理 ---------- */
   const screens = {};   // id -> { el, module }
   let currentId = null;
+  const ROOM_SCREEN_IDS = ['room', 'living', 'bathroom', 'kitchen', 'dressup'];
 
   function showScreen(id) {
     if (currentId === id) return;
@@ -15,6 +16,10 @@
     prev && prev.el.classList.remove('active');
     next.el.classList.add('active');
     currentId = id;
+    if (ROOM_SCREEN_IDS.includes(id) && Store.state.lastRoom !== id) {
+      Store.state.lastRoom = id;   // 记住上次玩的房间
+      Store.save();
+    }
     if (next.module && next.module.onEnter) next.module.onEnter();
   }
 
@@ -28,7 +33,7 @@
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('dragstart', e => e.preventDefault());
 
-  /* ---------- 通用：左上角回家按钮 ---------- */
+  /* ---------- 通用：左上角回家按钮 + 换房间按钮 ---------- */
   window.homeButtonHTML = `
     <button class="btn-home" aria-label="回家">
       <svg viewBox="0 0 48 48">
@@ -37,9 +42,98 @@
         <rect x="21.5" y="15" width="5" height="6" rx="2" fill="#ffd0dd"/>
       </svg>
     </button>`;
+  window.roomsButtonHTML = `
+    <button class="btn-rooms" aria-label="换房间">
+      <svg viewBox="0 0 48 48">
+        <path d="M10 42V20a2 2 0 0 1 2-2h24a2 2 0 0 1 2 2v22" fill="#fff" stroke="#4f9cc0" stroke-width="2.6" stroke-linejoin="round"/>
+        <path d="M16 40V28a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12" fill="#9ad7f0" stroke="#4f9cc0" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="24" cy="15" r="2.6" fill="#ffd34d"/>
+        <path d="M24 6l1.4 3.4 3.6.3-2.7 2.3.8 3.5-3.1-1.9-3.1 1.9.8-3.5-2.7-2.3 3.6-.3z" fill="#ffd34d"/>
+      </svg>
+    </button>`;
   document.addEventListener('click', e => {
     const btn = e.target.closest('.btn-home');
     if (btn) { Sound.door(); showScreen('home'); }
+  });
+
+  /* ---------- 房间切换弹出条（折叠式，全局一份） ---------- */
+  const ROOM_ICONS = {
+    room: { label: '卧室', svg: `
+      <svg viewBox="0 0 48 48">
+        <rect x="8" y="22" width="8" height="18" rx="3" fill="#2f7fa3"/>
+        <rect x="8" y="32" width="32" height="10" rx="4" fill="#4aa3c9"/>
+        <rect x="30" y="26" width="8" height="16" rx="3" fill="#2f7fa3"/>
+        <rect x="12" y="28" width="11" height="6" rx="3" fill="#fff"/>
+      </svg>` },
+    living: { label: '客厅', svg: `
+      <svg viewBox="0 0 48 48">
+        <rect x="6" y="14" width="36" height="14" rx="6" fill="#6bb8d8"/>
+        <rect x="4" y="20" width="8" height="14" rx="4" fill="#7ec8e3"/>
+        <rect x="36" y="20" width="8" height="14" rx="4" fill="#7ec8e3"/>
+        <rect x="10" y="24" width="28" height="10" rx="4" fill="#9ad7f0"/>
+        <rect x="8" y="34" width="32" height="5" rx="2.5" fill="#6bb8d8"/>
+      </svg>` },
+    kitchen: { label: '厨房', svg: `
+      <svg viewBox="0 0 48 48">
+        <path d="M10 20h28l-4 18q-10 4-20 0z" fill="#d98324"/>
+        <ellipse cx="24" cy="19" rx="12" ry="4" fill="#f2a94f"/>
+        <circle cx="24" cy="13" r="3" fill="#fff"/>
+        <path d="M18 8q-2-4 0-7 M30 8q2-4 0-7" stroke="#bde0f5" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </svg>` },
+    bathroom: { label: '卫生间', svg: `
+      <svg viewBox="0 0 48 48">
+        <path d="M8 22h32l-3 14q-13 4-26 0z" fill="#fdfdff" stroke="#b8ccd8" stroke-width="2.4"/>
+        <rect x="6" y="19" width="36" height="6" rx="3" fill="#b8ccd8"/>
+        <circle cx="16" cy="16" r="4.5" fill="#fff" opacity=".95"/>
+        <circle cx="25" cy="13" r="3.5" fill="#fff" opacity=".95"/>
+        <g transform="translate(33,12)"><circle r="4" fill="#ffd34d"/><polygon points="3,0 7,1 3.5,3" fill="#ff9f43"/></g>
+      </svg>` },
+    dressup: { label: '换衣间', svg: `
+      <svg viewBox="0 0 48 48">
+        <path d="M17 8 L14 16 L9 28 Q24 34 39 28 L34 16 L31 8 Q24 13 17 8 Z" fill="#e05c86"/>
+        <circle cx="24" cy="20" r="3" fill="#ffd0e0"/>
+      </svg>` }
+  };
+
+  let roomPickerEl = null;
+
+  function toggleRoomPicker(forceClose) {
+    if (!roomPickerEl) {
+      roomPickerEl = document.createElement('div');
+      roomPickerEl.className = 'room-picker hidden';
+      roomPickerEl.innerHTML = `<div class="room-picker-row">${
+        Object.keys(ROOM_ICONS).map(id => `
+          <button class="room-pick${id === currentId ? ' active' : ''}" data-room="${id}">
+            ${ROOM_ICONS[id].svg}<span>${ROOM_ICONS[id].label}</span>
+          </button>`).join('')
+      }<button class="room-pick-close" aria-label="关闭">✕</button></div>`;
+      roomPickerEl.addEventListener('click', e => {
+        if (e.target === roomPickerEl) { roomPickerEl.classList.add('hidden'); return; }
+        const close = e.target.closest('.room-pick-close');
+        if (close) { Sound.pop(); roomPickerEl.classList.add('hidden'); return; }
+        const pick = e.target.closest('.room-pick');
+        if (pick && pick.dataset.room !== currentId) {
+          Sound.door();
+          roomPickerEl.classList.add('hidden');
+          showScreen(pick.dataset.room);
+        }
+      });
+      document.getElementById('app').appendChild(roomPickerEl);
+    }
+    if (forceClose) {
+      roomPickerEl.classList.add('hidden');
+    } else {
+      const opening = roomPickerEl.classList.contains('hidden');
+      if (opening) {
+        roomPickerEl.querySelectorAll('.room-pick').forEach(p =>
+          p.classList.toggle('active', p.dataset.room === currentId));
+      }
+      roomPickerEl.classList.toggle('hidden');
+      Sound.pop();
+    }
+  }
+  document.addEventListener('click', e => {
+    if (e.target.closest('.btn-rooms')) toggleRoomPicker();
   });
 
   /* 通用：首次进入某界面时语音引导一次 */
@@ -57,8 +151,9 @@
       <div class="help-card">
         <h3>📖 给家长的小指南</h3>
         <ul>
+          <li>🚪 <b>换房间</b>：点左上角的小门按钮，可以在卧室 / 客厅 / 厨房 / 卫生间 / 换衣间之间切换</li>
           <li>👗 <b>换装</b>：点下方分类标签（发型/发色/裙子/鞋子/配饰/小猫），再点物品即可穿上</li>
-          <li>🛏️ <b>布置房间</b>：点下方家具放进房间；<b>按住家具拖动</b>可以换位置</li>
+          <li>🛏️ <b>布置房间</b>：点下方家具放进房间；<b>按住家具拖动</b>可以换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
           <li>🗑 <b>收走家具</b>：① 把家具<b>拖到屏幕下方的收纳筐</b>；② 或点左下角垃圾桶按钮，再点要收走的家具</li>
           <li>🍳 <b>做饭</b>：选菜谱 → 点食材放进锅 → 手指在锅里<b>画圈搅拌</b> → 点魔法按钮 → 喂给娃娃或小猫</li>
           <li>💾 装扮和房间<b>自动保存</b>，下次打开还是原样</li>
@@ -174,46 +269,23 @@
           <circle cx="${x}" cy="${y + 29}" r="4.5" fill="#ffd34d"/>
           <circle cx="${x + 14}" cy="${y + 30}" r="4.5" fill="#ff9eb5"/>
         </g>`).join('')}
-      <!-- 三扇门：卧室 / 衣帽间 / 厨房 -->
-      <g class="door-group" data-target="room">
-        <path d="M237,530 V393 Q237,362 300,362 Q363,362 363,393 V530 Z" fill="#fff"/>
-        <path d="M245,530 V396 Q245,368 300,368 Q355,368 355,396 V530 Z" fill="#7ec8e3"/>
-        <circle cx="300" cy="428" r="33" fill="#ffffff" opacity=".96"/>
-        <g transform="translate(300,428)">
-          <rect x="-24" y="-13" width="9" height="27" rx="4" fill="#2f7fa3"/>
-          <rect x="-24" y="1" width="48" height="13" rx="6" fill="#4aa3c9"/>
-          <rect x="16" y="-8" width="8" height="22" rx="4" fill="#2f7fa3"/>
-          <rect x="-19" y="-8" width="12" height="7" rx="3.5" fill="#fff"/>
-          <rect x="-21" y="14" width="5" height="7" fill="#2f7fa3"/>
-          <rect x="17" y="14" width="5" height="7" fill="#2f7fa3"/>
+      <!-- 一扇大门 -->
+      <g class="door-group door-big" data-target="lastRoom">
+        <path d="M338,530 V372 Q338,336 450,336 Q562,336 562,372 V530 Z" fill="#fff"/>
+        <path d="M348,530 V376 Q348,344 450,344 Q552,344 552,376 V530 Z" fill="#ff9eb5"/>
+        <path d="M348,530 V376 Q348,344 450,344 Q552,344 552,376 V530" fill="none" stroke="#e05c86" stroke-width="0"/>
+        <rect x="348" y="380" width="204" height="8" fill="rgba(255,255,255,.35)"/>
+        <!-- 门上的小窗户 -->
+        <circle cx="450" cy="396" r="24" fill="#cdf0ff" stroke="#fff" stroke-width="6"/>
+        <path d="M432,404 C438,396 444,400 450,404 C456,400 462,396 468,404" stroke="#ff8faa" stroke-width="6" fill="none" stroke-linecap="round" transform="translate(0,-2)"/>
+        <path d="M438,392 C444,384 456,384 462,392 C456,394 444,394 438,392 Z" fill="#ff8faa"/>
+        <!-- 星星牌匾 -->
+        <circle cx="450" cy="462" r="34" fill="#ffffff" opacity=".96"/>
+        <g transform="translate(450,462)">
+          <path d="M0,-18 L5,-6 L18,-5 L8,4 L11,17 L0,10 L-11,17 L-8,4 L-18,-5 L-5,-6 Z" fill="#ffd34d" stroke="#f2a94f" stroke-width="2"/>
         </g>
-        <circle cx="343" cy="468" r="6" fill="#fff" opacity=".85"/>
-      </g>
-      <g class="door-group" data-target="dressup">
-        <path d="M387,530 V393 Q387,362 450,362 Q513,362 513,393 V530 Z" fill="#fff"/>
-        <path d="M395,530 V396 Q395,368 450,368 Q505,368 505,396 V530 Z" fill="#ff9eb5"/>
-        <circle cx="450" cy="428" r="33" fill="#ffffff" opacity=".96"/>
-        <g transform="translate(450,428)">
-          <path d="M-9,-21 L-14,-4 L-23,15 Q0,25 23,15 L14,-4 L9,-21 Q0,-15 -9,-21 Z" fill="#e05c86"/>
-          <circle cx="0" cy="-3" r="4.5" fill="#ffd0e0"/>
-          <path d="M-9,-21 Q0,-26 9,-21" stroke="#e05c86" stroke-width="4" fill="none" stroke-linecap="round"/>
-        </g>
-        <circle cx="493" cy="468" r="6" fill="#fff" opacity=".85"/>
-      </g>
-      <g class="door-group" data-target="kitchen">
-        <path d="M537,530 V393 Q537,362 600,362 Q663,362 663,393 V530 Z" fill="#fff"/>
-        <path d="M545,530 V396 Q545,368 600,368 Q655,368 655,396 V530 Z" fill="#ffcf4d"/>
-        <circle cx="600" cy="428" r="33" fill="#ffffff" opacity=".96"/>
-        <g transform="translate(600,428)">
-          <path d="M-19,-11 L19,-11 L15,14 Q0,18 -15,14 Z" fill="#d98324"/>
-          <ellipse cx="0" cy="-12" rx="16" ry="5.5" fill="#f2a94f"/>
-          <circle cx="0" cy="-18" r="4" fill="#fff"/>
-          <circle cx="-23" cy="0" r="4" fill="#d98324"/>
-          <circle cx="23" cy="0" r="4" fill="#d98324"/>
-          <path d="M-8,-26 Q-6,-31 -8,-35" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".9"/>
-          <path d="M4,-26 Q6,-31 4,-35" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".9"/>
-        </g>
-        <circle cx="643" cy="468" r="6" fill="#fff" opacity=".85"/>
+        <circle cx="416" cy="472" r="7" fill="#fff" opacity=".9"/>
+        <circle cx="484" cy="472" r="7" fill="#fff" opacity=".9"/>
       </g>
     </g>
   </svg>`;
@@ -255,13 +327,15 @@
         door.addEventListener('click', e => {
           Sound.door();
           FX.sparkles(el, e.clientX, e.clientY, 10);
-          const target = door.getAttribute('data-target');
+          const target = door.getAttribute('data-target') === 'lastRoom'
+            ? (Store.state.lastRoom || 'bedroom')
+            : door.getAttribute('data-target');
           setTimeout(() => showScreen(target), 260);
         });
       });
     },
     onEnter() {
-      window.hintOnce('home', '欢迎来到魔法小屋！推开一扇门进去玩吧');
+      window.hintOnce('home', '欢迎来到魔法小屋！推开大门进去玩吧');
     }
   };
 
@@ -271,9 +345,11 @@
     register('home', Home);
     register('dressup', window.DressUp);
     register('room', window.Room);
+    register('living', window.LivingRoom);
+    register('bathroom', window.Bathroom);
     register('kitchen', window.Kitchen);
     currentId = 'home';
-    // 调试/测试直达：?screen=dressup|room|kitchen
+    // 调试/测试直达：?screen=room|living|bathroom|dressup|kitchen
     const m = location.search.match(/[?&]screen=(\w+)/);
     if (m && screens[m[1]]) showScreen(m[1]);
   });
