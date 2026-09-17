@@ -42,6 +42,32 @@
     sparkles(container, x, y, 5);
   }
 
+  /* 浴缸冒泡泡：半透明泡泡往上飘 */
+  function bubbles(container, x, y, count = 8) {
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      el.className = 'fx-sparkle';
+      const size = 10 + Math.random() * 22;
+      el.innerHTML = `<div style="width:${size}px;height:${size}px;border-radius:50%;
+        background:rgba(170,225,250,.55);border:2.5px solid rgba(255,255,255,.95);"></div>`;
+      const sx = x - rect.left + (Math.random() - 0.5) * 46;
+      const sy = y - rect.top + (Math.random() - 0.5) * 16;
+      el.style.left = sx + 'px';
+      el.style.top = sy + 'px';
+      container.appendChild(el);
+      const drift = (Math.random() - 0.5) * 60;
+      const rise = 70 + Math.random() * 90;
+      el.animate([
+        { transform: 'translate(-50%,-50%) scale(.3)', opacity: .95 },
+        { transform: `translate(calc(-50% + ${drift}px),calc(-50% - ${rise * 0.6}px)) scale(1)`, opacity: .95, offset: .6 },
+        { transform: `translate(calc(-50% + ${drift * 1.3}px),calc(-50% - ${rise}px)) scale(1.15)`, opacity: 0 }
+      ], { duration: 900 + Math.random() * 600, easing: 'cubic-bezier(.3,.6,.5,1)' })
+        .onfinish = () => el.remove();
+    }
+  }
+
   /* 全屏庆祝彩带（从顶上飘落） */
   function confetti(container, count = 36) {
     if (!container) return;
@@ -63,5 +89,5 @@
     }
   }
 
-  window.FX = { sparkles, poof, confetti, starSVG };
+  window.FX = { sparkles, poof, confetti, bubbles, starSVG };
 })();
