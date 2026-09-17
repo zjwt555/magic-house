@@ -190,12 +190,174 @@
         <path d="M42,30 Q36,18 30,14 M48,30 Q54,18 60,14" stroke="#5a6b7a" stroke-width="3" fill="none" stroke-linecap="round"/>
         <circle cx="30" cy="14" r="3" fill="#ffd34d"/>
         <circle cx="60" cy="14" r="3" fill="#ffd34d"/>
+      </svg>` },
+    /* ---- 客厅专属 ---- */
+    tv: { w: 0.185, act: 'tv', svg: `
+      <svg viewBox="0 0 190 165" xmlns="http://www.w3.org/2000/svg">
+        <rect x="12" y="100" width="166" height="52" rx="10" fill="#d98c5a"/>
+        <line x1="95" y1="102" x2="95" y2="150" stroke="#c47a44" stroke-width="3"/>
+        <circle cx="150" cy="126" r="5" fill="#ffd34d"/>
+        <circle cx="132" cy="126" r="5" fill="#7ec8e3"/>
+        <rect x="22" y="152" width="10" height="10" rx="4" fill="#c47a44"/>
+        <rect x="158" y="152" width="10" height="10" rx="4" fill="#c47a44"/>
+        <rect x="35" y="18" width="120" height="86" rx="10" fill="#4a4a55"/>
+        <rect x="45" y="28" width="100" height="66" rx="5" fill="#9ad7f0"/>
+        <circle cx="72" cy="48" r="9" fill="#ffd34d"/>
+        <path d="M45,86 Q65,66 82,78 Q100,90 120,74 L145,86 L145,94 L45,94 Z" fill="#98d8a0"/>
+        <rect x="86" y="4" width="18" height="10" rx="5" fill="#4a4a55"/>
+      </svg>` },
+    coffee: { w: 0.15, svg: `
+      <svg viewBox="0 0 160 125" xmlns="http://www.w3.org/2000/svg">
+        <line x1="38" y1="58" x2="30" y2="112" stroke="#d98c5a" stroke-width="9" stroke-linecap="round"/>
+        <line x1="122" y1="58" x2="130" y2="112" stroke="#d98c5a" stroke-width="9" stroke-linecap="round"/>
+        <ellipse cx="80" cy="98" rx="52" ry="12" fill="#e8cf9f"/>
+        <ellipse cx="80" cy="52" rx="70" ry="20" fill="#9ad7f0" opacity=".45"/>
+        <ellipse cx="80" cy="48" rx="70" ry="20" fill="#d9f2fc" stroke="#9ad7f0" stroke-width="4"/>
+        <g transform="translate(56,38)">
+          <ellipse cx="0" cy="6" rx="13" ry="4.5" fill="#fff"/>
+          <path d="M-8,-5 L8,-5 L6,6 Q0,9 -6,6 Z" fill="#fff"/>
+          <path d="M-2,-5 Q0,-11 2,-5" stroke="#ff9eb5" stroke-width="2.2" fill="none"/>
+        </g>
+        <rect x="88" y="32" width="26" height="18" rx="3" fill="#ff8f9e"/>
+        <line x1="92" y1="41" x2="110" y2="41" stroke="#fff" stroke-width="2.5"/>
+      </svg>` },
+    armchair: { w: 0.15, svg: `
+      <svg viewBox="0 0 150 165" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22,132 Q75,158 128,132" stroke="#c98443" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <rect x="34" y="52" width="82" height="66" rx="18" fill="#ffb3c7"/>
+        <rect x="24" y="74" width="102" height="46" rx="16" fill="#ff9eb5"/>
+        <rect x="34" y="84" width="82" height="14" rx="7" fill="#ffc2d3"/>
+        <line x1="30" y1="84" x2="30" y2="126" stroke="#c98443" stroke-width="10" stroke-linecap="round"/>
+        <line x1="120" y1="84" x2="120" y2="126" stroke="#c98443" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="30" cy="126" r="7" fill="#c98443"/>
+        <circle cx="120" cy="126" r="7" fill="#c98443"/>
+      </svg>` },
+    fishtank: { w: 0.13, act: 'fish', svg: `
+      <svg viewBox="0 0 140 165" xmlns="http://www.w3.org/2000/svg">
+        <rect x="30" y="112" width="80" height="16" rx="6" fill="#d98c5a"/>
+        <rect x="38" y="128" width="64" height="26" rx="8" fill="#c47a44"/>
+        <rect x="16" y="14" width="108" height="100" rx="10" fill="#dff3ff" stroke="#9ad7f0" stroke-width="5"/>
+        <path d="M20,52 L120,52 L120,100 Q70,112 20,100 Z" fill="#9ad7f0" opacity=".85"/>
+        <path d="M20,86 Q50,78 70,88 Q95,96 120,86 L120,100 Q70,112 20,100 Z" fill="#f2d9a0"/>
+        <circle cx="40" cy="104" r="4" fill="#b0a08a"/><circle cx="54" cy="107" r="3" fill="#b0a08a"/><circle cx="100" cy="105" r="4" fill="#b0a08a"/>
+        <path d="M34,84 Q30,64 40,50" stroke="#6cc46a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M106,88 Q110,68 100,56" stroke="#6cc46a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <g transform="translate(70,68)">
+          <ellipse cx="0" cy="0" rx="12" ry="8" fill="#ff9f43"/>
+          <polygon points="-10,0 -22,-7 -22,7" fill="#ff9f43"/>
+          <circle cx="7" cy="-2" r="2" fill="#5b3a29"/>
+        </g>
+        <g transform="translate(48,44) scale(.7)">
+          <ellipse cx="0" cy="0" rx="12" ry="8" fill="#7ecbff"/>
+          <polygon points="10,0 22,-7 22,7" fill="#7ecbff"/>
+          <circle cx="-7" cy="-2" r="2" fill="#5b3a29"/>
+        </g>
+        <circle cx="88" cy="40" r="3" fill="#fff" opacity=".8"/>
+        <circle cx="95" cy="32" r="2" fill="#fff" opacity=".7"/>
+      </svg>` },
+    cushion: { w: 0.09, svg: `
+      <svg viewBox="0 0 100 75" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="12" width="88" height="52" rx="26" fill="#ffb3c7"/>
+        <rect x="14" y="18" width="72" height="40" rx="20" fill="#ffc9d8"/>
+        <circle cx="50" cy="38" r="6" fill="#ff8faa"/>
+        <path d="M50,38 Q68,30 78,38 M50,38 Q32,30 22,38" stroke="#ff8faa" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>` },
+    /* ---- 卫生间专属 ---- */
+    bathtub: { w: 0.20, act: 'bath', svg: `
+      <svg viewBox="0 0 210 150" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22,52 L188,52 L176,116 Q105,132 34,116 Z" fill="#fdfdff" stroke="#e8e0f2" stroke-width="4"/>
+        <ellipse cx="105" cy="52" rx="83" ry="12" fill="#bfe6ff"/>
+        <rect x="16" y="44" width="178" height="14" rx="7" fill="#e8e0f2"/>
+        <path d="M186,58 Q204,58 202,38 L202,30" stroke="#c9d2da" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="202" cy="26" r="7" fill="#c9d2da"/>
+        <path d="M40,116 L32,134 M170,116 L178,134" stroke="#ffd34d" stroke-width="8" stroke-linecap="round"/>
+        ${[[52, 40, 13], [76, 32, 9], [98, 42, 12], [122, 34, 9], [146, 41, 13]].map(([x, y, r]) =>
+          `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".95"/>`).join('')}
+        <g transform="translate(150,30)">
+          <ellipse cx="0" cy="8" rx="13" ry="9" fill="#ffd34d"/>
+          <circle cx="-3" cy="-4" r="8.5" fill="#ffd34d"/>
+          <polygon points="4,-5 13,-3 5,1" fill="#ff9f43"/>
+          <circle cx="-6" cy="-6" r="1.8" fill="#5b3a29"/>
+        </g>
+      </svg>` },
+    sink: { w: 0.115, svg: `
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18,66 L102,66 L96,92 Q60,102 24,92 Z" fill="#fdfdff" stroke="#e8e0f2" stroke-width="4"/>
+        <ellipse cx="60" cy="66" rx="42" ry="9" fill="#dff3ff"/>
+        <path d="M60,70 L60,150" stroke="#e8e0f2" stroke-width="22" stroke-linecap="round"/>
+        <path d="M60,86 L60,140" stroke="#fdfdff" stroke-width="14" stroke-linecap="round"/>
+        <path d="M44,60 Q44,50 54,50 M76,60 Q76,50 66,50" stroke="#c9d2da" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M60,50 L60,40 L74,40" stroke="#c9d2da" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <circle cx="76" cy="40" r="5" fill="#c9d2da"/>
+        <ellipse cx="60" cy="156" rx="26" ry="7" fill="#e8e0f2"/>
+      </svg>` },
+    toilet: { w: 0.10, svg: `
+      <svg viewBox="0 0 105 145" xmlns="http://www.w3.org/2000/svg">
+        <rect x="22" y="16" width="62" height="52" rx="12" fill="#fdfdff" stroke="#e8e0f2" stroke-width="4"/>
+        <circle cx="53" cy="30" r="6" fill="#ffd34d"/>
+        <ellipse cx="53" cy="78" rx="42" ry="16" fill="#fdfdff" stroke="#e8e0f2" stroke-width="4"/>
+        <path d="M38,90 L38,124 Q53,134 68,124 L68,90" fill="#fdfdff" stroke="#e8e0f2" stroke-width="4"/>
+        <ellipse cx="53" cy="130" rx="24" ry="6" fill="#e8e0f2"/>
+        <ellipse cx="53" cy="78" rx="30" ry="9" fill="#dff3ff"/>
+      </svg>` },
+    towelrack: { w: 0.10, svg: `
+      <svg viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg">
+        <line x1="16" y1="20" x2="16" y2="140" stroke="#c98443" stroke-width="8" stroke-linecap="round"/>
+        <line x1="94" y1="20" x2="94" y2="140" stroke="#c98443" stroke-width="8" stroke-linecap="round"/>
+        <line x1="12" y1="36" x2="98" y2="36" stroke="#ffd34d" stroke-width="7" stroke-linecap="round"/>
+        <rect x="24" y="40" width="26" height="62" rx="8" fill="#ff9eb5"/>
+        <line x1="24" y1="56" x2="50" y2="56" stroke="#e05c86" stroke-width="4"/>
+        <line x1="24" y1="72" x2="50" y2="72" stroke="#e05c86" stroke-width="4"/>
+        <rect x="58" y="40" width="26" height="50" rx="8" fill="#7ec8e3"/>
+        <line x1="58" y1="56" x2="84" y2="56" stroke="#4f9cc0" stroke-width="4"/>
+      </svg>` },
+    bmirror: { w: 0.09, svg: `
+      <svg viewBox="0 0 100 125" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="44" r="34" fill="#dff3ff" stroke="#e8a3bd" stroke-width="8"/>
+        <path d="M34,28 Q40,20 48,24" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M62,58 l3,7 7,0.6 -5,4.5 1.5,7 -6.5,-4 -6.5,4 1.5,-7 -5,-4.5 7,-0.6z" fill="#ffd34d"/>
+        <rect x="14" y="86" width="72" height="12" rx="6" fill="#e8a3bd"/>
+        <rect x="26" y="74" width="10" height="14" rx="4" fill="#b79ced"/>
+        <rect x="42" y="70" width="10" height="18" rx="4" fill="#ff9eb5"/>
+        <rect x="58" y="76" width="10" height="12" rx="4" fill="#7ec8e3"/>
+      </svg>` },
+    bathmat: { w: 0.135, flat: true, svg: `
+      <svg viewBox="0 0 150 65" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="75" cy="33" rx="71" ry="27" fill="#9ad7f0"/>
+        <ellipse cx="75" cy="33" rx="52" ry="19" fill="#bfe6ff"/>
+        ${[-30, -10, 10, 30].map(dx => `<circle cx="${75 + dx}" cy="33" r="5" fill="#7ec8e3"/>`).join('')}
+      </svg>` },
+    st_duck: { sticker: true, w: 0.085, svg: `
+      <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="45" cy="56" rx="26" ry="18" fill="#ffd34d"/>
+        <path d="M24,60 Q45,74 66,60" stroke="#f2b730" stroke-width="3" fill="none"/>
+        <circle cx="36" cy="32" r="15" fill="#ffd34d"/>
+        <polygon points="48,30 64,34 49,40" fill="#ff9f43"/>
+        <circle cx="32" cy="29" r="3" fill="#5b3a29"/>
+        <path d="M50,52 Q58,48 62,54" stroke="#f2b730" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>` },
+    st_bubble: { sticker: true, w: 0.08, svg: `
+      <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="34" cy="38" r="20" fill="rgba(160,220,250,.55)" stroke="rgba(255,255,255,.9)" stroke-width="3"/>
+        <circle cx="62" cy="58" r="14" fill="rgba(160,220,250,.45)" stroke="rgba(255,255,255,.9)" stroke-width="3"/>
+        <circle cx="56" cy="20" r="9" fill="rgba(160,220,250,.5)" stroke="rgba(255,255,255,.9)" stroke-width="2.5"/>
+        <ellipse cx="27" cy="31" rx="6" ry="4" fill="#fff" opacity=".8" transform="rotate(-24 27 31)"/>
+        <ellipse cx="57" cy="53" rx="4" ry="3" fill="#fff" opacity=".8"/>
       </svg>` }
   };
 
-  /* 顺序即抽屉里的顺序：先大件后贴纸 */
-  const ORDER = ['bed', 'sofa', 'rug', 'table', 'bookshelf', 'piano', 'lamp', 'plant', 'catbed', 'teddy', 'frame', 'clock',
-    'st_star', 'st_flower', 'st_butterfly'];
+  /* 各房间的家具清单顺序 */
+  const ROOM_SETS = {
+    bedroom: ['bed', 'sofa', 'rug', 'table', 'bookshelf', 'piano', 'lamp', 'plant', 'catbed', 'teddy', 'frame', 'clock',
+      'st_star', 'st_flower', 'st_butterfly'],
+    living: ['tv', 'sofa', 'coffee', 'armchair', 'fishtank', 'cushion', 'rug', 'bookshelf', 'piano', 'lamp', 'plant', 'frame', 'clock',
+      'st_star', 'st_flower', 'st_butterfly'],
+    bathroom: ['bathtub', 'sink', 'toilet', 'bmirror', 'towelrack', 'bathmat', 'plant',
+      'st_duck', 'st_bubble', 'st_star', 'st_flower']
+  };
+
+  /* 顺序即抽屉里的顺序：先大件后贴纸（见 ROOM_SETS 各房间清单） */
+  const ORDER = ROOM_SETS.bedroom;
 
   /* ---------- 墙纸 / 地板（CSS 背景） ---------- */
   const WALLS = [
@@ -204,7 +366,9 @@
     { bg: 'radial-gradient(circle,#cdecc9 9px,transparent 10px)', bgColor: '#e8f8e8', bgSize: '38px 38px' },   // 薄荷圆点
     { bg: 'repeating-linear-gradient(45deg,#f3ecfb 0 30px,#e6d9f5 30px 60px)' },                     // 薰衣草斜纹
     { bg: 'linear-gradient(#fff2e3,#ffe3c7)' },                                                      // 蜜桃渐变
-    { bg: 'repeating-linear-gradient(0deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),repeating-linear-gradient(90deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),#ffd9ea' } // 粉格棋盘
+    { bg: 'repeating-linear-gradient(0deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),repeating-linear-gradient(90deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),#ffd9ea' }, // 粉格棋盘
+    { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#d8ecf5 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#d8ecf5 34px 38px)', bgColor: '#f4fbff' }, // 白瓷砖
+    { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#a8d8d0 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#a8d8d0 34px 38px)', bgColor: '#e4f5f2' }  // 薄荷瓷砖
   ];
 
   const FLOORS = [
@@ -213,7 +377,9 @@
     { bg: 'repeating-linear-gradient(90deg,#bfe0f5 0 34px,#aed4f0 34px 68px)' },                     // 蓝条纹
     { bg: 'radial-gradient(circle at 50% 50%,#a8dfa0 6px,transparent 7px)', bgColor: '#b8e6a8', bgSize: '30px 30px' }, // 草地
     { bg: 'radial-gradient(circle,#fff 4px,transparent 5px)', bgColor: '#ded0f2', bgSize: '34px 34px' },     // 紫星星
-    { bg: 'repeating-linear-gradient(-45deg,#f2d9a0 0 22px,#e8c983 22px 44px)' }                     // 蜂蜜黄
+    { bg: 'repeating-linear-gradient(-45deg,#f2d9a0 0 22px,#e8c983 22px 44px)' },                     // 蜂蜜黄
+    { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#b8ccd8 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#b8ccd8 34px 38px)', bgColor: '#e8eff4' }, // 灰瓷砖
+    { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#a3c8dd 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#a3c8dd 34px 38px)', bgColor: '#d9ecf5' }  // 蓝瓷砖
   ];
 
   function applyBg(elm, def) {
@@ -227,5 +393,5 @@
     }
   }
 
-  window.RoomAssets = { ITEMS, ORDER, WALLS, FLOORS, applyBg };
+  window.RoomAssets = { ITEMS, ORDER, ROOM_SETS, WALLS, FLOORS, applyBg };
 })();
