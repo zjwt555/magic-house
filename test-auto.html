@@ -151,12 +151,13 @@
       const girlRoomAfter = Store.state.char.girl.room;
       log('拖动娃娃换房间', ROOM_IDS.indexOf(girlRoomAfter) >= 0 && girlRoomAfter !== 'living', girlRoomAfter);
       log('圆点显示娃娃位置', $$('.world-dot')[roomIdx(girlRoomAfter)].querySelector('.dot-girl') !== null);
-      /* 点地板走路（先跳回娃娃所在房间，同房间内走） */
+      /* 点地板走路（先跳回娃娃所在房间，往远离她的一侧点，确保有明显位移） */
       click($$('.world-dot')[roomIdx(Store.state.char.girl.room)]);
       await sleep(200);
       const x0 = Store.state.char.girl.x;
-      pe('pointerdown', stage, sr2.left + sr2.width * 0.7, sr2.top + sr2.height * 0.85);
-      pe('pointerup', stage, sr2.left + sr2.width * 0.7, sr2.top + sr2.height * 0.85);
+      const tapX = x0 > 0.5 ? 0.18 : 0.82;
+      pe('pointerdown', stage, sr2.left + sr2.width * tapX, sr2.top + sr2.height * 0.85);
+      pe('pointerup', stage, sr2.left + sr2.width * tapX, sr2.top + sr2.height * 0.85);
       await sleep(120);
       log('点地板走路', Math.abs(Store.state.char.girl.x - x0) > 0.05,
         `${x0.toFixed(2)}→${Store.state.char.girl.x.toFixed(2)}`);
