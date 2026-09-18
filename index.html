@@ -16,18 +16,14 @@
 </head>
 <body>
 <div id="app">
-  <!-- 主界面：一栋大房子，三扇门 -->
+  <!-- 主界面：一栋大房子，一扇大门 -->
   <div class="screen active" id="screen-home"></div>
-  <!-- 衣帽间：换装 -->
-  <div class="screen" id="screen-dressup"></div>
-  <!-- 卧室：装饰 -->
-  <div class="screen" id="screen-room"></div>
-  <!-- 客厅：装饰 -->
-  <div class="screen" id="screen-living"></div>
-  <!-- 卫生间：装饰 -->
-  <div class="screen" id="screen-bathroom"></div>
-  <!-- 厨房：做饭 -->
-  <div class="screen" id="screen-kitchen"></div>
+  <!-- 大世界：7 间房横向相连 -->
+  <div class="screen" id="screen-world"></div>
+  <!-- 换装面板（悬浮在世界之上） -->
+  <div class="screen overlay-screen" id="screen-dressup"></div>
+  <!-- 做饭面板（悬浮在世界之上） -->
+  <div class="screen overlay-screen" id="screen-kitchen"></div>
 </div>
 <script src="js/store.js"></script>
 <script src="js/audio.js"></script>
@@ -36,8 +32,8 @@
 <script src="js/assets-room.js"></script>
 <script src="js/assets-kitchen.js"></script>
 <script src="js/dressup.js"></script>
-<script src="js/room.js"></script>
 <script src="js/kitchen.js"></script>
+<script src="js/world.js"></script>
 <script src="js/main.js"></script>
 <script>
 /* PWA：注册离线缓存（本地 file:// 打开时自动跳过） */
