@@ -183,6 +183,11 @@
     const r = btn.getBoundingClientRect();
     FX.sparkles(el, r.left + r.width / 2, r.top, 10);
     setTimeout(() => Sound.praiseRandom(FEED_PRAISE), 350);
+    /* 菜端到世界里的角色面前吃掉 */
+    setTimeout(() => {
+      window.showScreen('world');
+      window.World && World.feedCharacter(who);
+    }, 500);
   }
 
   /* ---------- 模块定义 ---------- */
@@ -212,7 +217,7 @@
             <div class="dish-result hidden">
               <div class="dish-svg"></div>
               <div class="feed-row">
-                <button class="btn-feed" data-who="doll">
+                <button class="btn-feed" data-who="girl">
                   <svg viewBox="0 0 60 60">
                     <circle cx="30" cy="32" r="20" fill="#ffe0c7"/>
                     <path d="M10,30 Q10,10 30,10 Q50,10 50,30 Q44,22 36,24 Q30,18 24,24 Q16,22 10,30 Z" fill="#8b5e3c"/>
@@ -277,7 +282,7 @@
 
       /* 喂食 / 再做一次 */
       el.querySelectorAll('.btn-feed').forEach(b =>
-        b.addEventListener('click', () => feed(b.dataset.who, b)));
+        b.addEventListener('click', () => feed(b.dataset.who === 'doll' ? 'girl' : b.dataset.who, b)));
       el.querySelector('.dish-result .btn-home').addEventListener('click', e => {
         e.stopPropagation();
         Sound.pop();
