@@ -52,7 +52,7 @@
     return [r.left + r.width / 2, r.top + r.height / 2, r];
   };
   const isWorldActive = () => $('#screen-world').classList.contains('active');
-  const ROOM_IDS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe'];
+  const ROOM_IDS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe', 'yard', 'park', 'shop'];
   const roomIdx = id => ROOM_IDS.indexOf(id);
 
   async function run() {
@@ -69,7 +69,7 @@
         `items=${mig.rooms.bedroom.items.length} wall=${mig.rooms.bedroom.wall}`);
       log('迁移:老lastRoom→bedroom', mig.lastRoom === 'bedroom', mig.lastRoom);
       log('迁移:角色字段生成', !!(mig.char && mig.char.girl && mig.char.cat), JSON.stringify(mig.char.girl));
-      log('迁移:7房间齐备', Object.keys(mig.rooms).length === 7, Object.keys(mig.rooms).join(','));
+      log('迁移:7房间齐备', Object.keys(mig.rooms).length === 10, Object.keys(mig.rooms).join(','));
       Store.reset();
       await sleep(60);
 
@@ -87,13 +87,13 @@
 
       /* ---- 2. 世界结构 ---- */
       const rooms = $$('#screen-world .world-room');
-      log('世界7间房', rooms.length === 7, rooms.length);
+      log('世界10个场景', rooms.length === 10, rooms.length);
       log('固定装置:厨房冰箱+灶台', $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length === 2,
         $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length);
       log('固定装置:换衣间衣柜', $$('#screen-world .world-room[data-room="wardrobe"] .world-fixture').length === 1);
       log('角色在场', !!$('#char-girl') && !!$('#char-cat'));
       const dots = $$('.world-dot');
-      log('圆点导航7个', dots.length === 7, dots.length);
+      log('圆点导航10个', dots.length === 10, dots.length);
 
       /* ---- 3. 相机 ---- */
       click($('#screen-world .world-arrow.right'));
@@ -277,15 +277,53 @@
       click($$('#screen-world .btn-palette')[0]);
       await sleep(50);
       const swatches = $$('#screen-world .palette-pop .swatch');
-      log('墙纸色板8款', swatches.length === 8, swatches.length);
+      log('墙纸色板9款', swatches.length === 9, swatches.length);
       click(swatches[7]);
       await sleep(80);
       log('卫生间换薄荷瓷砖', Store.state.rooms.bathroom.wall === 7, Store.state.rooms.bathroom.wall);
 
+      /* ---- 10. 室外场景 ---- */
+      click($$('.world-dot')[7]); // 院子
+      await sleep(180);
+      log('跳到院子', window.World.currentRoomId === 'yard');
+      const yardCards = $$('#screen-world .item-card');
+      log('院子家具卡12件', yardCards.length === 12, yardCards.length);
+      log('含秋千/沙坑/帐篷', ['swing', 'sandbox', 'tent'].every(id =>
+        [...yardCards].some(c => c.dataset.id === id)));
+      log('院子草地地板', Store.state.rooms.yard.floor === 3, Store.state.rooms.yard.floor);
+      click([...yardCards].find(c => c.dataset.id === 'swing'));
+      await sleep(150);
+      log('院子加秋千', Store.state.rooms.yard.items.length === 1, Store.state.rooms.yard.items.length);
+      const swingNode = $$('#screen-world .world-room[data-room="yard"] .room-item')[0];
+      const [swx, swy] = center(swingNode);
+      pe('pointerdown', swingNode, swx, swy);
+      pe('pointerup', swingNode, swx, swy);
+      await sleep(100);
+      log('轻点秋千互动不误删', Store.state.rooms.yard.items.length === 1);
+      click($$('.world-dot')[8]); // 公园
+      await sleep(180);
+      log('跳到公园', window.World.currentRoomId === 'park');
+      log('公园含滑梯/喷泉/池塘', ['slide', 'fountain', 'pond'].every(id =>
+        [...$$('#screen-world .item-card')].some(c => c.dataset.id === id)));
+      click($$('.world-dot')[9]); // 商店
+      await sleep(180);
+      log('跳到商店', window.World.currentRoomId === 'shop');
+      log('商店糖果墙默认', Store.state.rooms.shop.wall === 8, Store.state.rooms.shop.wall);
+      log('商店含货架/收银台/冰柜', ['shopshelf', 'counter', 'freezer'].every(id =>
+        [...$$('#screen-world .item-card')].some(c => c.dataset.id === id)));
+      /* 弹出条跳卧室（键名修复验证） */
+      click($('#screen-world .btn-rooms'));
+      await sleep(80);
+      click(document.querySelector('.room-pick[data-room="bedroom"]'));
+      await sleep(200);
+      log('弹出条跳卧室生效', window.World.currentRoomId === 'bedroom', window.World.currentRoomId);
+      const bedCardVisible = [...$$('#screen-world .item-card')].some(c => c.dataset.id === 'bed');
+      log('卧室抽屉已刷新', bedCardVisible);
+
       /* ---- 10. 存档完整性 ---- */
       Store.saveNow();
       const saved = JSON.parse(localStorage.getItem('magic-house-v1'));
-      log('存档含角色/道具/7房间', !!(saved.char && Array.isArray(saved.props) && Object.keys(saved.rooms).length === 7));
+      log('存档含角色/道具/10房间', !!(saved.char && Array.isArray(saved.props) && Object.keys(saved.rooms).length === 10));
 
     } catch (err) {
       results.push('FAIL | 测试异常中断 | ' + (err && err.message) + (err && err.stack ? ' | ' + err.stack.split('\n')[1] : ''));
