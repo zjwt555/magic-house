@@ -343,20 +343,161 @@
         <circle cx="56" cy="20" r="9" fill="rgba(160,220,250,.5)" stroke="rgba(255,255,255,.9)" stroke-width="2.5"/>
         <ellipse cx="27" cy="31" rx="6" ry="4" fill="#fff" opacity=".8" transform="rotate(-24 27 31)"/>
         <ellipse cx="57" cy="53" rx="4" ry="3" fill="#fff" opacity=".8"/>
+      </svg>` },
+    /* ---- 阳台专属 ---- */
+    flowerstand: { w: 0.115, svg: `
+      <svg viewBox="0 0 120 190" xmlns="http://www.w3.org/2000/svg">
+        <rect x="18" y="60" width="84" height="9" rx="4.5" fill="#d98c5a"/>
+        <rect x="18" y="120" width="84" height="9" rx="4.5" fill="#d98c5a"/>
+        <line x1="26" y1="69" x2="26" y2="182" stroke="#c47a44" stroke-width="9" stroke-linecap="round"/>
+        <line x1="94" y1="69" x2="94" y2="182" stroke="#c47a44" stroke-width="9" stroke-linecap="round"/>
+        <path d="M34,60 L50,60 L46,34 Q42,28 38,34 Z" fill="#e8975e"/>
+        <path d="M74,60 L90,60 L86,34 Q82,28 78,34 Z" fill="#e8975e"/>
+        ${[[42, 24], [82, 24]].map(([x, y]) =>
+          `<circle cx="${x}" cy="${y}" r="8" fill="#ff9eb5"/>
+           <circle cx="${x}" cy="${y}" r="3.5" fill="#ffd34d"/>
+           <path d="M${x - 10},${y + 6} Q${x},${y + 14} ${x + 10},${y + 6}" stroke="#6cc46a" stroke-width="3" fill="none"/>`).join('')}
+        <path d="M50,120 L70,120 L67,102 Q60,96 53,102 Z" fill="#e8975e"/>
+        <g transform="translate(60,92)">
+          ${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-8" rx="4" ry="7.5" fill="#b79ced" transform="rotate(${a})"/>`).join('')}
+          <circle r="3.5" fill="#ffd34d"/>
+        </g>
+      </svg>` },
+    clothline: { w: 0.22, svg: `
+      <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" y1="10" x2="20" y2="150" stroke="#c98443" stroke-width="10" stroke-linecap="round"/>
+        <line x1="220" y1="10" x2="220" y2="150" stroke="#c98443" stroke-width="10" stroke-linecap="round"/>
+        <path d="M20,26 Q120,44 220,26" stroke="#b0a08a" stroke-width="4" fill="none"/>
+        <g transform="rotate(-3 62 30)">
+          <rect x="46" y="32" width="32" height="40" rx="6" fill="#ff9eb5"/>
+          <path d="M52,32 L58,24 L62,30 L66,24 L72,32" fill="none" stroke="#e05c86" stroke-width="3"/>
+          <rect x="46" y="60" width="32" height="8" rx="4" fill="#e05c86"/>
+        </g>
+        <g transform="rotate(2 150 32)">
+          <rect x="132" y="34" width="36" height="30" rx="5" fill="#7ec8e3"/>
+          <line x1="140" y1="34" x2="140" y2="64" stroke="#4f9cc0" stroke-width="3"/>
+          <line x1="160" y1="34" x2="160" y2="64" stroke="#4f9cc0" stroke-width="3"/>
+        </g>
+        <circle cx="205" cy="40" r="7" fill="#ffd34d"/>
+      </svg>` },
+    deckchair: { w: 0.15, svg: `
+      <svg viewBox="0 0 160 150" xmlns="http://www.w3.org/2000/svg">
+        <line x1="26" y1="118" x2="120" y2="46" stroke="#c98443" stroke-width="8" stroke-linecap="round"/>
+        <line x1="14" y1="132" x2="134" y2="132" stroke="#c98443" stroke-width="8" stroke-linecap="round"/>
+        <line x1="40" y1="132" x2="104" y2="70" stroke="#b07838" stroke-width="7" stroke-linecap="round"/>
+        <path d="M22,120 L118,50 L134,64 L38,134 Z" fill="#ffb3c7"/>
+        <path d="M28,124 L112,58 L120,65 L36,131 Z" fill="#ff9eb5"/>
+        <rect x="108" y="38" width="30" height="22" rx="6" fill="#ff9eb5" transform="rotate(12 108 38)"/>
+        <circle cx="64" cy="96" r="4" fill="#fff" opacity=".7"/>
+        <circle cx="84" cy="80" r="4" fill="#fff" opacity=".7"/>
+      </svg>` },
+    /* ---- 书房专属 ---- */
+    desk: { w: 0.18, svg: `
+      <svg viewBox="0 0 190 155" xmlns="http://www.w3.org/2000/svg">
+        <rect x="12" y="58" width="166" height="14" rx="7" fill="#d98c5a"/>
+        <rect x="22" y="72" width="20" height="76" rx="8" fill="#c47a44"/>
+        <rect x="148" y="72" width="20" height="76" rx="8" fill="#c47a44"/>
+        <rect x="56" y="88" width="78" height="52" rx="8" fill="#b06f3e"/>
+        <rect x="62" y="20" width="66" height="42" rx="6" fill="#4a4a55"/>
+        <rect x="68" y="26" width="54" height="30" rx="3" fill="#9ad7f0"/>
+        <circle cx="95" cy="41" r="6" fill="#ffd34d"/>
+        <path d="M68,50 L122,50 L132,56 L58,56 Z" fill="#3a3a44"/>
+        <rect x="88" y="62" width="14" height="8" fill="#3a3a44"/>
+        <rect x="74" y="48" width="20" height="8" rx="2" fill="#ff8f9e"/>
+        <circle cx="146" cy="52" r="6" fill="#98d8a0"/>
+      </svg>` },
+    globe: { w: 0.095, svg: `
+      <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50,96 L50,128" stroke="#c98443" stroke-width="7" stroke-linecap="round"/>
+        <ellipse cx="50" cy="132" rx="24" ry="7" fill="#c98443"/>
+        <circle cx="50" cy="52" r="40" fill="#9ad7f0"/>
+        <path d="M28,36 Q42,26 54,34 Q66,42 60,54 Q52,64 40,58 Q26,50 28,36 Z" fill="#98d8a0"/>
+        <path d="M56,66 Q68,62 74,70 Q66,80 56,76 Z" fill="#98d8a0"/>
+        <ellipse cx="50" cy="52" rx="40" ry="12" fill="none" stroke="#7ec8e3" stroke-width="3"/>
+        <line x1="50" y1="8" x2="50" y2="96" stroke="#e8a3bd" stroke-width="3.5"/>
+        <circle cx="50" cy="10" r="5" fill="#e8a3bd"/>
+      </svg>` },
+    dining: { w: 0.17, svg: `
+      <svg viewBox="0 0 180 130" xmlns="http://www.w3.org/2000/svg">
+        <line x1="42" y1="62" x2="34" y2="118" stroke="#d98c5a" stroke-width="10" stroke-linecap="round"/>
+        <line x1="138" y1="62" x2="146" y2="118" stroke="#d98c5a" stroke-width="10" stroke-linecap="round"/>
+        <ellipse cx="90" cy="56" rx="78" ry="18" fill="#e8cf9f"/>
+        <ellipse cx="90" cy="48" rx="78" ry="18" fill="#f7e3b8"/>
+        <ellipse cx="60" cy="44" rx="16" ry="6" fill="#fff"/>
+        <ellipse cx="118" cy="42" rx="13" ry="5.5" fill="#fff"/>
+        <circle cx="60" cy="40" r="6" fill="#ff6b6b"/>
+        <g transform="translate(118,36)"><rect x="-8" y="-4" width="16" height="9" rx="3" fill="#ffd166"/></g>
+      </svg>` },
+    /* ---- 固定互动装置（不可拖不可收，fx=房间内水平位置） ---- */
+    fridge: { fixture: true, w: 0.115, fx: 0.06, act: 'fridge', svg: `
+      <svg viewBox="0 0 115 210" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="8" width="95" height="194" rx="14" fill="#bfe0f0"/>
+        <rect x="18" y="16" width="79" height="76" rx="9" fill="#dff3ff"/>
+        <rect x="18" y="100" width="79" height="94" rx="9" fill="#dff3ff"/>
+        <line x1="10" y1="97" x2="105" y2="97" stroke="#9cc9de" stroke-width="4"/>
+        <rect x="86" y="30" width="7" height="34" rx="3.5" fill="#7ea9be"/>
+        <rect x="86" y="112" width="7" height="40" rx="3.5" fill="#7ea9be"/>
+        <circle cx="38" cy="46" r="8" fill="#ff6b6b"/>
+        <circle cx="58" cy="50" r="7" fill="#ffd166"/>
+        <path d="M28,140 Q38,130 48,140 M56,146 Q66,136 76,146" stroke="#9cc9de" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <circle cx="38" cy="128" r="5" fill="#ff9eb5"/>
+      </svg>` },
+    stove: { fixture: true, w: 0.14, fx: 0.42, act: 'pot', svg: `
+      <svg viewBox="0 0 150 170" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="96" width="134" height="66" rx="10" fill="#cfd8de"/>
+        <rect x="16" y="86" width="118" height="18" rx="9" fill="#aeb8c0"/>
+        <circle cx="40" cy="95" r="5" fill="#7f8a93"/><circle cx="70" cy="95" r="5" fill="#7f8a93"/>
+        <rect x="118" y="104" width="16" height="12" rx="3" fill="#ff8f7a"/>
+        <rect x="118" y="124" width="16" height="12" rx="3" fill="#ffd166"/>
+        <path d="M46,86 L46,58 Q46,44 62,44 L88,44 Q104,44 104,58 L104,86" fill="#e05c86"/>
+        <ellipse cx="75" cy="86" rx="29" ry="8" fill="#c74a72"/>
+        <ellipse cx="75" cy="84" rx="22" ry="5" fill="#f2a94f"/>
+        <path d="M46,60 L34,52 M104,60 L116,52" stroke="#c74a72" stroke-width="7" stroke-linecap="round"/>
+        <path d="M64,36 Q66,26 60,18 M86,36 Q88,26 82,18" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".85"/>
+      </svg>` },
+    wardrobecab: { fixture: true, w: 0.135, fx: 0.08, act: 'wardrobe', svg: `
+      <svg viewBox="0 0 140 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="10" width="124" height="184" rx="12" fill="#e8a3bd"/>
+        <line x1="70" y1="14" x2="70" y2="190" stroke="#d98cb0" stroke-width="5"/>
+        <rect x="18" y="20" width="46" height="164" rx="8" fill="#f7c6dd"/>
+        <rect x="76" y="20" width="46" height="164" rx="8" fill="#f7c6dd"/>
+        <circle cx="60" cy="102" r="5" fill="#b34a75"/>
+        <circle cx="80" cy="102" r="5" fill="#b34a75"/>
+        <g transform="translate(41,64) scale(.55)">
+          <path d="M-9,-21 L-14,-4 L-23,15 Q0,25 23,15 L14,-4 L9,-21 Q0,-15 -9,-21 Z" fill="#e05c86"/>
+          <circle cx="0" cy="-3" r="4.5" fill="#ffd0e0"/>
+        </g>
+        <g transform="translate(99,60) scale(.5)">
+          <path d="M0,-18 L5,-6 L18,-5 L8,4 L11,17 L0,10 L-11,17 L-8,4 L-18,-5 L-5,-6 Z" fill="#ffd34d"/>
+        </g>
+        <rect x="8" y="0" width="124" height="14" rx="7" fill="#d98cb0"/>
       </svg>` }
   };
 
+  /* 世界房间顺序（横向大房子从左到右） */
+  const WORLD_ROOMS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe'];
+
   /* 各房间的家具清单顺序 */
   const ROOM_SETS = {
+    balcony: ['clothline', 'deckchair', 'flowerstand', 'plant', 'catbed', 'st_flower', 'st_butterfly', 'st_bubble'],
     bedroom: ['bed', 'sofa', 'rug', 'table', 'bookshelf', 'piano', 'lamp', 'plant', 'catbed', 'teddy', 'frame', 'clock',
       'st_star', 'st_flower', 'st_butterfly'],
+    bathroom: ['bathtub', 'sink', 'toilet', 'bmirror', 'towelrack', 'bathmat', 'plant',
+      'st_duck', 'st_bubble', 'st_star', 'st_flower'],
     living: ['tv', 'sofa', 'coffee', 'armchair', 'fishtank', 'cushion', 'rug', 'bookshelf', 'piano', 'lamp', 'plant', 'frame', 'clock',
       'st_star', 'st_flower', 'st_butterfly'],
-    bathroom: ['bathtub', 'sink', 'toilet', 'bmirror', 'towelrack', 'bathmat', 'plant',
-      'st_duck', 'st_bubble', 'st_star', 'st_flower']
+    kitchen: ['dining', 'table', 'plant', 'clock', 'st_flower', 'st_star'],
+    study: ['desk', 'globe', 'bookshelf', 'armchair', 'lamp', 'plant', 'frame', 'clock', 'st_star', 'st_flower'],
+    wardrobe: ['rug', 'piano', 'lamp', 'plant', 'teddy', 'frame', 'clock', 'st_star', 'st_flower', 'st_butterfly']
   };
 
-  /* 顺序即抽屉里的顺序：先大件后贴纸（见 ROOM_SETS 各房间清单） */
+  /* 固定装置归属（渲染在房间背景层，不可拖不可收） */
+  const FIXTURES = { kitchen: ['fridge', 'stove'], wardrobe: ['wardrobecab'] };
+
+  /* 厨房冰箱里的食物（复用厨房素材库的食材 SVG） */
+  const FOODS = ['apple', 'strawberry', 'banana', 'grape', 'orange', 'watermelon', 'milk'];
+
+  /* 顺序即抽屉里的顺序（见 ROOM_SETS 各房间清单） */
   const ORDER = ROOM_SETS.bedroom;
 
   /* ---------- 墙纸 / 地板（CSS 背景） ---------- */
@@ -393,5 +534,5 @@
     }
   }
 
-  window.RoomAssets = { ITEMS, ORDER, ROOM_SETS, WALLS, FLOORS, applyBg };
+  window.RoomAssets = { ITEMS, ORDER, ROOM_SETS, WORLD_ROOMS, FIXTURES, FOODS, WALLS, FLOORS, applyBg };
 })();
