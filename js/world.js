@@ -45,7 +45,7 @@
 
   function jumpTo(roomId) {
     const i = roomIdx(roomId);
-    if (i >= 0) { cam = i; applyCam(); }
+    if (i >= 0) { cam = i; applyCam(); renderToolbar(); }
   }
 
   /* ---------- 房间渲染 ---------- */
@@ -315,6 +315,28 @@
       FX.bubbles(el, cx, rect.top + rect.height * 0.35, 6);
       Sound.blub();
       Sound.praiseRandom(['小鱼游游～', '咕噜咕噜～']);
+    } else if (act === 'swing') {
+      node.animate([
+        { transform: 'rotate(0deg)' },
+        { transform: 'rotate(-7deg)' },
+        { transform: 'rotate(6deg)' },
+        { transform: 'rotate(-4deg)' },
+        { transform: 'rotate(0deg)' }
+      ], { duration: 1100, easing: 'ease-in-out' });
+      Sound.sparkle();
+      Sound.praiseRandom(['荡秋千喽！飞起来啦！', '再高一点！']);
+    } else if (act === 'fountain') {
+      FX.bubbles(el, cx, rect.top + rect.height * 0.2, 9);
+      Sound.blub();
+      Sound.praiseRandom(['喷泉水花哗啦啦！', '小水珠跳起舞啦！']);
+    } else if (act === 'freezer') {
+      FX.sparkles(el, cx, rect.top + rect.height * 0.4, 8);
+      Sound.squeak();
+      Sound.praiseRandom(['冰淇淋凉凉的！', '想吃哪个口味的呀？']);
+    } else if (act === 'register') {
+      Sound.chime();
+      FX.sparkles(el, cx, rect.top + rect.height * 0.3, 7);
+      Sound.praiseRandom(['叮！谢谢惠顾！', '欢迎光临小商店！', '叮——买好啦！']);
     }
   }
 
