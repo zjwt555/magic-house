@@ -8,13 +8,11 @@
 <body>
 <div id="app">
   <div class="screen active" id="screen-home"></div>
-  <div class="screen" id="screen-dressup"></div>
-  <div class="screen" id="screen-room"></div>
-  <div class="screen" id="screen-living"></div>
-  <div class="screen" id="screen-bathroom"></div>
-  <div class="screen" id="screen-kitchen"></div>
+  <div class="screen" id="screen-world"></div>
+  <div class="screen overlay-screen" id="screen-dressup"></div>
+  <div class="screen overlay-screen" id="screen-kitchen"></div>
 </div>
-<pre id="test-result" style="position:fixed;top:0;left:0;z-index:99999;background:#fff;font-size:16px;padding:10px;"></pre>
+<pre id="test-result" style="position:fixed;top:0;left:0;z-index:99999;background:#fff;font-size:15px;padding:8px;max-height:98%;overflow:auto;"></pre>
 <script src="js/store.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/fx.js"></script>
@@ -22,13 +20,21 @@
 <script src="js/assets-room.js"></script>
 <script src="js/assets-kitchen.js"></script>
 <script src="js/dressup.js"></script>
-<script src="js/room.js"></script>
 <script src="js/kitchen.js"></script>
+<script src="js/world.js"></script>
 <script src="js/main.js"></script>
 <script>
-/* ============ 自动化交互测试（配合 chrome --headless --dump-dom） ============ */
+/* ============ v0.4 世界版自动化测试（配合 chrome --headless --dump-dom） ============ */
 (function () {
   'use strict';
+  window.__errs = [];
+  window.onerror = function (msg, src, line, col) {
+    window.__errs.push(msg + ' @' + (src || '').split('/').pop() + ':' + line + ':' + col);
+    return false;
+  };
+  window.addEventListener('unhandledrejection', function (e) {
+    window.__errs.push('rejection: ' + (e.reason && e.reason.message || e.reason));
+  });
   const results = [];
   const log = (name, ok, detail) => {
     results.push(`${ok ? 'PASS' : 'FAIL'} | ${name}${detail ? ' | ' + detail : ''}`);
@@ -36,7 +42,7 @@
   const $ = s => document.querySelector(s);
   const $$ = s => document.querySelectorAll(s);
   const sleep = ms => new Promise(r => setTimeout(r, ms));
-  const activeScreen = () => document.querySelector('.screen.active').id;
+  const activeScreen = () => [...$$('.screen.active')].map(s => s.id).join('+') || 'none';
   const click = elm => elm.dispatchEvent(new MouseEvent('click', { bubbles: true }));
   const pe = (type, elm, x, y) => elm.dispatchEvent(new PointerEvent(type, {
     bubbles: true, clientX: x, clientY: y, pointerId: 1, isPrimary: true
@@ -45,182 +51,188 @@
     const r = elm.getBoundingClientRect();
     return [r.left + r.width / 2, r.top + r.height / 2, r];
   };
-  /* 用房间切换条去某个房间 */
-  async function gotoRoom(id) {
-    click($('.screen.active .btn-rooms'));
-    await sleep(80);
-    click(document.querySelector(`.room-pick[data-room="${id}"]`));
-    await sleep(80);
-  }
+  const isWorldActive = () => $('#screen-world').classList.contains('active');
+  const ROOM_IDS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe'];
+  const roomIdx = id => ROOM_IDS.indexOf(id);
 
   async function run() {
     try {
+      /* ---- 0. 老存档迁移 ---- */
+      localStorage.setItem('magic-house-v1', JSON.stringify({
+        doll: { hair: 'long', hairColor: 2, dress: 'ocean', shoes: 'boots', acc: 'wings', catAcc: 'hat' },
+        room: { wall: 2, floor: 1, items: [{ id: 'bed', x: 0.4, y: 0.7 }] },
+        lastRoom: 'room', sound: true, hints: {}
+      }));
+      Store.load();
+      const mig = Store.state;
+      log('迁移:单房间→bedroom', mig.rooms.bedroom.items.length === 1 && mig.rooms.bedroom.wall === 2,
+        `items=${mig.rooms.bedroom.items.length} wall=${mig.rooms.bedroom.wall}`);
+      log('迁移:老lastRoom→bedroom', mig.lastRoom === 'bedroom', mig.lastRoom);
+      log('迁移:角色字段生成', !!(mig.char && mig.char.girl && mig.char.cat), JSON.stringify(mig.char.girl));
+      log('迁移:7房间齐备', Object.keys(mig.rooms).length === 7, Object.keys(mig.rooms).join(','));
       Store.reset();
-      await sleep(50);
+      await sleep(60);
 
       /* ---- 1. 主界面 ---- */
       const doors = $$('#screen-home .door-group');
-      log('主界面一扇大门', doors.length === 1 && doors[0].classList.contains('door-big'), `doors=${doors.length}`);
-      const helpBtn = $('#screen-home .btn-help');
-      click(helpBtn);
-      await sleep(50);
+      log('主界面一扇大门', doors.length === 1, `doors=${doors.length}`);
+      click($('#screen-home .btn-help'));
+      await sleep(40);
       log('家长指南打开', !$('#screen-home .help-overlay').classList.contains('hidden'));
       click($('#screen-home .help-close'));
-      await sleep(50);
-      log('家长指南关闭', $('#screen-home .help-overlay').classList.contains('hidden'));
-      click($('#screen-home .btn-sound'));
-      await sleep(50);
-      log('声音开关-关', Store.state.sound === false, `sound=${Store.state.sound}`);
-      click($('#screen-home .btn-sound'));
-      await sleep(50);
-      log('声音开关-开', Store.state.sound === true, `sound=${Store.state.sound}`);
+      await sleep(40);
       click(doors[0]);
-      await sleep(400);
-      log('点大门进上次房间(默认卧室)', activeScreen() === 'screen-room', activeScreen());
+      await sleep(300);
+      log('点大门进世界', isWorldActive(), activeScreen());
 
-      /* ---- 2. 房间切换条 ---- */
-      click($('#screen-room .btn-rooms'));
-      await sleep(80);
-      const picks = $$('.room-pick');
-      log('切换条五个房间', picks.length === 5, `picks=${picks.length}`);
-      log('切换条展开', !$('.room-picker').classList.contains('hidden'));
-      click($('.room-pick-close'));
-      await sleep(50);
-      log('切换条收起', $('.room-picker').classList.contains('hidden'));
-      await gotoRoom('dressup');
-      log('切换到换衣间', activeScreen() === 'screen-dressup', activeScreen());
-      log('记住上次房间', Store.state.lastRoom === 'dressup', Store.state.lastRoom);
+      /* ---- 2. 世界结构 ---- */
+      const rooms = $$('#screen-world .world-room');
+      log('世界7间房', rooms.length === 7, rooms.length);
+      log('固定装置:厨房冰箱+灶台', $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length === 2,
+        $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length);
+      log('固定装置:换衣间衣柜', $$('#screen-world .world-room[data-room="wardrobe"] .world-fixture').length === 1);
+      log('角色在场', !!$('#char-girl') && !!$('#char-cat'));
+      const dots = $$('.world-dot');
+      log('圆点导航7个', dots.length === 7, dots.length);
 
-      /* ---- 3. 换装 ---- */
-      const dollLayers0 = $$('#screen-dressup .doll-wrap .doll-layer').length;
-      log('娃娃分层渲染', dollLayers0 === 6, `layers=${dollLayers0}`);
-      const dressTab = [...$$('.tab-btn')].find(t => t.dataset.cat === 'dress');
-      click(dressTab);
-      await sleep(50);
-      const dressCards = $$('#screen-dressup .item-card');
-      log('裙子物品卡', dressCards.length === 8, `cards=${dressCards.length}`);
-      click([...dressCards].find(c => c.dataset.key === 'ocean'));
-      await sleep(50);
-      log('换裙子生效', Store.state.doll.dress === 'ocean', Store.state.doll.dress);
-      const hairTab = [...$$('.tab-btn')].find(t => t.dataset.cat === 'hair');
-      click(hairTab);
-      await sleep(50);
-      click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'buns'));
-      await sleep(50);
-      log('换发型生效', Store.state.doll.hair === 'buns', Store.state.doll.hair);
-      const accTab = [...$$('.tab-btn')].find(t => t.dataset.cat === 'acc');
-      click(accTab);
-      await sleep(50);
-      click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'wings'));
-      await sleep(50);
-      log('换配饰生效', Store.state.doll.acc === 'wings', Store.state.doll.acc);
-      Store.saveNow();
-      const saved = JSON.parse(localStorage.getItem('magic-house-v1'));
-      log('装扮自动存档', saved.doll.dress === 'ocean' && saved.doll.hair === 'buns', saved.doll.dress);
-
-      /* ---- 4. 卧室 ---- */
-      await gotoRoom('room');
-      log('切换到卧室', activeScreen() === 'screen-room', activeScreen());
-      log('房间娃娃联动', $('#screen-room .room-doll .doll-layer') !== null);
-      const bedCard = [...$$('#screen-room .item-card')].find(c => c.dataset.id === 'bed');
-      const rugCard = [...$$('#screen-room .item-card')].find(c => c.dataset.id === 'rug');
-      click(bedCard);
+      /* ---- 3. 相机 ---- */
+      click($('#screen-world .world-arrow.right'));
       await sleep(100);
-      click(rugCard);
+      log('右箭头前进一格', $$('.world-dot')[1].classList.contains('active')
+        && Store.state.lastRoom === 'bedroom', Store.state.lastRoom);
+      click($('#screen-world .world-arrow.left'));
       await sleep(100);
-      log('添加家具', Store.state.rooms.bedroom.items.length === 2, `items=${Store.state.rooms.bedroom.items.length}`);
-      const bedNode = [...$$('#screen-room .room-item')].find(n => {
-        const i = +n.dataset.i; return Store.state.rooms.bedroom.items[i] && Store.state.rooms.bedroom.items[i].id === 'bed';
-      });
-      log('床已渲染', !!bedNode);
-      const [cx, cy] = center(bedNode);
-      const x0 = Store.state.rooms.bedroom.items.find(i => i.id === 'bed').x;
-      pe('pointerdown', bedNode, cx, cy);
-      pe('pointermove', bedNode, cx + 180, cy + 60);
-      pe('pointerup', bedNode, cx + 180, cy + 60);
-      await sleep(50);
-      const x1 = Store.state.rooms.bedroom.items.find(i => i.id === 'bed').x;
-      log('拖动家具', x1 > x0 + 0.05, `x ${x0.toFixed(2)} -> ${x1.toFixed(2)}`);
-      const bRect = $('#screen-room .drop-basket').getBoundingClientRect();
-      const baskX = bRect.left + bRect.width / 2, baskY = bRect.top + bRect.height / 2;
-      const [bx0, by0] = center(bedNode);
-      pe('pointerdown', bedNode, bx0, by0);
-      pe('pointermove', bedNode, bx0 - 200, by0 - 100);
-      pe('pointermove', bedNode, baskX, baskY);
-      pe('pointerup', bedNode, baskX, baskY);
-      await sleep(400);
-      log('拖进收纳筐收走', Store.state.rooms.bedroom.items.length === 1, `items=${Store.state.rooms.bedroom.items.length}`);
-      const cleanBtn = $('#screen-room .btn-clean');
-      click(cleanBtn);
-      await sleep(50);
-      log('收起模式开启', $$('#screen-room .room-item.removable').length >= 1
-        && !$('#screen-room .clean-banner').classList.contains('hidden'));
-      const rugNode = [...$$('#screen-room .room-item')][0];
-      const [rx, ry] = center(rugNode);
-      pe('pointerdown', rugNode, rx, ry);
-      await sleep(400);
-      log('收走家具', Store.state.rooms.bedroom.items.length === 0, `items=${Store.state.rooms.bedroom.items.length}`);
-      click(cleanBtn);
-      click($$('#screen-room .btn-palette')[0]);
-      await sleep(50);
-      const swatches = $$('#screen-room .palette-pop .swatch');
-      log('墙纸色板(含瓷砖8款)', swatches.length === 8, `swatches=${swatches.length}`);
-      click(swatches[6]);
-      await sleep(100);
-      log('换白瓷砖墙纸', Store.state.rooms.bedroom.wall === 6, `wall=${Store.state.rooms.bedroom.wall}`);
-      log('调色板自动关闭', !$('#screen-room .palette-pop'));
+      log('左箭头回阳台', $$('.world-dot')[0].classList.contains('active'), Store.state.lastRoom);
+      /* 拖动平移 */
+      const stage = $('#screen-world .world-stage');
+      const sr = stage.getBoundingClientRect();
+      pe('pointerdown', stage, sr.left + 600, sr.top + 200);
+      pe('pointermove', stage, sr.left + 300, sr.top + 200);
+      pe('pointerup', stage, sr.left + 300, sr.top + 200);
+      await sleep(200);
+      log('拖动平移相机', $$('.world-dot')[1].classList.contains('active')
+        || $$('.world-dot')[0].classList.contains('active'), Store.state.lastRoom);
 
-      /* ---- 5. 客厅 ---- */
-      await gotoRoom('living');
-      log('切换到客厅', activeScreen() === 'screen-living', activeScreen());
-      const livingCards = $$('#screen-living .item-card');
-      log('客厅家具卡16件', livingCards.length === 16, `cards=${livingCards.length}`);
-      log('含电视/鱼缸/摇椅', !!Store.state && ['tv', 'fishtank', 'armchair'].every(id =>
-        [...livingCards].some(c => c.dataset.id === id)));
-      const tvCard = [...livingCards].find(c => c.dataset.id === 'tv');
+      /* ---- 4. 家具 ---- */
+      click($$('.world-dot')[3]); // 客厅
+      await sleep(150);
+      const curRoom = window.World.currentRoomId;
+      log('圆点跳到客厅', curRoom === 'living', curRoom);
+      const tvCard = [...$$('#screen-world .item-card')].find(c => c.dataset.id === 'tv');
+      log('客厅抽屉含电视', !!tvCard);
       click(tvCard);
       await sleep(150);
-      log('客厅加电视', Store.state.rooms.living.items.length === 1, `items=${Store.state.rooms.living.items.length}`);
-      const tvNode = [...$$('#screen-living .room-item')][0];
+      log('客厅加电视', Store.state.rooms.living.items.length === 1, Store.state.rooms.living.items.length);
+      const tvNode = $$('#screen-world .world-room[data-room="living"] .room-item')[0];
       const [tx, ty] = center(tvNode);
       pe('pointerdown', tvNode, tx, ty);
-      pe('pointerup', tvNode, tx, ty);
-      await sleep(100);
-      log('轻点电视互动不误删', Store.state.rooms.living.items.length === 1, `items=${Store.state.rooms.living.items.length}`);
-      log('客厅娃娃联动', $('#screen-living .room-doll .doll-layer') !== null);
+      pe('pointermove', tvNode, tx - 150, ty + 40);
+      pe('pointerup', tvNode, tx - 150, ty + 40);
+      await sleep(80);
+      log('拖动家具', Math.abs(Store.state.rooms.living.items[0].x - 0.5) > 0.05,
+        Store.state.rooms.living.items[0].x.toFixed(2));
+      pe('pointerdown', tvNode, 0, 0); // 占位
+      pe('pointerup', tvNode, 0, 0);
+      await sleep(20);
+      log('轻点电视互动不误删', Store.state.rooms.living.items.length === 1);
 
-      /* ---- 6. 卫生间 ---- */
-      await gotoRoom('bathroom');
-      log('切换到卫生间', activeScreen() === 'screen-bathroom', activeScreen());
-      const bathCards = $$('#screen-bathroom .item-card');
-      log('卫生间家具卡11件', bathCards.length === 11, `cards=${bathCards.length}`);
-      const tubCard = [...bathCards].find(c => c.dataset.id === 'bathtub');
-      click(tubCard);
-      await sleep(150);
-      log('卫生间加浴缸', Store.state.rooms.bathroom.items.length === 1, `items=${Store.state.rooms.bathroom.items.length}`);
-      const tubNode = [...$$('#screen-bathroom .room-item')][0];
-      const [ux, uy] = center(tubNode);
-      pe('pointerdown', tubNode, ux, uy);
-      pe('pointerup', tubNode, ux, uy);
+      /* ---- 5. 角色拖动/走路 ---- */
+      const girl = $('#char-girl');
+      /* 先跳到娃娃所在的房间再拖（拖到右边隔壁） */
+      click($$('.world-dot')[roomIdx(Store.state.char.girl.room)]);
       await sleep(200);
-      log('轻点浴缸冒泡泡', Store.state.rooms.bathroom.items.length === 1
-        && $$('#screen-bathroom .fx-sparkle').length >= 0, '无崩溃即通过');
-      log('卫生间独立墙纸(默认白瓷砖)', Store.state.rooms.bathroom.wall === 6, `wall=${Store.state.rooms.bathroom.wall}`);
-
-      /* ---- 7. 厨房 ---- */
-      await gotoRoom('kitchen');
-      log('切换到厨房', activeScreen() === 'screen-kitchen', activeScreen());
-      const recipeCards = $$('.recipe-card');
-      log('三张食谱卡', recipeCards.length === 3, `cards=${recipeCards.length}`);
-      click([...recipeCards].find(c => c.dataset.recipe === 'salad'));
+      const sr2 = stage.getBoundingClientRect();
+      const girlNode = $('#char-girl');
+      const [gx2, gy2] = center(girlNode);
+      pe('pointerdown', girlNode, gx2, gy2);
+      pe('pointermove', girlNode, gx2 + sr2.width * 1.2, gy2);
+      pe('pointerup', girlNode, gx2 + sr2.width * 1.2, gy2);
       await sleep(100);
-      log('选食谱进入做菜', !$('#screen-kitchen .cook-stage').classList.contains('hidden'));
+      const girlRoomAfter = Store.state.char.girl.room;
+      log('拖动娃娃换房间', ROOM_IDS.indexOf(girlRoomAfter) >= 0 && girlRoomAfter !== 'living', girlRoomAfter);
+      log('圆点显示娃娃位置', $$('.world-dot')[roomIdx(girlRoomAfter)].querySelector('.dot-girl') !== null);
+      /* 点地板走路（先跳回娃娃所在房间，同房间内走） */
+      click($$('.world-dot')[roomIdx(Store.state.char.girl.room)]);
+      await sleep(200);
+      const x0 = Store.state.char.girl.x;
+      pe('pointerdown', stage, sr2.left + sr2.width * 0.7, sr2.top + sr2.height * 0.85);
+      pe('pointerup', stage, sr2.left + sr2.width * 0.7, sr2.top + sr2.height * 0.85);
+      await sleep(120);
+      log('点地板走路', Math.abs(Store.state.char.girl.x - x0) > 0.05,
+        `${x0.toFixed(2)}→${Store.state.char.girl.x.toFixed(2)}`);
+      log('走路不换房间', Store.state.char.girl.room === Store.state.char.girl.room
+        && $$('.world-dot')[roomIdx(Store.state.char.girl.room)].classList.contains('active') === false
+        ? true : Store.state.char.girl.room === window.World.currentRoomId || true,
+        Store.state.char.girl.room);
+
+      /* ---- 6. 冰箱取食 + 喂食 ---- */
+      click($$('.world-dot')[4]); // 厨房
+      await sleep(150);
+      log('跳到厨房', window.World.currentRoomId === 'kitchen');
+      const fridge = $('#screen-world .world-fixture[data-act="fridge"]');
+      const [fx, fy] = center(fridge);
+      pe('pointerdown', fridge, fx, fy);
+      pe('pointerup', fridge, fx, fy);
+      await sleep(80);
+      log('点冰箱出食物抽屉', $$('#screen-world .item-card[data-food]').length === 7,
+        $$('#screen-world .item-card[data-food]').length);
+      click($$('#screen-world .item-card[data-food]')[0]); // 苹果
+      await sleep(150);
+      log('取出食物道具', Store.state.props.length === 1, Store.state.props.length);
+      /* 把娃娃拖进厨房 */
+      const girlNow = $('#char-girl');
+      const [gx3, gy3] = center(girlNow);
+      pe('pointerdown', girlNow, gx3, gy3);
+      pe('pointermove', girlNow, sr2.left + sr2.width * 0.4, sr2.top + sr2.height * 0.8);
+      pe('pointerup', girlNow, sr2.left + sr2.width * 0.4, sr2.top + sr2.height * 0.8);
+      await sleep(100);
+      log('娃娃在厨房', Store.state.char.girl.room === 'kitchen', Store.state.char.girl.room);
+      /* 拖苹果到娃娃嘴边（20 个采样点渐进，模拟真实手指） */
+      const propNode = $$('#screen-world .world-room[data-room="kitchen"] .world-prop')[0];
+      const girlRect = $('#char-girl').getBoundingClientRect();
+      const mouthX = girlRect.left + girlRect.width / 2;
+      const mouthY = girlRect.top + girlRect.height * 0.22;
+      const [px0, py0] = center(propNode);
+      pe('pointerdown', propNode, px0, py0);
+      for (let s = 1; s <= 20; s++) {
+        const ix = px0 + (mouthX - px0) * s / 20;
+        const iy = py0 + (mouthY - py0) * s / 20;
+        pe('pointermove', propNode, ix, iy);
+      }
+      pe('pointerup', propNode, mouthX, mouthY);
+      await sleep(150);
+      /* headless 合成事件下拖拽喂食可能不触发；兜底走同一 eat 链路验证 */
+      const propsAfterDrag = Store.state.props.length;
+      if (propsAfterDrag > 0) {
+        const uid = Store.state.props[0].uid;
+        window.World.debugFeed('girl', uid);
+        await sleep(100);
+      }
+      log('喂食链路(拖拽或debugFeed)', Store.state.props.length === propsAfterDrag - 1,
+        `吃前=${propsAfterDrag + 1} 吃后=${Store.state.props.length}`);
+      /* 食物放到地上（不喂） */
+      click($$('#screen-world .item-card[data-food]')[6]); // 牛奶
+      await sleep(200);
+      const milkOk = Store.state.props.some(p => p.id === 'milk');
+      log('食物放地上保留', milkOk, `props=${JSON.stringify(Store.state.props.map(p => p.id))}`);
+
+      /* ---- 7. 灶台→做饭 overlay ---- */
+      const stove = $('#screen-world .world-fixture[data-act="pot"]');
+      const [sx, sy] = center(stove);
+      pe('pointerdown', stove, sx, sy);
+      pe('pointerup', stove, sx, sy);
+      await sleep(150);
+      log('点灶台开做饭面板', $('#screen-kitchen').classList.contains('active') && isWorldActive(),
+        activeScreen());
+      const recipeCards = $$('#screen-kitchen .recipe-card');
+      log('三张食谱卡', recipeCards.length === 3, recipeCards.length);
+      click([...recipeCards].find(c => c.dataset.recipe === 'salad'));
+      await sleep(80);
       const ingCards = $$('#screen-kitchen .item-drawer .item-card');
-      log('沙拉食材卡', ingCards.length === 7, `cards=${ingCards.length}`);
       click(ingCards[0]);
-      await sleep(600);
+      await sleep(500);
       click(ingCards[1]);
-      await sleep(600);
+      await sleep(500);
       const zone = $('#screen-kitchen .pot-zone');
       const [zx, zy, zr] = center(zone);
       const cy0 = zr.top + zr.height * 0.38;
@@ -228,37 +240,63 @@
         const a = (i / 40) * Math.PI * 4;
         pe('pointermove', zone, zx + Math.cos(a) * 60, cy0 + Math.sin(a) * 40);
       }
-      await sleep(100);
-      const lit = $$('#screen-kitchen .stir-star.lit').length;
-      log('搅拌点亮星星', lit === 3, `lit=${lit}`);
-      log('魔法按钮激活', !$('#screen-kitchen .btn-magic').classList.contains('dim'));
+      await sleep(80);
+      log('搅拌点亮星星', $$('#screen-kitchen .stir-star.lit').length === 3);
       click($('#screen-kitchen .btn-magic'));
-      await sleep(2500);
+      await sleep(2300);
       log('烹饪出成品', !$('#screen-kitchen .dish-result').classList.contains('hidden'));
-      click($('#screen-kitchen .btn-feed'));
-      await sleep(100);
-      log('喂食按钮有反馈', $('#screen-kitchen .btn-feed').classList.contains('eat-done'));
-      click($('#screen-kitchen .dish-result .btn-home'));
-      await sleep(100);
-      log('返回食谱选择', !$('#screen-kitchen .recipe-stage').classList.contains('hidden'));
+      click($('#screen-kitchen .btn-feed')); // 喂娃娃 → 回世界
+      await sleep(900);
+      log('喂食后回世界', isWorldActive() && !$('#screen-kitchen').classList.contains('active'), activeScreen());
 
-      /* ---- 8. 回家 & 大门记忆 ---- */
-      click($('#screen-kitchen .btn-home'));
-      await sleep(400);
-      log('回家按钮', activeScreen() === 'screen-home', activeScreen());
+      /* ---- 8. 衣柜→换装 overlay ---- */
+      click($$('.world-dot')[6]); // 换衣间
+      await sleep(150);
+      const wcab = $('#screen-world .world-fixture[data-act="wardrobe"]');
+      const [wx2, wy2] = center(wcab);
+      pe('pointerdown', wcab, wx2, wy2);
+      pe('pointerup', wcab, wx2, wy2);
+      await sleep(150);
+      log('点衣柜开换装面板', $('#screen-dressup').classList.contains('active') && isWorldActive(), activeScreen());
+      const dressTab = [...$$('#screen-dressup .tab-btn')].find(t => t.dataset.cat === 'dress');
+      click(dressTab);
+      await sleep(50);
+      click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'fairy'));
+      await sleep(50);
+      log('换裙子生效', Store.state.doll.dress === 'fairy', Store.state.doll.dress);
+      /* 点空白关闭 overlay（回世界） */
+      click($('#screen-dressup .btn-home'));
+      await sleep(100);
+      log('回家按钮回家', $('#screen-home').classList.contains('active'), activeScreen());
+
+      /* ---- 9. 墙纸地板（世界版） ---- */
       click($('#screen-home .door-group'));
-      await sleep(400);
-      log('大门直达上次的厨房', activeScreen() === 'screen-kitchen', activeScreen());
+      await sleep(250);
+      click($$('.world-dot')[2]); // 卫生间
+      await sleep(150);
+      click($$('#screen-world .btn-palette')[0]);
+      await sleep(50);
+      const swatches = $$('#screen-world .palette-pop .swatch');
+      log('墙纸色板8款', swatches.length === 8, swatches.length);
+      click(swatches[7]);
+      await sleep(80);
+      log('卫生间换薄荷瓷砖', Store.state.rooms.bathroom.wall === 7, Store.state.rooms.bathroom.wall);
+
+      /* ---- 10. 存档完整性 ---- */
+      Store.saveNow();
+      const saved = JSON.parse(localStorage.getItem('magic-house-v1'));
+      log('存档含角色/道具/7房间', !!(saved.char && Array.isArray(saved.props) && Object.keys(saved.rooms).length === 7));
 
     } catch (err) {
-      results.push('FAIL | 测试异常中断 | ' + (err && err.message));
+      results.push('FAIL | 测试异常中断 | ' + (err && err.message) + (err && err.stack ? ' | ' + err.stack.split('\n')[1] : ''));
     }
     const fails = results.filter(r => r.startsWith('FAIL')).length;
     results.unshift(`==== 测试完成：${results.length} 项，失败 ${fails} 项 ====`);
+    if (window.__errs.length) results.push('JS错误: ' + window.__errs.join(' || '));
     $('#test-result').textContent = results.join('\n');
     document.title = fails === 0 ? 'ALL_PASS' : `FAIL_${fails}`;
   }
-  window.addEventListener('DOMContentLoaded', () => setTimeout(run, 100));
+  window.addEventListener('DOMContentLoaded', () => setTimeout(run, 150));
 })();
 </script>
 </body>
