@@ -188,6 +188,9 @@
       renderDoll();
       renderDrawer();
       window.hintOnce('dressup', '点下面的衣服和裙子，给娃娃穿上吧');
+    },
+    onLeave() {
+      window.World && World.refreshCharacters();   // 换好的装同步到世界里的娃娃
     }
   };
 })();
