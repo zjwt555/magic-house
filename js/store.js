@@ -12,7 +12,10 @@
     living:   { wall: 4, floor: 5, items: [] },   // 客厅：蜜桃墙+蜂蜜黄
     kitchen:  { wall: 7, floor: 6, items: [] },   // 厨房：薄荷瓷砖+灰瓷砖
     study:    { wall: 4, floor: 0, items: [] },   // 书房：蜜桃墙+木地板
-    wardrobe: { wall: 5, floor: 1, items: [] }    // 换衣间：粉格棋盘+粉地毯
+    wardrobe: { wall: 5, floor: 1, items: [] },   // 换衣间：粉格棋盘+粉地毯
+    yard:     { wall: 1, floor: 3, items: [] },   // 院子：蓝天云朵+草地
+    park:     { wall: 1, floor: 7, items: [] },   // 公园：蓝天+石板路
+    shop:     { wall: 8, floor: 5, items: [] }    // 商店：糖果条纹+格子地板
   });
 
   /* 旧版屏幕 id → 世界房间 id（lastRoom 迁移用） */
