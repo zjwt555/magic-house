@@ -878,11 +878,12 @@ html, body {
   transition: transform .12s;
 }
 .world-fixture:active { transform: scale(1.05); }
+.world-fixture.open { filter: drop-shadow(0 0 10px rgba(160,225,250,.9)); }
 .world-fixture svg { display: block; width: 100%; height: 100%; pointer-events: none; }
 .world-fixture::after {
   content: '';
   position: absolute;
-  inset: -6px;
+  inset: -10px;
   border-radius: 18px;
   border: 3px dashed transparent;
   transition: border-color .25s;
