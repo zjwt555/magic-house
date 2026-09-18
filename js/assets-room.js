@@ -441,6 +441,33 @@
         <circle cx="58" cy="50" r="7" fill="#ffd166"/>
         <path d="M28,140 Q38,130 48,140 M56,146 Q66,136 76,146" stroke="#9cc9de" stroke-width="3.5" fill="none" stroke-linecap="round"/>
         <circle cx="38" cy="128" r="5" fill="#ff9eb5"/>
+      </svg>`,
+      svgOpen: `
+      <svg viewBox="0 0 150 210" xmlns="http://www.w3.org/2000/svg">
+        <!-- 打开的左门 -->
+        <path d="M30,24 L10,34 L10,86 L30,96 Z" fill="#a8d0e0" stroke="#9cc9de" stroke-width="3"/>
+        <rect x="14" y="48" width="12" height="5" rx="2.5" fill="#7ea9be"/>
+        <!-- 冰箱体：敞开露出食材 -->
+        <rect x="30" y="8" width="95" height="194" rx="14" fill="#bfe0f0"/>
+        <rect x="38" y="16" width="79" height="76" rx="9" fill="#f2fbff"/>
+        <rect x="38" y="100" width="79" height="94" rx="9" fill="#f2fbff"/>
+        <rect x="42" y="46" width="71" height="6" rx="3" fill="#cfe6f2"/>
+        <rect x="42" y="70" width="71" height="6" rx="3" fill="#cfe6f2"/>
+        <!-- 冷藏室食材 -->
+        <g transform="translate(54,28)"><rect x="-7" y="-6" width="14" height="18" rx="3" fill="#fff"/><polygon points="-7,-6 0,-14 7,-6" fill="#9ad7f0"/></g>
+        <circle cx="80" cy="34" r="8" fill="#ff6b6b"/>
+        <g transform="translate(98,32)"><circle r="7" fill="#ffd166"/><circle cx="0" cy="-9" r="3" fill="#7ec088"/></g>
+        <circle cx="52" cy="60" r="5" fill="#9f7edb"/><circle cx="62" cy="63" r="5" fill="#9f7edb"/><circle cx="57" cy="70" r="5" fill="#9f7edb"/>
+        <ellipse cx="88" cy="62" rx="7" ry="9" fill="#fff8ee"/>
+        <g transform="translate(103,62)"><rect x="-6" y="-6" width="12" height="12" rx="2" fill="#8a5a3a"/></g>
+        <!-- 冷冻室：冰淇淋 -->
+        <g transform="translate(56,128)"><rect x="-4" y="0" width="8" height="22" rx="4" fill="#ff8f9e"/><circle cy="-4" r="6" fill="#ffb3c7"/></g>
+        <g transform="translate(76,126)"><rect x="-4" y="0" width="8" height="22" rx="4" fill="#7ec8e3"/><circle cy="-4" r="6" fill="#9ad7f0"/></g>
+        <g transform="translate(96,128)"><rect x="-4" y="0" width="8" height="22" rx="4" fill="#98d8a0"/><circle cy="-4" r="6" fill="#b8e6bd"/></g>
+        <!-- 冷气 -->
+        <circle cx="36" cy="12" r="5" fill="#fff" opacity=".8"/>
+        <circle cx="30" cy="26" r="4" fill="#fff" opacity=".6"/>
+        <circle cx="34" cy="40" r="3" fill="#fff" opacity=".5"/>
       </svg>` },
     stove: { fixture: true, w: 0.14, fx: 0.42, act: 'pot', svg: `
       <svg viewBox="0 0 150 170" xmlns="http://www.w3.org/2000/svg">
@@ -449,11 +476,14 @@
         <circle cx="40" cy="95" r="5" fill="#7f8a93"/><circle cx="70" cy="95" r="5" fill="#7f8a93"/>
         <rect x="118" y="104" width="16" height="12" rx="3" fill="#ff8f7a"/>
         <rect x="118" y="124" width="16" height="12" rx="3" fill="#ffd166"/>
-        <path d="M46,86 L46,58 Q46,44 62,44 L88,44 Q104,44 104,58 L104,86" fill="#e05c86"/>
-        <ellipse cx="75" cy="86" rx="29" ry="8" fill="#c74a72"/>
-        <ellipse cx="75" cy="84" rx="22" ry="5" fill="#f2a94f"/>
-        <path d="M46,60 L34,52 M104,60 L116,52" stroke="#c74a72" stroke-width="7" stroke-linecap="round"/>
-        <path d="M64,36 Q66,26 60,18 M86,36 Q88,26 82,18" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".85"/>
+        <!-- 锅：口朝上坐在灶台上 -->
+        <path d="M48,90 L48,60 Q48,50 60,50 L90,50 Q102,50 102,60 L102,90 Z" fill="#e05c86"/>
+        <ellipse cx="75" cy="50" rx="28" ry="8" fill="#c74a72"/>
+        <ellipse cx="75" cy="48" rx="21" ry="5" fill="#f2a94f"/>
+        <path d="M64,48 Q75,52 86,48" stroke="#ffbe6b" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M48,62 L36,54 M102,62 L114,54" stroke="#c74a72" stroke-width="7" stroke-linecap="round"/>
+        <!-- 蒸汽从锅里往上冒 -->
+        <path d="M64,40 Q60,30 66,20 M76,38 Q72,28 78,16 M88,40 Q84,30 90,22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".9"/>
       </svg>` },
     wardrobecab: { fixture: true, w: 0.135, fx: 0.08, act: 'wardrobe', svg: `
       <svg viewBox="0 0 140 200" xmlns="http://www.w3.org/2000/svg">
@@ -697,7 +727,8 @@
   const FIXTURES = { kitchen: ['fridge', 'stove'], wardrobe: ['wardrobecab'] };
 
   /* 厨房冰箱里的食物（复用厨房素材库的食材 SVG） */
-  const FOODS = ['apple', 'strawberry', 'banana', 'grape', 'orange', 'watermelon', 'milk'];
+  const FOODS = ['apple', 'strawberry', 'banana', 'grape', 'orange', 'watermelon', 'milk',
+    'egg', 'tomato', 'carrot', 'chocolate', 'corn', 'pineapple', 'bread', 'peach'];
 
   /* 顺序即抽屉里的顺序（见 ROOM_SETS 各房间清单） */
   const ORDER = ROOM_SETS.bedroom;
