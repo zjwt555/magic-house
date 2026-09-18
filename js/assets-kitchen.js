@@ -131,6 +131,37 @@
         <rect x="18" y="22" width="44" height="40" rx="7" fill="#8a5a3a"/>
         ${[0, 1, 2].map(i => `<line x1="${18 + (i + 1) * 11}" y1="24" x2="${18 + (i + 1) * 11}" y2="60" stroke="#6f4630" stroke-width="3"/>`).join('')}
         <line x1="19" y1="42" x2="61" y2="42" stroke="#6f4630" stroke-width="3"/>
+      </svg>`,
+    corn: `
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="40" cy="38" rx="15" ry="26" fill="#ffd166"/>
+        ${[0, 1, 2, 3, 4].map(r => [0, 1, 2].map(c =>
+          `<rect x="${30 + c * 8}" y="${18 + r * 9}" width="5" height="5" rx="1.5" fill="#f2b730"/>`).join('')).join('')}
+        <path d="M28,54 Q22,64 30,72 M52,54 Q58,64 50,72" stroke="#7ec088" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M36,60 Q32,70 38,76 M44,60 Q48,70 42,76" stroke="#98d8a0" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M32,16 Q40,8 48,16" stroke="#7ec088" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </svg>`,
+    pineapple: `
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="40" cy="50" rx="20" ry="24" fill="#f2a94f"/>
+        ${[0, 1, 2, 3].map(i => `<path d="M22,${38 + i * 8} Q40,${44 + i * 8} 58,${38 + i * 8}" stroke="#d98c3a" stroke-width="2.6" fill="none"/>`).join('')}
+        ${[0, 1, 2].map(i => `<path d="M26,${34 + i * 10} Q40,${28 + i * 10} 54,${34 + i * 10}" stroke="#d98c3a" stroke-width="2.2" fill="none"/>`).join('')}
+        ${[[-14, -4], [0, -8], [14, -4]].map(([tx, ty]) =>
+          `<path d="M${40 + tx * 0.4},${28 + ty} Q${40 + tx},${28 + ty - 12} ${40 + tx * 0.9},${28 + ty - 16} Q${40 + tx * 0.3},${28 + ty - 8} ${40},${28 + ty}" fill="#6cc46a"/>`).join('')}
+      </svg>`,
+    bread: `
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14,34 Q14,20 40,20 Q66,20 66,34 L64,56 Q40,64 16,56 Z" fill="#e8a86b"/>
+        <path d="M16,40 Q28,34 40,40 M30,48 Q40,44 50,48" stroke="#d98c5a" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <ellipse cx="40" cy="24" rx="18" ry="5" fill="#f7cba0"/>
+      </svg>`,
+    peach: `
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="48" r="22" fill="#ffb3c7"/>
+        <path d="M40,28 Q34,42 40,68" stroke="#ff8faa" stroke-width="4" fill="none"/>
+        <circle cx="31" cy="42" r="7" fill="#ffd0dd" opacity=".8"/>
+        <line x1="40" y1="26" x2="40" y2="16" stroke="#8a5a3a" stroke-width="3.5" stroke-linecap="round"/>
+        <ellipse cx="49" cy="18" rx="10" ry="5" fill="#7ec088" transform="rotate(-22 49 18)"/>
       </svg>`
   };
 
@@ -216,6 +247,42 @@
           <ellipse cx="37" cy="-48" rx="7" ry="4" fill="#7ec088" transform="rotate(-30 37 -48)"/>
         </g>
         <g fill="#fff"><circle cx="60" cy="150" r="4"/><circle cx="262" cy="162" r="5"/><circle cx="246" cy="120" r="3.5"/></g>
+      </svg>`,
+    juice: `
+      <svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="160" cy="262" rx="80" ry="14" fill="rgba(120,90,60,.12)"/>
+        <path d="M110,80 L210,80 L196,240 Q160,254 124,240 Z" fill="rgba(223,243,255,.65)" stroke="#bfe0f5" stroke-width="6"/>
+        <path d="M118,120 L202,120 L194,236 Q160,248 126,236 Z" fill="#ffb347"/>
+        <ellipse cx="160" cy="118" rx="43" ry="10" fill="#ffd07a"/>
+        <ellipse cx="160" cy="118" rx="43" ry="10" fill="none" stroke="#f2a23e" stroke-width="3"/>
+        <circle cx="140" cy="160" r="5" fill="#ffd07a" opacity=".8"/>
+        <circle cx="176" cy="188" r="4" fill="#ffd07a" opacity=".8"/>
+        <circle cx="150" cy="205" r="4" fill="#ffd07a" opacity=".8"/>
+        <line x1="186" y1="104" x2="228" y2="30" stroke="#ff8f9e" stroke-width="10" stroke-linecap="round"/>
+        <line x1="186" y1="104" x2="228" y2="30" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="6 14"/>
+        <g transform="translate(110,78)">
+          <circle r="20" fill="#ff9f43"/>
+          <path d="M0,-20 A20,20 0 0 1 0,20 Z" fill="#ffbe6b"/>
+          <circle r="16" fill="none" stroke="#e8872e" stroke-width="2.5"/>
+          <line x1="0" y1="-16" x2="0" y2="16" stroke="#e8872e" stroke-width="2"/>
+        </g>
+        <g fill="#fff"><circle cx="236" cy="140" r="4"/><circle cx="90" cy="150" r="5"/><circle cx="250" cy="190" r="3.5"/></g>
+      </svg>`,
+    icecream: `
+      <svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="160" cy="262" rx="86" ry="14" fill="rgba(120,90,60,.12)"/>
+        <path d="M104,138 L216,138 L160,252 Z" fill="#e8a86b"/>
+        <path d="M118,160 L206,160 M124,184 L198,184 M132,208 L190,208" stroke="#d1924f" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="126" cy="112" r="32" fill="#ff9eb5"/>
+        <circle cx="194" cy="112" r="32" fill="#98d8a0"/>
+        <circle cx="160" cy="86" r="34" fill="#fff5e6"/>
+        <circle cx="116" cy="102" r="7" fill="#fff" opacity=".6"/>
+        <circle cx="184" cy="100" r="7" fill="#fff" opacity=".6"/>
+        <line x1="160" y1="52" x2="160" y2="38" stroke="#5a9e56" stroke-width="3.5"/>
+        <circle cx="160" cy="32" r="10" fill="#e05555"/>
+        <circle cx="156" cy="28" r="3" fill="#fff" opacity=".7"/>
+        ${[[126, 100], [140, 118], [160, 74], [178, 96], [196, 118], [150, 100]].map(([x, y], i) =>
+          `<rect x="${x}" y="${y}" width="4" height="9" rx="2" fill="${['#7ecbff', '#ffd166', '#b79ced'][i % 3]}" transform="rotate(${i * 50} ${x} ${y})"/>`).join('')}
       </svg>`
   };
 
@@ -251,6 +318,25 @@
           <rect x="-1.5" y="-26" width="3" height="12" rx="1.5" fill="#e05c86"/>
           <ellipse cy="-29" rx="4" ry="5.5" fill="#ffd34d"/>
         </g>
+      </svg>`,
+    juice: `
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M38,34 L82,34 L74,94 Q60,100 46,94 Z" fill="rgba(223,243,255,.7)" stroke="#bfe0f5" stroke-width="4"/>
+        <path d="M42,48 L78,48 L72,92 Q60,97 48,92 Z" fill="#ffb347"/>
+        <ellipse cx="60" cy="47" rx="19" ry="5" fill="#ffd07a"/>
+        <line x1="74" y1="40" x2="92" y2="12" stroke="#ff8f9e" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="38" cy="32" r="9" fill="#ff9f43"/>
+        <path d="M38,24 A9,9 0 0 1 38,40 Z" fill="#ffbe6b"/>
+      </svg>`,
+    icecream: `
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M36,54 L84,54 L60,104 Z" fill="#e8a86b"/>
+        <path d="M42,66 L78,66 M46,78 L74,78" stroke="#d1924f" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="47" cy="44" r="14" fill="#ff9eb5"/>
+        <circle cx="73" cy="44" r="14" fill="#98d8a0"/>
+        <circle cx="60" cy="32" r="15" fill="#fff5e6"/>
+        <circle cx="60" cy="14" r="5" fill="#e05555"/>
+        <line x1="60" y1="17" x2="60" y2="12" stroke="#5a9e56" stroke-width="2.5"/>
       </svg>`
   };
 
@@ -270,6 +356,16 @@
       id: 'cake', name: '小蛋糕', container: 'bowl', dish: 'cake',
       ingredients: ['flour', 'egg', 'milk', 'sugar', 'butter', 'chocolate', 'strawberry'],
       praise: '小蛋糕烤好啦！'
+    },
+    {
+      id: 'juice', name: '鲜榨果汁', container: 'bowl', dish: 'juice',
+      ingredients: ['orange', 'apple', 'strawberry', 'grape', 'carrot', 'honey', 'peach'],
+      praise: '鲜榨果汁做好啦！'
+    },
+    {
+      id: 'icecream', name: '冰淇淋', container: 'bowl', dish: 'icecream',
+      ingredients: ['milk', 'sugar', 'strawberry', 'chocolate', 'banana', 'peach', 'corn'],
+      praise: '冰淇淋做好啦，凉丝丝！'
     }
   ];
 
