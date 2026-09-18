@@ -87,6 +87,7 @@
       f.style.left = (def.fx * 100) + '%';
       f.style.width = (def.w * 100) + '%';
       if (vb) f.style.aspectRatio = vb[1] + ' / ' + vb[2];
+      f.style.zIndex = 250;
       f.innerHTML = def.svg;
       layer.appendChild(f);
     });
@@ -355,13 +356,42 @@
     return { idx: Math.min(R().WORLD_ROOMS.length - 1, Math.max(0, Math.floor(wx / roomW))), wx };
   }
 
+  /* ---------- 固定装置互动（冰箱/灶台/衣柜），带 click 兜底 ---------- */
+  let lastFixAt = 0;
+
+  function activateFixture(node) {
+    const act = node.dataset.act;
+    Sound.pop();
+    if (act === 'wardrobe') { Sound.chime(); window.showScreen('dressup'); }
+    else if (act === 'pot') { Sound.chime(); window.showScreen('kitchen'); }
+    else if (act === 'fridge') {
+      foodDrawer = !foodDrawer;
+      /* 开门视觉：关门图 ↔ 开门图 */
+      const def = R().ITEMS.fridge;
+      if (def.svgOpen) {
+        node.innerHTML = foodDrawer ? def.svgOpen : def.svg;
+        const vb = (foodDrawer ? def.svgOpen : def.svg).match(/viewBox="0 0 ([\d.]+) ([\d.]+)/);
+        if (vb) node.style.aspectRatio = vb[1] + ' / ' + vb[2];
+        node.classList.toggle('open', foodDrawer);
+      }
+      renderToolbar();
+      Sound.praise(foodDrawer ? '冰箱开门啦，想吃点什么？' : '把冰箱关好啦');
+    }
+  }
+
   function onDown(e) {
     if (drag) { el.dataset.branch = 'blocked'; return; }
+    const fixNode = e.target.closest('.world-fixture');
     const charNode = e.target.closest('.world-char');
     const itemNode = e.target.closest('.room-item');
     const propNode = e.target.closest('.world-prop');
-    const fixNode = e.target.closest('.world-fixture');
     el.dataset.branch = charNode ? 'char' : propNode ? 'prop' : itemNode ? 'item' : fixNode ? 'fix' : 'pan';
+
+    if (fixNode) {
+      lastFixAt = Date.now();
+      activateFixture(fixNode);
+      return;
+    }
 
     if (charNode) {
       const who = charNode.id === 'char-girl' ? 'girl' : 'cat';
@@ -399,17 +429,6 @@
         moved: false, lastX: e.clientX, lastY: e.clientY
       };
       itemNode.classList.add('dragging');
-    } else if (fixNode) {
-      const act = fixNode.dataset.act;
-      Sound.pop();
-      if (act === 'wardrobe') { Sound.chime(); window.showScreen('dressup'); }
-      else if (act === 'pot') { Sound.chime(); window.showScreen('kitchen'); }
-      else if (act === 'fridge') {
-        foodDrawer = !foodDrawer;
-        renderToolbar();
-        Sound.praise(foodDrawer ? '冰箱里有水果和牛奶哦' : '想拿什么，再点一下冰箱');
-      }
-      return;
     } else {
       /* 空白处：拖动 = 平移相机；轻点地板 = 走路 */
       drag = { kind: 'pan', startX: e.clientX, moved: false, lastX: e.clientX, startCam: cam, startY: e.clientY };
@@ -718,6 +737,12 @@
       window.addEventListener('pointercancel', onUp);
       stage.style.touchAction = 'none';
       window.addEventListener('resize', measure);
+
+      /* click 兜底：个别环境下 pointerdown 被吞掉时仍能开冰箱/灶台/衣柜 */
+      stage.addEventListener('click', e => {
+        const fixNode = e.target.closest('.world-fixture');
+        if (fixNode && Date.now() - lastFixAt > 600) activateFixture(fixNode);
+      });
 
       /* 调色板 / 收起模式 */
       el.querySelectorAll('.btn-palette').forEach(b =>
