@@ -87,7 +87,7 @@
         <circle cx="33" cy="33" r="4" fill="#ffd34d"/>
         <path d="M10,6 L38,6" stroke="#c98443" stroke-width="3" stroke-linecap="round"/>
       </svg>` },
-    room: { label: '卧室', svg: `
+    bedroom: { label: '卧室', svg: `
       <svg viewBox="0 0 48 48">
         <rect x="8" y="22" width="8" height="18" rx="3" fill="#2f7fa3"/>
         <rect x="8" y="32" width="32" height="10" rx="4" fill="#4aa3c9"/>
@@ -132,9 +132,36 @@
         <line x1="24" y1="12" x2="24" y2="38" stroke="#d98cb0" stroke-width="2.5"/>
         <path d="M14 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#e05c86" transform="translate(2,2)"/>
         <path d="M28 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#7ec8e3" transform="translate(2,2)"/>
+      </svg>` },
+    yard: { label: '院子', svg: `
+      <svg viewBox="0 0 48 48">
+        <circle cx="24" cy="18" r="14" fill="#6cc46a"/>
+        <circle cx="12" cy="24" r="9" fill="#7ed47b"/>
+        <circle cx="36" cy="24" r="9" fill="#7ed47b"/>
+        <rect x="21" y="28" width="6" height="14" rx="2.5" fill="#a9784a"/>
+        <circle cx="17" cy="14" r="3" fill="#ff6b6b"/>
+        <circle cx="30" cy="20" r="3" fill="#ff6b6b"/>
+        <path d="M6 42 Q24 36 42 42" stroke="#5a9e56" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      </svg>` },
+    park: { label: '公园', svg: `
+      <svg viewBox="0 0 48 48">
+        <ellipse cx="24" cy="36" rx="18" ry="7" fill="#9ad7f0"/>
+        <rect x="21" y="18" width="6" height="14" rx="2.5" fill="#e8e2d8"/>
+        <ellipse cx="24" cy="17" rx="10" ry="4" fill="#9ad7f0"/>
+        <path d="M24 15 Q24 7 18 4 M24 15 Q24 7 30 4 M24 15 Q24 5 24 1" stroke="#7ec8e3" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="18" cy="4" r="2.5" fill="#bfe6ff"/><circle cx="30" cy="4" r="2.5" fill="#bfe6ff"/>
+      </svg>` },
+    shop: { label: '商店', svg: `
+      <svg viewBox="0 0 48 48">
+        <path d="M8 16 L8 10 Q24 4 40 10 L40 16 Z" fill="#ff9eb5"/>
+        ${[0, 1, 2].map(i => `<rect x="${11 + i * 10}" y="${8 - (i % 2)}" width="8" height="8" rx="2" fill="#fff" opacity=".9"/>`).join('')}
+        <rect x="10" y="20" width="28" height="20" rx="3" fill="#fff6e8"/>
+        <rect x="14" y="24" width="7" height="10" rx="2" fill="#ff8f9e"/>
+        <rect x="24" y="24" width="7" height="10" rx="2" fill="#7ec8e3"/>
+        <circle cx="36" cy="29" r="4" fill="#ffd166"/>
       </svg>` }
   };
-  const PICK_ORDER = ['balcony', 'room', 'bathroom', 'living', 'kitchen', 'study', 'dressup'];
+  const PICK_ORDER = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'dressup', 'yard', 'park', 'shop'];
 
   let roomPickerEl = null;
 
@@ -156,10 +183,9 @@
         if (pick) {
           Sound.door();
           roomPickerEl.classList.add('hidden');
-          const target = pick.dataset.room === 'room' ? 'room' : pick.dataset.room;
           /* 从 overlay 跳房间：先回世界再平移相机 */
           showScreen('world');
-          window.World.jumpTo(target);
+          window.World.jumpTo(pick.dataset.room);
         }
       });
       document.getElementById('app').appendChild(roomPickerEl);
@@ -190,7 +216,7 @@
       <div class="help-card">
         <h3>📖 给家长的小指南</h3>
         <ul>
-          <li>🏠 <b>大世界</b>：进门后是 7 间房的横向大房子，<b>手指左右拖动</b>看世界；点左上角小门按钮可直达任意房间</li>
+          <li>🏠 <b>大世界</b>：进门后是 10 个场景的横向大世界（房子 7 间房 + <b>院子、公园、商店</b>三个室外），<b>手指左右拖动</b>看世界；点左上角小门按钮可直达任意场景</li>
           <li>🚶 <b>娃娃会走路</b>：点一下地板娃娃就走过去；<b>按住娃娃/小猫</b>可以拎到任何房间</li>
           <li>👗 <b>换装</b>：去换衣间点<b>大衣柜</b>，点分类标签再点衣服即可穿上</li>
           <li>🛏️ <b>布置房间</b>：点下方家具放进房间，按住拖动换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
@@ -385,8 +411,13 @@
     register('dressup', window.DressUp);
     register('kitchen', window.Kitchen);
     currentId = 'home';
-    // 调试/测试直达：?screen=world|dressup|kitchen
+    // 调试/测试直达：?screen=world|dressup|kitchen，?room=yard|park|shop|...
     const m = location.search.match(/[?&]screen=(\w+)/);
     if (m && screens[m[1]]) showScreen(m[1]);
+    const rm = location.search.match(/[?&]room=(\w+)/);
+    if (rm && window.World) {
+      if (currentId !== 'world') showScreen('world');
+      window.World.jumpTo(rm[1]);
+    }
   });
 })();
