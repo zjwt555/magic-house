@@ -1,5 +1,5 @@
 /* ============ 魔法小屋 Service Worker：离线可玩 ============ */
-const VERSION = 'magic-house-v0.3.0';
+const VERSION = 'magic-house-v0.4.0';
 const CORE = [
   './',
   './index.html',
@@ -11,7 +11,7 @@ const CORE = [
   './js/assets-room.js',
   './js/assets-kitchen.js',
   './js/dressup.js',
-  './js/room.js',
+  './js/world.js',
   './js/kitchen.js',
   './js/main.js',
   './icons/icon-192.png',
