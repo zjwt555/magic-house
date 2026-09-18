@@ -471,11 +471,208 @@
           <path d="M0,-18 L5,-6 L18,-5 L8,4 L11,17 L0,10 L-11,17 L-8,4 L-18,-5 L-5,-6 Z" fill="#ffd34d"/>
         </g>
         <rect x="8" y="0" width="124" height="14" rx="7" fill="#d98cb0"/>
+      </svg>` },
+    /* ---- 院子专属 ---- */
+    swing: { w: 0.155, act: 'swing', svg: `
+      <svg viewBox="0 0 170 200" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="30" x2="12" y2="192" stroke="#c98443" stroke-width="10" stroke-linecap="round"/>
+        <line x1="140" y1="30" x2="158" y2="192" stroke="#c98443" stroke-width="10" stroke-linecap="round"/>
+        <line x1="30" y1="30" x2="52" y2="192" stroke="#b07838" stroke-width="9" stroke-linecap="round"/>
+        <line x1="140" y1="30" x2="118" y2="192" stroke="#b07838" stroke-width="9" stroke-linecap="round"/>
+        <rect x="18" y="22" width="134" height="12" rx="6" fill="#c98443"/>
+        <line x1="66" y1="34" x2="66" y2="116" stroke="#b0a08a" stroke-width="4.5"/>
+        <line x1="104" y1="34" x2="104" y2="116" stroke="#b0a08a" stroke-width="4.5"/>
+        <rect x="54" y="112" width="62" height="14" rx="7" fill="#ff9eb5"/>
+        <rect x="54" y="112" width="62" height="6" rx="3" fill="#ffc2d3"/>
+      </svg>` },
+    sandbox: { w: 0.165, flat: true, svg: `
+      <svg viewBox="0 0 175 95" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="18" width="155" height="60" rx="10" fill="#d98c5a"/>
+        <rect x="20" y="26" width="135" height="44" rx="7" fill="#f2d9a0"/>
+        <rect x="10" y="8" width="12" height="22" rx="5" fill="#c47a44"/>
+        <rect x="153" y="8" width="12" height="22" rx="5" fill="#c47a44"/>
+        <rect x="10" y="64" width="12" height="22" rx="5" fill="#c47a44"/>
+        <rect x="153" y="64" width="12" height="22" rx="5" fill="#c47a44"/>
+        ${[[45, 45], [75, 55], [105, 42], [130, 55], [60, 62]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.2" fill="#d9b87a"/>`).join('')}
+        <path d="M36,38 L52,38 L49,52 Q44,56 39,52 Z" fill="#ff8f7a"/>
+        <rect x="42" y="30" width="4" height="9" rx="2" fill="#ff6b6b"/>
+        <line x1="112" y1="62" x2="122" y2="42" stroke="#7ec8e3" stroke-width="5" stroke-linecap="round"/>
+        <path d="M118,44 L130,46 L122,54 Z" fill="#9ad7f0"/>
+      </svg>` },
+    tent: { w: 0.145, svg: `
+      <svg viewBox="0 0 160 155" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="15,145 80,18 145,145" fill="#7ec8e3"/>
+        <polygon points="38,145 80,72 122,145" fill="#5aa8cc"/>
+        <polygon points="60,145 80,100 100,145" fill="#4f9cc0"/>
+        <line x1="80" y1="18" x2="80" y2="2" stroke="#c98443" stroke-width="4"/>
+        <path d="M80,4 L102,10 L84,18 Z" fill="#ff6b6b"/>
+        <ellipse cx="80" cy="147" rx="66" ry="6" fill="rgba(90,140,90,.25)"/>
+      </svg>` },
+    fence: { w: 0.2, svg: `
+      <svg viewBox="0 0 210 115" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="38" width="198" height="12" rx="6" fill="#fff0e0"/>
+        <rect x="6" y="66" width="198" height="12" rx="6" fill="#fff0e0"/>
+        ${[20, 60, 100, 140, 180].map(x => `
+          <path d="M${x - 11},88 L${x - 11},30 Q${x - 11},14 ${x},10 Q${x + 11},14 ${x + 11},30 L${x + 11},88 Z" fill="#fff8f0" stroke="#ecd9c3" stroke-width="2"/>`).join('')}
+        <g transform="translate(60,34)">
+          <circle r="6" fill="#ff9eb5"/><circle cy="-7" r="4" fill="#ff9eb5"/><circle cx="7" r="4" fill="#ff9eb5"/><circle cx="-7" r="4" fill="#ff9eb5"/><circle r="2.5" fill="#ffd34d"/>
+        </g>
+        <g transform="translate(150,32)">
+          <circle r="5.5" fill="#b79ced"/><circle cy="-6.5" r="3.8" fill="#b79ced"/><circle cx="6.5" r="3.8" fill="#b79ced"/><circle cx="-6.5" r="3.8" fill="#b79ced"/><circle r="2.2" fill="#ffd34d"/>
+        </g>
+      </svg>` },
+    mailbox: { w: 0.075, svg: `
+      <svg viewBox="0 0 80 150" xmlns="http://www.w3.org/2000/svg">
+        <line x1="40" y1="60" x2="40" y2="140" stroke="#c98443" stroke-width="9" stroke-linecap="round"/>
+        <path d="M12,58 L12,30 Q12,16 26,16 L62,16 L62,58 Q40,66 12,58 Z" fill="#7ec8e3"/>
+        <rect x="56" y="26" width="12" height="22" rx="4" fill="#5aa8cc"/>
+        <circle cx="62" cy="37" r="2.5" fill="#fff"/>
+        <line x1="18" y1="14" x2="18" y2="2" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="18" cy="2" r="4" fill="#ff6b6b"/>
+        <path d="M20,46 Q34,52 46,46" stroke="#5aa8cc" stroke-width="3" fill="none"/>
+      </svg>` },
+    /* ---- 公园专属 ---- */
+    slide: { w: 0.17, svg: `
+      <svg viewBox="0 0 180 195" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="40" x2="30" y2="184" stroke="#c98443" stroke-width="9" stroke-linecap="round"/>
+        <line x1="58" y1="40" x2="58" y2="184" stroke="#c98443" stroke-width="9" stroke-linecap="round"/>
+        ${[64, 92, 120, 148, 176].map(y => `<line x1="30" y1="${y - 18}" x2="58" y2="${y - 18}" stroke="#b07838" stroke-width="6" stroke-linecap="round"/>`).join('')}
+        <rect x="24" y="30" width="70" height="12" rx="6" fill="#ff9eb5"/>
+        <path d="M88,36 L162,168 Q168,182 154,182 L142,182 Q150,170 96,44 Z" fill="#ffd166"/>
+        <path d="M88,46 L148,166 L136,166 L84,50 Z" fill="#ffe9a8"/>
+        <rect x="88" y="34" width="10" height="10" rx="4" fill="#e0a92c"/>
+        <line x1="60" y1="40" x2="88" y2="40" stroke="#ff9eb5" stroke-width="10" stroke-linecap="round"/>
+      </svg>` },
+    pond: { w: 0.2, flat: true, svg: `
+      <svg viewBox="0 0 210 105" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="105" cy="54" rx="98" ry="46" fill="#c9c2b8"/>
+        <ellipse cx="105" cy="52" rx="86" ry="38" fill="#9ad7f0"/>
+        <ellipse cx="105" cy="52" rx="86" ry="38" fill="none" stroke="#7ec8e3" stroke-width="4"/>
+        <ellipse cx="80" cy="44" rx="16" ry="8" fill="#6cc46a"/>
+        <ellipse cx="126" cy="62" rx="13" ry="6.5" fill="#7ed47b"/>
+        <g transform="translate(126,44)">
+          ${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-6" rx="3" ry="5.5" fill="#ff9eb5" transform="rotate(${a})"/>`).join('')}
+          <circle r="2.8" fill="#ffd34d"/>
+        </g>
+        ${[[50, 30], [160, 34], [66, 70], [148, 72]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="#b8b0a4"/>`).join('')}
+        <path d="M92,56 q4,3 8,0 M96,50 q4,3 8,0" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".7"/>
+      </svg>` },
+    bench: { w: 0.13, svg: `
+      <svg viewBox="0 0 140 125" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="18" width="120" height="12" rx="6" fill="#98d8a0"/>
+        <rect x="10" y="38" width="120" height="12" rx="6" fill="#98d8a0"/>
+        <rect x="8" y="58" width="124" height="16" rx="8" fill="#7ec088"/>
+        <line x1="22" y1="30" x2="22" y2="112" stroke="#5a6b7a" stroke-width="8" stroke-linecap="round"/>
+        <line x1="118" y1="30" x2="118" y2="112" stroke="#5a6b7a" stroke-width="8" stroke-linecap="round"/>
+        <line x1="22" y1="66" x2="22" y2="112" stroke="#5a6b7a" stroke-width="8" stroke-linecap="round"/>
+        <line x1="118" y1="66" x2="118" y2="112" stroke="#5a6b7a" stroke-width="8" stroke-linecap="round"/>
+      </svg>` },
+    bigtree: { w: 0.17, svg: `
+      <svg viewBox="0 0 180 215" xmlns="http://www.w3.org/2000/svg">
+        <path d="M82,210 L84,130 Q85,120 78,112 M98,210 L96,130 Q95,120 104,110" stroke="#a9784a" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <path d="M90,130 Q70,110 52,104 M90,124 Q110,102 128,100" stroke="#a9784a" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <circle cx="90" cy="72" r="52" fill="#6cc46a"/>
+        <circle cx="46" cy="96" r="34" fill="#7ed47b"/>
+        <circle cx="136" cy="92" r="34" fill="#7ed47b"/>
+        <circle cx="64" cy="44" r="28" fill="#8fe08a"/>
+        <circle cx="118" cy="42" r="26" fill="#8fe08a"/>
+        ${[[70, 60], [104, 78], [88, 38], [124, 56]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="6" fill="#ff6b6b"/><circle cx="${x - 2}" cy="${y - 2}" r="2" fill="#fff" opacity=".6"/>`).join('')}
+      </svg>` },
+    fountain: { w: 0.14, act: 'fountain', svg: `
+      <svg viewBox="0 0 150 175" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="75" cy="150" rx="66" ry="20" fill="#c9c2b8"/>
+        <ellipse cx="75" cy="146" rx="56" ry="15" fill="#9ad7f0"/>
+        <rect x="66" y="80" width="18" height="66" rx="8" fill="#e8e2d8"/>
+        <ellipse cx="75" cy="82" rx="38" ry="11" fill="#e8e2d8"/>
+        <ellipse cx="75" cy="79" rx="30" ry="8" fill="#9ad7f0"/>
+        <ellipse cx="75" cy="52" rx="12" ry="4.5" fill="#e8e2d8"/>
+        <path d="M75,50 Q75,30 62,22 M75,50 Q75,30 88,22 M75,50 Q75,26 75,16" stroke="#7ec8e3" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <circle cx="62" cy="20" r="4" fill="#bfe6ff"/><circle cx="88" cy="20" r="4" fill="#bfe6ff"/><circle cx="75" cy="14" r="4" fill="#bfe6ff"/>
+        ${[[40, 140], [110, 138], [56, 150], [96, 150]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#b8b0a4"/>`).join('')}
+      </svg>` },
+    picnicmat: { w: 0.135, flat: true, svg: `
+      <svg viewBox="0 0 145 75" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="8" width="133" height="60" rx="10" fill="#ff8f8f"/>
+        ${[0, 1, 2, 3, 4].map(c => [0, 1, 2].map(r => {
+          const x = 12 + c * 26 + (r % 2) * 13, y = 13 + r * 18;
+          return (x + 22 < 136) ? `<rect x="${x}" y="${y}" width="22" height="16" rx="4" fill="rgba(255,255,255,.55)"/>` : '';
+        }).join('')).join('')}
+        <g transform="translate(112,14)">
+          <path d="M-12,10 L12,10 L9,22 Q0,26 -9,22 Z" fill="#d98c5a"/>
+          <path d="M-12,10 Q0,-4 12,10" stroke="#c47a44" stroke-width="4" fill="none"/>
+        </g>
+      </svg>` },
+    /* ---- 商店专属 ---- */
+    shopshelf: { w: 0.16, svg: `
+      <svg viewBox="0 0 170 205" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="8" width="150" height="190" rx="12" fill="#d98c5a"/>
+        <rect x="20" y="18" width="130" height="170" rx="6" fill="#fff6e8"/>
+        ${[0, 1, 2].map(r => `
+          <rect x="20" y="${78 + r * 56 - 8}" width="130" height="8" fill="#c47a44"/>
+          <g>
+            <rect x="28" y="${70 + r * 56 - 14}" width="16" height="14" rx="3" fill="#ff8f9e"/>
+            <rect x="48" y="${70 + r * 56 - 17}" width="14" height="17" rx="3" fill="#7ec8e3"/>
+            <path d="M68,${70 + r * 56} L68,${70 + r * 56 - 20} L80,${70 + r * 56 - 20} L80,${70 + r * 56} Z" fill="#ffd166"/>
+            <circle cx="98" cy="${70 + r * 56 - 8}" r="8" fill="#98d8a0"/>
+            <rect x="114" y="${70 + r * 56 - 13}" width="18" height="13" rx="3" fill="#b79ced"/>
+            <circle cx="140" cy="${70 + r * 56 - 9}" r="6.5" fill="#ff9f43"/>
+          </g>`).join('')}
+      </svg>` },
+    counter: { w: 0.175, act: 'register', svg: `
+      <svg viewBox="0 0 185 155" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="62" width="169" height="66" rx="12" fill="#ff9eb5"/>
+        <rect x="8" y="62" width="169" height="16" rx="8" fill="#e05c86"/>
+        <rect x="20" y="96" width="60" height="22" rx="6" fill="#ffd0dd"/>
+        <rect x="8" y="126" width="12" height="20" rx="5" fill="#e05c86"/>
+        <rect x="165" y="126" width="12" height="20" rx="5" fill="#e05c86"/>
+        <g transform="translate(128,40)">
+          <rect x="-24" y="0" width="48" height="26" rx="6" fill="#7a6355"/>
+          <rect x="-18" y="-14" width="36" height="16" rx="4" fill="#9ad7f0"/>
+          <rect x="-6" y="-24" width="12" height="12" rx="3" fill="#5a6b7a"/>
+          <rect x="-14" y="6" width="8" height="6" rx="2" fill="#ffd34d"/>
+          <rect x="-2" y="6" width="8" height="6" rx="2" fill="#ffd34d"/>
+          <rect x="10" y="6" width="8" height="6" rx="2" fill="#ffd34d"/>
+        </g>
+        <circle cx="42" cy="52" r="9" fill="#ff6b6b"/>
+        <circle cx="62" cy="50" r="8" fill="#ffd166"/>
+      </svg>` },
+    freezer: { w: 0.115, act: 'freezer', svg: `
+      <svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="34" width="104" height="88" rx="12" fill="#bfe0f0"/>
+        <rect x="16" y="42" width="88" height="72" rx="8" fill="#eaf8ff"/>
+        <rect x="16" y="42" width="88" height="72" rx="8" fill="none" stroke="#9cc9de" stroke-width="3"/>
+        <g transform="translate(38,66)">
+          <rect x="-5" y="0" width="10" height="26" rx="5" fill="#ff8f9e"/>
+          <circle cy="-6" r="7" fill="#ffb3c7"/>
+        </g>
+        <g transform="translate(60,60)">
+          <rect x="-5" y="6" width="10" height="26" rx="5" fill="#7ec8e3"/>
+          <circle cy="0" r="7" fill="#9ad7f0"/>
+        </g>
+        <g transform="translate(82,66)">
+          <rect x="-5" y="0" width="10" height="26" rx="5" fill="#98d8a0"/>
+          <circle cy="-6" r="7" fill="#b8e6bd"/>
+        </g>
+        <path d="M20,20 L100,20" stroke="#9cc9de" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="60" cy="20" r="8" fill="#7ea9be"/>
+      </svg>` },
+    toypile: { w: 0.12, svg: `
+      <svg viewBox="0 0 130 105" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="34" cy="58" r="24" fill="#ff8f9e"/>
+        <path d="M14,50 A24,24 0 0 1 54,42" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="58" cy="40" r="14" fill="#7ec8e3"/>
+        <path d="M50,32 A14,14 0 0 1 66,28" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <rect x="76" y="46" width="22" height="22" rx="4" fill="#ffd166"/>
+        <text x="87" y="62" text-anchor="middle" font-size="14" font-weight="800" fill="#e0a92c">A</text>
+        <rect x="98" y="52" width="20" height="20" rx="4" fill="#98d8a0"/>
+        <text x="108" y="67" text-anchor="middle" font-size="13" font-weight="800" fill="#5a9e56">B</text>
+        <ellipse cx="24" cy="84" rx="16" ry="6" fill="rgba(90,140,90,.3)"/>
+        <ellipse cx="66" cy="88" rx="26" ry="6" fill="rgba(90,140,90,.3)"/>
       </svg>` }
   };
 
-  /* 世界房间顺序（横向大房子从左到右） */
-  const WORLD_ROOMS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe'];
+  /* 世界房间顺序（横向大房子从左到右，最右是室外） */
+  const WORLD_ROOMS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe', 'yard', 'park', 'shop'];
 
   /* 各房间的家具清单顺序 */
   const ROOM_SETS = {
@@ -488,7 +685,12 @@
       'st_star', 'st_flower', 'st_butterfly'],
     kitchen: ['dining', 'table', 'plant', 'clock', 'st_flower', 'st_star'],
     study: ['desk', 'globe', 'bookshelf', 'armchair', 'lamp', 'plant', 'frame', 'clock', 'st_star', 'st_flower'],
-    wardrobe: ['rug', 'piano', 'lamp', 'plant', 'teddy', 'frame', 'clock', 'st_star', 'st_flower', 'st_butterfly']
+    wardrobe: ['rug', 'piano', 'lamp', 'plant', 'teddy', 'frame', 'clock', 'st_star', 'st_flower', 'st_butterfly'],
+    yard: ['swing', 'sandbox', 'tent', 'fence', 'mailbox', 'bigtree', 'plant', 'catbed',
+      'st_flower', 'st_butterfly', 'st_duck', 'st_star'],
+    park: ['slide', 'fountain', 'pond', 'bench', 'bigtree', 'tent', 'picnicmat', 'swing', 'mailbox',
+      'st_butterfly', 'st_flower', 'st_star'],
+    shop: ['shopshelf', 'counter', 'freezer', 'toypile', 'rug', 'fence', 'st_star', 'st_flower']
   };
 
   /* 固定装置归属（渲染在房间背景层，不可拖不可收） */
@@ -509,7 +711,8 @@
     { bg: 'linear-gradient(#fff2e3,#ffe3c7)' },                                                      // 蜜桃渐变
     { bg: 'repeating-linear-gradient(0deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),repeating-linear-gradient(90deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),#ffd9ea' }, // 粉格棋盘
     { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#d8ecf5 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#d8ecf5 34px 38px)', bgColor: '#f4fbff' }, // 白瓷砖
-    { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#a8d8d0 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#a8d8d0 34px 38px)', bgColor: '#e4f5f2' }  // 薄荷瓷砖
+    { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#a8d8d0 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#a8d8d0 34px 38px)', bgColor: '#e4f5f2' }, // 薄荷瓷砖
+    { bg: 'repeating-linear-gradient(90deg,#fff0f6 0 28px,#ffd9ea 28px 56px),radial-gradient(circle at 50% 40%,#fff 6px,transparent 7px)', bgSize: '56px 72px' } // 糖果条纹+圆点
   ];
 
   const FLOORS = [
@@ -520,7 +723,8 @@
     { bg: 'radial-gradient(circle,#fff 4px,transparent 5px)', bgColor: '#ded0f2', bgSize: '34px 34px' },     // 紫星星
     { bg: 'repeating-linear-gradient(-45deg,#f2d9a0 0 22px,#e8c983 22px 44px)' },                     // 蜂蜜黄
     { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#b8ccd8 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#b8ccd8 34px 38px)', bgColor: '#e8eff4' }, // 灰瓷砖
-    { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#a3c8dd 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#a3c8dd 34px 38px)', bgColor: '#d9ecf5' }  // 蓝瓷砖
+    { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#a3c8dd 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#a3c8dd 34px 38px)', bgColor: '#d9ecf5' },  // 蓝瓷砖
+    { bg: 'repeating-linear-gradient(0deg,transparent 0 32px,#c9c2b8 32px 36px),repeating-linear-gradient(90deg,transparent 0 32px,#c9c2b8 32px 36px)', bgColor: '#e8e2d8' }  // 石板路
   ];
 
   function applyBg(elm, def) {
