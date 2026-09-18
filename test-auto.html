@@ -175,8 +175,9 @@
       pe('pointerdown', fridge, fx, fy);
       pe('pointerup', fridge, fx, fy);
       await sleep(80);
-      log('点冰箱出食物抽屉', $$('#screen-world .item-card[data-food]').length === 7,
+      log('点冰箱出食物抽屉', $$('#screen-world .item-card[data-food]').length === 15,
         $$('#screen-world .item-card[data-food]').length);
+      log('冰箱开门视觉', fridge.classList.contains('open'));
       click($$('#screen-world .item-card[data-food]')[0]); // 苹果
       await sleep(150);
       log('取出食物道具', Store.state.props.length === 1, Store.state.props.length);
@@ -226,7 +227,9 @@
       log('点灶台开做饭面板', $('#screen-kitchen').classList.contains('active') && isWorldActive(),
         activeScreen());
       const recipeCards = $$('#screen-kitchen .recipe-card');
-      log('三张食谱卡', recipeCards.length === 3, recipeCards.length);
+      log('五张食谱卡', recipeCards.length === 5, recipeCards.length);
+      log('含果汁/冰淇淋食谱', ['juice', 'icecream'].every(id =>
+        [...recipeCards].some(c => c.dataset.recipe === id)));
       click([...recipeCards].find(c => c.dataset.recipe === 'salad'));
       await sleep(80);
       const ingCards = $$('#screen-kitchen .item-drawer .item-card');
