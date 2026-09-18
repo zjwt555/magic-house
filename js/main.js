@@ -2,26 +2,46 @@
 (function () {
   'use strict';
 
-  /* ---------- 屏幕管理 ---------- */
+  /* ---------- 屏幕管理（world 常驻 + overlay 悬浮） ---------- */
   const screens = {};   // id -> { el, module }
   let currentId = null;
-  const ROOM_SCREEN_IDS = ['room', 'living', 'bathroom', 'kitchen', 'dressup'];
+  const OVERLAYS = ['dressup', 'kitchen'];   // 悬浮在世界之上的面板
 
   function showScreen(id) {
-    if (currentId === id) return;
-    const prev = currentId ? screens[currentId] : null;
+    if (currentId === id && id !== 'home') return;
     const next = screens[id];
     if (!next) return;
-    if (prev && prev.module && prev.module.onLeave) prev.module.onLeave();
-    prev && prev.el.classList.remove('active');
-    next.el.classList.add('active');
-    currentId = id;
-    if (ROOM_SCREEN_IDS.includes(id) && Store.state.lastRoom !== id) {
-      Store.state.lastRoom = id;   // 记住上次玩的房间
-      Store.save();
+    const prev = currentId ? screens[currentId] : null;
+
+    if (OVERLAYS.includes(id)) {
+      /* overlay：world 保持激活，面板盖在上面 */
+      if (prev && prev.module && prev.module.onLeave && currentId !== 'world') prev.module.onLeave();
+      OVERLAYS.forEach(o => screens[o] && screens[o].el.classList.remove('active'));
+      next.el.classList.add('active');
+      currentId = id;
+    } else {
+      /* home / world：收掉所有 overlay */
+      OVERLAYS.forEach(o => {
+        const s = screens[o];
+        if (s && s.el.classList.contains('active')) {
+          s.el.classList.remove('active');
+          if (s.module && s.module.onLeave) s.module.onLeave();
+        }
+      });
+      if (prev && prev.el !== next.el) {
+        prev.el.classList.remove('active');
+        if (prev.module && prev.module.onLeave) prev.module.onLeave();
+      }
+      next.el.classList.add('active');
+      currentId = id;
+      if (id === 'world') {
+        Store.state.lastRoom = window.World.currentRoomId;
+        Store.save();
+      }
     }
     if (next.module && next.module.onEnter) next.module.onEnter();
   }
+  window.showScreen = showScreen;
 
   function register(id, module) {
     const el = document.getElementById('screen-' + id);
@@ -56,14 +76,31 @@
     if (btn) { Sound.door(); showScreen('home'); }
   });
 
-  /* ---------- 房间切换弹出条（折叠式，全局一份） ---------- */
+  /* ---------- 房间跳转弹出条（7 间房，点选后相机直达） ---------- */
   const ROOM_ICONS = {
+    balcony: { label: '阳台', svg: `
+      <svg viewBox="0 0 48 48">
+        <rect x="6" y="10" width="36" height="30" rx="4" fill="#dff3ff" stroke="#9ad7f0" stroke-width="2.5"/>
+        <line x1="24" y1="10" x2="24" y2="40" stroke="#9ad7f0" stroke-width="2.5"/>
+        <line x1="6" y1="25" x2="42" y2="25" stroke="#9ad7f0" stroke-width="2.5"/>
+        <circle cx="15" cy="18" r="4" fill="#ff9eb5"/>
+        <circle cx="33" cy="33" r="4" fill="#ffd34d"/>
+        <path d="M10,6 L38,6" stroke="#c98443" stroke-width="3" stroke-linecap="round"/>
+      </svg>` },
     room: { label: '卧室', svg: `
       <svg viewBox="0 0 48 48">
         <rect x="8" y="22" width="8" height="18" rx="3" fill="#2f7fa3"/>
         <rect x="8" y="32" width="32" height="10" rx="4" fill="#4aa3c9"/>
         <rect x="30" y="26" width="8" height="16" rx="3" fill="#2f7fa3"/>
         <rect x="12" y="28" width="11" height="6" rx="3" fill="#fff"/>
+      </svg>` },
+    bathroom: { label: '卫生间', svg: `
+      <svg viewBox="0 0 48 48">
+        <path d="M8 22h32l-3 14q-13 4-26 0z" fill="#fdfdff" stroke="#b8ccd8" stroke-width="2.4"/>
+        <rect x="6" y="19" width="36" height="6" rx="3" fill="#b8ccd8"/>
+        <circle cx="16" cy="16" r="4.5" fill="#fff" opacity=".95"/>
+        <circle cx="25" cy="13" r="3.5" fill="#fff" opacity=".95"/>
+        <g transform="translate(33,12)"><circle r="4" fill="#ffd34d"/><polygon points="3,0 7,1 3.5,3" fill="#ff9f43"/></g>
       </svg>` },
     living: { label: '客厅', svg: `
       <svg viewBox="0 0 48 48">
@@ -80,20 +117,24 @@
         <circle cx="24" cy="13" r="3" fill="#fff"/>
         <path d="M18 8q-2-4 0-7 M30 8q2-4 0-7" stroke="#bde0f5" stroke-width="2.4" fill="none" stroke-linecap="round"/>
       </svg>` },
-    bathroom: { label: '卫生间', svg: `
+    study: { label: '书房', svg: `
       <svg viewBox="0 0 48 48">
-        <path d="M8 22h32l-3 14q-13 4-26 0z" fill="#fdfdff" stroke="#b8ccd8" stroke-width="2.4"/>
-        <rect x="6" y="19" width="36" height="6" rx="3" fill="#b8ccd8"/>
-        <circle cx="16" cy="16" r="4.5" fill="#fff" opacity=".95"/>
-        <circle cx="25" cy="13" r="3.5" fill="#fff" opacity=".95"/>
-        <g transform="translate(33,12)"><circle r="4" fill="#ffd34d"/><polygon points="3,0 7,1 3.5,3" fill="#ff9f43"/></g>
+        <rect x="6" y="26" width="36" height="5" rx="2.5" fill="#d98c5a"/>
+        <rect x="10" y="31" width="5" height="11" rx="2" fill="#c47a44"/>
+        <rect x="33" y="31" width="5" height="11" rx="2" fill="#c47a44"/>
+        <rect x="14" y="12" width="20" height="14" rx="2" fill="#4a4a55"/>
+        <rect x="17" y="15" width="14" height="8" rx="1.5" fill="#9ad7f0"/>
+        <circle cx="38" cy="16" r="4.5" fill="#98d8a0"/>
       </svg>` },
     dressup: { label: '换衣间', svg: `
       <svg viewBox="0 0 48 48">
-        <path d="M17 8 L14 16 L9 28 Q24 34 39 28 L34 16 L31 8 Q24 13 17 8 Z" fill="#e05c86"/>
-        <circle cx="24" cy="20" r="3" fill="#ffd0e0"/>
+        <rect x="8" y="10" width="32" height="30" rx="4" fill="#e8a3bd"/>
+        <line x1="24" y1="12" x2="24" y2="38" stroke="#d98cb0" stroke-width="2.5"/>
+        <path d="M14 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#e05c86" transform="translate(2,2)"/>
+        <path d="M28 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#7ec8e3" transform="translate(2,2)"/>
       </svg>` }
   };
+  const PICK_ORDER = ['balcony', 'room', 'bathroom', 'living', 'kitchen', 'study', 'dressup'];
 
   let roomPickerEl = null;
 
@@ -102,8 +143,8 @@
       roomPickerEl = document.createElement('div');
       roomPickerEl.className = 'room-picker hidden';
       roomPickerEl.innerHTML = `<div class="room-picker-row">${
-        Object.keys(ROOM_ICONS).map(id => `
-          <button class="room-pick${id === currentId ? ' active' : ''}" data-room="${id}">
+        PICK_ORDER.map(id => `
+          <button class="room-pick" data-room="${id}">
             ${ROOM_ICONS[id].svg}<span>${ROOM_ICONS[id].label}</span>
           </button>`).join('')
       }<button class="room-pick-close" aria-label="关闭">✕</button></div>`;
@@ -112,10 +153,13 @@
         const close = e.target.closest('.room-pick-close');
         if (close) { Sound.pop(); roomPickerEl.classList.add('hidden'); return; }
         const pick = e.target.closest('.room-pick');
-        if (pick && pick.dataset.room !== currentId) {
+        if (pick) {
           Sound.door();
           roomPickerEl.classList.add('hidden');
-          showScreen(pick.dataset.room);
+          const target = pick.dataset.room === 'room' ? 'room' : pick.dataset.room;
+          /* 从 overlay 跳房间：先回世界再平移相机 */
+          showScreen('world');
+          window.World.jumpTo(target);
         }
       });
       document.getElementById('app').appendChild(roomPickerEl);
@@ -123,11 +167,6 @@
     if (forceClose) {
       roomPickerEl.classList.add('hidden');
     } else {
-      const opening = roomPickerEl.classList.contains('hidden');
-      if (opening) {
-        roomPickerEl.querySelectorAll('.room-pick').forEach(p =>
-          p.classList.toggle('active', p.dataset.room === currentId));
-      }
       roomPickerEl.classList.toggle('hidden');
       Sound.pop();
     }
@@ -151,9 +190,11 @@
       <div class="help-card">
         <h3>📖 给家长的小指南</h3>
         <ul>
-          <li>🚪 <b>换房间</b>：点左上角的小门按钮，可以在卧室 / 客厅 / 厨房 / 卫生间 / 换衣间之间切换</li>
-          <li>👗 <b>换装</b>：点下方分类标签（发型/发色/裙子/鞋子/配饰/小猫），再点物品即可穿上</li>
-          <li>🛏️ <b>布置房间</b>：点下方家具放进房间；<b>按住家具拖动</b>可以换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
+          <li>🏠 <b>大世界</b>：进门后是 7 间房的横向大房子，<b>手指左右拖动</b>看世界；点左上角小门按钮可直达任意房间</li>
+          <li>🚶 <b>娃娃会走路</b>：点一下地板娃娃就走过去；<b>按住娃娃/小猫</b>可以拎到任何房间</li>
+          <li>👗 <b>换装</b>：去换衣间点<b>大衣柜</b>，点分类标签再点衣服即可穿上</li>
+          <li>🛏️ <b>布置房间</b>：点下方家具放进房间，按住拖动换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
+          <li>🍎 <b>喂食</b>：去厨房点<b>冰箱</b>拿水果牛奶，拖到娃娃或小猫嘴边就吃掉；点<b>灶台</b>还能做饭</li>
           <li>🗑 <b>收走家具</b>：① 把家具<b>拖到屏幕下方的收纳筐</b>；② 或点左下角垃圾桶按钮，再点要收走的家具</li>
           <li>🍳 <b>做饭</b>：选菜谱 → 点食材放进锅 → 手指在锅里<b>画圈搅拌</b> → 点魔法按钮 → 喂给娃娃或小猫</li>
           <li>💾 装扮和房间<b>自动保存</b>，下次打开还是原样</li>
@@ -327,10 +368,7 @@
         door.addEventListener('click', e => {
           Sound.door();
           FX.sparkles(el, e.clientX, e.clientY, 10);
-          const target = door.getAttribute('data-target') === 'lastRoom'
-            ? (Store.state.lastRoom || 'bedroom')
-            : door.getAttribute('data-target');
-          setTimeout(() => showScreen(target), 260);
+          setTimeout(() => showScreen('world'), 260);
         });
       });
     },
@@ -343,13 +381,11 @@
   window.addEventListener('DOMContentLoaded', () => {
     Store.load();
     register('home', Home);
+    register('world', window.World);
     register('dressup', window.DressUp);
-    register('room', window.Room);
-    register('living', window.LivingRoom);
-    register('bathroom', window.Bathroom);
     register('kitchen', window.Kitchen);
     currentId = 'home';
-    // 调试/测试直达：?screen=room|living|bathroom|dressup|kitchen
+    // 调试/测试直达：?screen=world|dressup|kitchen
     const m = location.search.match(/[?&]screen=(\w+)/);
     if (m && screens[m[1]]) showScreen(m[1]);
   });
