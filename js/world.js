@@ -169,7 +169,14 @@
 
   function renderProps(roomId) { renderRoom(roomId); }
 
+  /* 食物道具上限：超过就收走最早的一个，免得一直点冰箱把场景和存档撑爆 */
+  const MAX_PROPS = 30;
+
   function spawnFood(id) {
+    if (Store.state.props.length >= MAX_PROPS) {
+      const oldest = Store.state.props.shift();
+      if (oldest) renderRoom(oldest.room);
+    }
     const p = {
       uid: 'p' + (propUid++) + '_' + Date.now() % 100000,
       id, room: roomAt(cam),
@@ -279,7 +286,10 @@
 
   function removeItem(node) {
     const roomId = node.dataset.room;
-    const idx = +node.dataset.i;
+    const items = roomState(roomId).items;
+    /* 用对象引用定位而不是渲染时下标：清理模式下连点两件家具时，两个延时器
+       都持旧下标会删错项（数组已 splice 过，下标全偏了） */
+    const it = items[+node.dataset.i];
     const rect = node.getBoundingClientRect();
     FX.poof(el, rect.left + rect.width / 2, rect.top + rect.height / 2);
     Sound.poof();
@@ -287,8 +297,8 @@
     node.style.transform += ' scale(0)';
     node.style.opacity = '0';
     setTimeout(() => {
-      const items = roomState(roomId).items;
-      items.splice(idx, 1);
+      const i = it ? items.indexOf(it) : -1;
+      if (i >= 0) items.splice(i, 1);
       Store.save();
       renderRoom(roomId);
     }, 260);
@@ -399,15 +409,13 @@
       charNode.classList.add('lifted');
     } else if (propNode) {
       const uid = propNode.dataset.uid;
-      let p = Store.state.props.find(q => q.uid === uid);
+      const p = Store.state.props.find(q => q.uid === uid);
       if (!p) {
-        /* 兜底：DOM 上有道具但 state 缺条目（异常场景），就地重建 */
-        p = {
-          uid: uid || 'x' + Date.now(),
-          id: propNode.dataset.food || 'apple',
-          room: roomAt(cam), x: 0.5, y: 0.8
-        };
-        Store.state.props.push(p);
+        /* 幽灵节点：DOM 里有但存档里没有（渲染与存档不同步）。
+           以前这里是"就地重建"一个条目，结果是道具越拖越多、uid 重复；
+           直接清掉节点更正确，也能自愈。 */
+        propNode.remove();
+        return;
       }
       drag = { kind: 'prop', node: propNode, p, origRoom: p.room, feedWho: null, startX: e.clientX, startY: e.clientY, moved: false, lastX: e.clientX, lastY: e.clientY };
       propNode.classList.add('lifted');
@@ -473,8 +481,8 @@
       node.style.transitionDuration = '0s';
       node.style.left = (idx * roomW + c.x * roomW) + 'px';
       node.style.top = (c.y * 100) + '%';
-      basket = el.querySelector('.drop-basket');
-      if (basket) basket.classList.toggle('show', c.y > 0.8);
+      /* 角色不能被收纳筐收走，拖角色时别亮筐（免得小朋友以为能丢进去） */
+      if (basket) basket.classList.remove('show', 'hover');
       return;
     }
 
@@ -486,13 +494,21 @@
       if (!drag.moved) return;
       drag.node.style.left = (e.clientX - 27) + 'px';
       drag.node.style.top = (e.clientY - 27) + 'px';
-      /* 持续检测是否悬在角色嘴边（松手即吃） */
+      const overBox = overBasket(e.clientX, e.clientY);
+      /* 食物也能拖进收纳筐收走：拖动时亮筐并高亮 */
+      if (basket) {
+        basket.classList.add('show');
+        basket.classList.toggle('hover', overBox);
+      }
+      /* 持续检测是否悬在角色嘴边（松手即吃）。注意这里**不能**因为"在筐上方"
+         就清掉 feedWho：拖拽轨迹经常擦过筐的判定区，会导致喂食时灵时不灵。
+         筐的优先级交给 onUp 的分支顺序处理（在筐上方 → 收走，否则 → 喂掉）。 */
       drag.feedWho = null;
       for (const who of ['girl', 'cat']) {
         if (canFeed(who, e.clientX, e.clientY)) { drag.feedWho = who; break; }
       }
       for (const who of ['girl', 'cat']) {
-        charEl(who).classList.toggle('feed-hint', drag.feedWho === who);
+        charEl(who).classList.toggle('feed-hint', drag.feedWho === who && !overBox);
       }
       return;
     }
@@ -503,8 +519,7 @@
       if (!drag.moved && (Math.abs(nx - drag.it.x) > 0.008 || Math.abs(ny - drag.it.y) > 0.008)) {
         drag.moved = true;
         Sound.pop();
-        basket = el.querySelector('.drop-basket');
-        basket && basket.classList.add('show');
+        if (basket) basket.classList.add('show');
       }
       if (!drag.moved) return;
       drag.it.x = Math.min(0.98, Math.max(0.02, nx));
@@ -529,8 +544,7 @@
     if (!drag) return;
     const d = drag;
     drag = null;
-    basket = el.querySelector('.drop-basket');
-    basket && basket.classList.remove('show', 'hover');
+    if (basket) basket.classList.remove('show', 'hover');
 
     if (d.kind === 'pan') {
       if (d.moved) {
@@ -579,7 +593,17 @@
     if (d.kind === 'prop') {
       el.querySelectorAll('.feed-hint').forEach(n => n.classList.remove('feed-hint'));
       el.dataset.upDbg = `moved=${d.moved} feedWho=${d.feedWho || 'none'} p=${!!d.p} girlTop=${Math.round(charEl('girl').getBoundingClientRect().top)} girlH=${Math.round(charEl('girl').getBoundingClientRect().height)} lastY=${Math.round(d.lastY)}`;
-      if (d.moved && d.feedWho) {
+      if (d.moved && overBasket(e.clientX, e.clientY)) {
+        /* 拖到收纳筐：收走这个食物（在这之前食物只能喂掉，没有任何清理手段） */
+        if (d.p) {
+          const i = Store.state.props.indexOf(d.p);
+          if (i >= 0) Store.state.props.splice(i, 1);
+          Store.save();
+        }
+        d.node.remove();
+        FX.poof(el, e.clientX, e.clientY);
+        Sound.poof();
+      } else if (d.moved && d.feedWho) {
         /* 松手即喂：move 过程中已确认悬在嘴边 */
         const i = Store.state.props.indexOf(d.p);
         if (i >= 0) Store.state.props.splice(i, 1);
@@ -713,6 +737,7 @@
 
       stage = el.querySelector('.world-stage');
       track = el.querySelector('.world-track');
+      basket = el.querySelector('.drop-basket');   // 缓存一次，拖动时不再每个 move 事件查 DOM
 
       /* 箭头 */
       el.querySelector('.world-arrow.left').addEventListener('click', () => {
@@ -799,6 +824,10 @@
       const foodId = Store.state.props[i].id;
       Store.state.props.splice(i, 1);
       Store.save();
+      /* 必须同时移除 DOM 节点，否则场景里会留下一个"幽灵食物"：
+         拖它时 onDown 在 state 里找不到该 uid，会兜底重建出一个重复道具 */
+      const node = track.querySelector('.world-prop[data-uid="' + uid + '"]');
+      if (node) node.remove();
       eat(who, foodId);
       return true;
     }
