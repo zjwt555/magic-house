@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { bumpSw } from './bump-sw.mjs';
 
 const TOKEN = process.env.GH_TOKEN;
 const REPO_FULL = 'zjwt555/magic-house';
@@ -29,13 +30,21 @@ async function api(method, p, body) {
 }
 const git = (...args) => execFileSync(GIT, args, { cwd: ROOT, encoding: 'utf8' }).trim();
 
+/* 先把 sw.js 版本按内容推进，否则 iPad 上已安装的老用户会一直吃旧缓存 */
+bumpSw();
+
 /* 1. 远端文件清单 */
 const treeRes = await api('GET', `/repos/${REPO_FULL}/git/trees/main?recursive=1`);
 if (treeRes.status !== 200) { console.error('取远端 tree 失败：', treeRes.data); process.exit(1); }
 const remote = new Map(treeRes.data.tree.filter(t => t.type === 'blob').map(t => [t.path, t.sha]));
 
-/* 2. 本地文件清单（git 跟踪的，已尊重 .gitignore） */
-const localPaths = git('ls-files').split('\n').filter(Boolean);
+/* 2. 本地文件清单（git 跟踪的 + 还没 git add 的新文件；两者都尊重 .gitignore）
+   只用 ls-files 会漏掉刚新增、尚未 add 的文件（如新增的 bump-sw.mjs），
+   症状是"跑了同步但新文件没上去"，还不报错 */
+const localPaths = [
+  ...git('ls-files').split('\n'),
+  ...git('ls-files', '--others', '--exclude-standard').split('\n')
+].filter(p => p && !p.endsWith('/'));
 const local = new Map();
 for (const p of localPaths) {
   local.set(p.replace(/\//g, '/'), git('hash-object', path.join(ROOT, p)));
