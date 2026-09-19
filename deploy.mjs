@@ -4,6 +4,7 @@
    做的事：建公开仓库 magic-house → 上传全部文件 → 开启 Pages → 轮询就绪 */
 import fs from 'node:fs';
 import path from 'node:path';
+import { bumpSw } from './bump-sw.mjs';
 
 const TOKEN = process.env.GH_TOKEN;
 const REPO = 'magic-house';
@@ -30,7 +31,11 @@ async function api(method, p, body) {
 
 /* 收集要上传的文件 */
 const ROOT = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
-const EXCLUDE = new Set(['.chrome-test', '.git', 'node_modules', '.zcode', 'deploy.mjs']);
+const EXCLUDE = new Set(['.chrome-test', '.git', 'node_modules', '.zcode', 'deploy.mjs', 'bump-sw.mjs']);
+
+/* 先把 sw.js 版本按内容推进，否则 iPad 上已安装的老用户会一直吃旧缓存 */
+bumpSw();
+
 const files = [];
 (function walk(dir) {
   for (const name of fs.readdirSync(dir)) {
