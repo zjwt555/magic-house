@@ -155,16 +155,16 @@
       click($$('.world-dot')[roomIdx(Store.state.char.girl.room)]);
       await sleep(200);
       const x0 = Store.state.char.girl.x;
+      const room0 = Store.state.char.girl.room;    // 走路前娃娃所在房间
+      const cam0 = window.World.currentRoomId;     // 走路前相机所在房间
       const tapX = x0 > 0.5 ? 0.18 : 0.82;
       pe('pointerdown', stage, sr2.left + sr2.width * tapX, sr2.top + sr2.height * 0.85);
       pe('pointerup', stage, sr2.left + sr2.width * tapX, sr2.top + sr2.height * 0.85);
       await sleep(120);
       log('点地板走路', Math.abs(Store.state.char.girl.x - x0) > 0.05,
         `${x0.toFixed(2)}→${Store.state.char.girl.x.toFixed(2)}`);
-      log('走路不换房间', Store.state.char.girl.room === Store.state.char.girl.room
-        && $$('.world-dot')[roomIdx(Store.state.char.girl.room)].classList.contains('active') === false
-        ? true : Store.state.char.girl.room === window.World.currentRoomId || true,
-        Store.state.char.girl.room);
+      log('走路不换房间', Store.state.char.girl.room === room0 && window.World.currentRoomId === cam0,
+        `前=${room0}/${cam0} 后=${Store.state.char.girl.room}/${window.World.currentRoomId}`);
 
       /* ---- 6. 冰箱取食 + 喂食 ---- */
       click($$('.world-dot')[4]); // 厨房
@@ -189,12 +189,16 @@
       pe('pointerup', girlNow, sr2.left + sr2.width * 0.4, sr2.top + sr2.height * 0.8);
       await sleep(100);
       log('娃娃在厨房', Store.state.char.girl.room === 'kitchen', Store.state.char.girl.room);
-      /* 拖苹果到娃娃嘴边（20 个采样点渐进，模拟真实手指） */
-      const propNode = $$('#screen-world .world-room[data-room="kitchen"] .world-prop')[0];
+      /* 拖苹果到娃娃嘴边（20 个采样点渐进，模拟真实手指）
+         只挑存档里真实存在的节点，避免拖到渲染残留的"幽灵道具" */
+      const liveUids = new Set(Store.state.props.map(p => p.uid));
+      const propNode = [...$$('#screen-world .world-room[data-room="kitchen"] .world-prop')]
+        .find(n => liveUids.has(n.dataset.uid));
       const girlRect = $('#char-girl').getBoundingClientRect();
       const mouthX = girlRect.left + girlRect.width / 2;
       const mouthY = girlRect.top + girlRect.height * 0.22;
       const [px0, py0] = center(propNode);
+      const propsBeforeFeed = Store.state.props.length;   // 喂食前的基数（应为 1）
       pe('pointerdown', propNode, px0, py0);
       for (let s = 1; s <= 20; s++) {
         const ix = px0 + (mouthX - px0) * s / 20;
@@ -203,20 +207,45 @@
       }
       pe('pointerup', propNode, mouthX, mouthY);
       await sleep(150);
-      /* headless 合成事件下拖拽喂食可能不触发；兜底走同一 eat 链路验证 */
-      const propsAfterDrag = Store.state.props.length;
-      if (propsAfterDrag > 0) {
+      /* 拖拽成功则道具已消失；headless 合成事件下可能不触发，再走同一 eat 链路兜底 */
+      let feedPath = 'drag';
+      let feedDbg = '';
+      let propsAfterFeed = Store.state.props.length;
+      if (propsAfterFeed > 0 && propsBeforeFeed > 0) {
         const uid = Store.state.props[0].uid;
-        window.World.debugFeed('girl', uid);
+        const ok = window.World.debugFeed('girl', uid);
+        feedDbg = ` debugFeed=${ok} uid=${uid}`;
         await sleep(100);
+        feedPath = 'debugFeed';
+        propsAfterFeed = Store.state.props.length;
       }
-      log('喂食链路(拖拽或debugFeed)', Store.state.props.length === propsAfterDrag - 1,
-        `吃前=${propsAfterDrag + 1} 吃后=${Store.state.props.length}`);
+      log('喂食链路(拖拽或debugFeed)', propsBeforeFeed > 0 && propsAfterFeed === propsBeforeFeed - 1,
+        `路径=${feedPath} 吃前=${propsBeforeFeed} 吃后=${propsAfterFeed}${feedDbg} props=${JSON.stringify(Store.state.props)}`);
       /* 食物放到地上（不喂） */
       click($$('#screen-world .item-card[data-food]')[6]); // 牛奶
       await sleep(200);
       const milkOk = Store.state.props.some(p => p.id === 'milk');
       log('食物放地上保留', milkOk, `props=${JSON.stringify(Store.state.props.map(p => p.id))}`);
+      /* 食物拖进收纳筐收走（此前食物只能喂掉，没有任何清理手段） */
+      const propsBeforeBox = Store.state.props.length;
+      const liveUids2 = new Set(Store.state.props.map(p => p.uid));
+      const milkNode = [...$$('#screen-world .world-prop')]
+        .find(n => liveUids2.has(n.dataset.uid) && n.dataset.food === 'milk');
+      const bkr = $('#screen-world .drop-basket').getBoundingClientRect();
+      const bcx = bkr.left + bkr.width / 2, bcy = bkr.top + bkr.height / 2;
+      if (milkNode) {
+        const [mx0, my0] = center(milkNode);
+        pe('pointerdown', milkNode, mx0, my0);
+        pe('pointermove', milkNode, mx0 + 30, my0 - 20);      // 先越过拖动阈值
+        pe('pointermove', milkNode, (mx0 + bcx) / 2, (my0 + bcy) / 2);
+        pe('pointermove', milkNode, bcx, bcy);                // 悬在收纳筐上
+        pe('pointerup', milkNode, bcx, bcy);
+        await sleep(150);
+      }
+      log('食物拖进收纳筐可收走',
+        !!milkNode && Store.state.props.length === propsBeforeBox - 1,
+        `牛奶节点=${!!milkNode} 收前=${propsBeforeBox} 收后=${Store.state.props.length}`
+        + ` props=${JSON.stringify(Store.state.props.map(p => p.id))} branch=${$('#screen-world').dataset.branch}`);
 
       /* ---- 7. 灶台→做饭 overlay ---- */
       const stove = $('#screen-world .world-fixture[data-act="pot"]');
@@ -252,6 +281,18 @@
       click($('#screen-kitchen .btn-feed')); // 喂娃娃 → 回世界
       await sleep(900);
       log('喂食后回世界', isWorldActive() && !$('#screen-kitchen').classList.contains('active'), activeScreen());
+      /* 做完饭离开后重进厨房：应回到食谱选择页，而不是残留的成品界面 */
+      const stove2 = $('#screen-world .world-fixture[data-act="pot"]');
+      const [sx2, sy2] = center(stove2);
+      pe('pointerdown', stove2, sx2, sy2);
+      pe('pointerup', stove2, sx2, sy2);
+      await sleep(150);
+      log('重进厨房回到食谱页',
+        !$('#screen-kitchen .recipe-stage').classList.contains('hidden')
+        && $('#screen-kitchen .dish-result').classList.contains('hidden'),
+        `食谱页=${!$('#screen-kitchen .recipe-stage').classList.contains('hidden')} 成品残留=${!$('#screen-kitchen .dish-result').classList.contains('hidden')}`);
+      window.showScreen('world');
+      await sleep(150);
 
       /* ---- 8. 衣柜→换装 overlay ---- */
       click($$('.world-dot')[6]); // 换衣间
