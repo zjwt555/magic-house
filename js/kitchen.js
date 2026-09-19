@@ -282,7 +282,7 @@
 
       /* 喂食 / 再做一次 */
       el.querySelectorAll('.btn-feed').forEach(b =>
-        b.addEventListener('click', () => feed(b.dataset.who === 'doll' ? 'girl' : b.dataset.who, b)));
+        b.addEventListener('click', () => feed(b.dataset.who, b)));
       el.querySelector('.dish-result .btn-home').addEventListener('click', e => {
         e.stopPropagation();
         Sound.pop();
@@ -292,6 +292,9 @@
       showRecipeSelect();
     },
     onEnter() {
+      /* 上次那盘菜已经做好了：重进时回到食谱选择页，别让小朋友看到残留的成品 */
+      const result = el.querySelector('.dish-result');
+      if (result && !result.classList.contains('hidden')) showRecipeSelect();
       window.hintOnce('kitchen', '想做什么菜呀？点一张卡片开始吧');
     },
     onLeave() { }
