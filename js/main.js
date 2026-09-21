@@ -357,6 +357,23 @@
     </g>
   </svg>`;
 
+  const RESET_ICON_SVG = `
+    <svg viewBox="0 0 36 36">
+      <path d="M29 18 a11 11 0 1 1 -3.3 -7.8" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <polygon points="21,5 32,9 25,17" fill="#fff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>`;
+  const RESET_CONFIRM_HTML = `
+    <div class="reset-confirm hidden">
+      <div class="reset-card">
+        <h3>🧹 全部还原？</h3>
+        <p>房间布置、娃娃装扮、玩具食物都会回到刚下载的样子。<br><b>这个操作不能撤销</b>，确认要做吗？</p>
+        <div class="reset-buttons">
+          <button class="reset-no">再想想</button>
+          <button class="reset-yes">确定还原</button>
+        </div>
+      </div>
+    </div>`;
+
   const Home = {
     init(el) {
       el.innerHTML = `
@@ -368,7 +385,10 @@
               <text x="18" y="26" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">?</text>
             </svg>
           </button>
-        </div>` + HOME_SVG + HELP_HTML;
+          <button class="btn-corner btn-reset" aria-label="全部还原">
+            ${RESET_ICON_SVG}
+          </button>
+        </div>` + HOME_SVG + HELP_HTML + RESET_CONFIRM_HTML;
 
       /* 声音开关 */
       const soundBtn = el.querySelector('.btn-sound');
@@ -396,6 +416,30 @@
           FX.sparkles(el, e.clientX, e.clientY, 10);
           setTimeout(() => showScreen('world'), 260);
         });
+      });
+
+      /* 全部还原（带二次确认，避免娃误点） */
+      const confirmEl = el.querySelector('.reset-confirm');
+      el.querySelector('.btn-reset').addEventListener('click', () => {
+        Sound.pop();
+        confirmEl.classList.remove('hidden');
+      });
+      const closeReset = () => { Sound.pop(); confirmEl.classList.add('hidden'); };
+      el.querySelector('.reset-no').addEventListener('click', closeReset);
+      el.querySelector('.reset-confirm').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeReset();
+      });
+      el.querySelector('.reset-yes').addEventListener('click', () => {
+        Store.reset();
+        /* 娃娃要"拎回"原位，否则重置后 state 在 living 但 DOM 节点还在原房间 */
+        if (window.World && window.World.refreshCharacters) {
+          window.World.refreshCharacters();
+          /* 重置后 lastRoom 回到 living，但相机此刻在 home 上 — 不必切；下次进世界才生效 */
+        }
+        Sound.fanfare();
+        Sound.praise('房间已经全部还原啦');
+        FX.confetti(el, 28);
+        closeReset();
       });
     },
     onEnter() {
