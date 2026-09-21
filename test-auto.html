@@ -81,6 +81,49 @@
       log('家长指南打开', !$('#screen-home .help-overlay').classList.contains('hidden'));
       click($('#screen-home .help-close'));
       await sleep(40);
+
+      /* 全部还原按钮 + 二次确认 */
+      const resetBtn = $('#screen-home .btn-reset');
+      log('主屏有还原按钮', !!resetBtn);
+      click(resetBtn);
+      await sleep(40);
+      log('还原二次确认弹出', !$('#screen-home .reset-confirm').classList.contains('hidden'));
+      /* 先准备一些"被还原会清掉"的状态：造一件家具 + 一个食物 + 改个娃娃 */
+      Store.state.rooms.living.items.push({ id: 'tv', x: 0.5, y: 0.7 });
+      Store.state.props.push({ uid: 'test-pre-reset', id: 'apple', room: 'living', x: 0.3, y: 0.8 });
+      Store.state.doll.dress = 'fairy';
+      Store.save();
+      click($('#screen-home .reset-yes'));
+      await sleep(80);
+      log('点确定后房间清空',
+        Store.state.rooms.living.items.length === 0
+        && Store.state.props.length === 0
+        && Store.state.doll.dress !== 'fairy',
+        `items=${Store.state.rooms.living.items.length} props=${Store.state.props.length} dress=${Store.state.doll.dress}`);
+      log('还原弹窗自动关闭', $('#screen-home .reset-confirm').classList.contains('hidden'));
+      /* 再试"再想想"路径 */
+      click($('#screen-home .btn-reset'));
+      await sleep(40);
+      click($('#screen-home .reset-no'));
+      await sleep(40);
+      log('再想想关闭弹窗', $('#screen-home .reset-confirm').classList.contains('hidden'));
+
+      /* TTS 防抖：连续两次同句 praise 只触发 1 次 speak */
+      const origSpeak = window.speechSynthesis && window.speechSynthesis.speak;
+      let speakCount = 0;
+      if (origSpeak) {
+        window.speechSynthesis.speak = function () { speakCount++; return origSpeak.apply(this, arguments); };
+      }
+      const before = speakCount;
+      Sound.praise('同句测一句话');          // 触发 1 次
+      Sound.praise('同句测一句话');          // 应当被 1.5s 防抖挡掉
+      Sound.praise('同句测一句话');          // 也挡掉
+      const sameTextCalls = speakCount - before;
+      Sound.praise('不同的句子');            // 通过防抖，触发 1 次
+      const newTextCalls = speakCount - before - sameTextCalls;
+      log('TTS 同句 1.5s 内只播 1 次', sameTextCalls === 1, `同句=${sameTextCalls}次 不同句=${newTextCalls}次`);
+      if (origSpeak) window.speechSynthesis.speak = origSpeak;
+
       click(doors[0]);
       await sleep(300);
       log('点大门进世界', isWorldActive(), activeScreen());
