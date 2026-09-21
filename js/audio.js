@@ -5,6 +5,13 @@
 
   let ctx = null;
   let unlocked = false;
+  /* 节流：所有短促音效（pop/chime/sparkle/thud/poof/stir/munch/squeak/blub/door）
+     50ms 内重复触发只算一次，避免娃在 iPad 上狂点叠成一长声 */
+  const PLAY_THROTTLE_MS = 50;
+  const lastPlayedAt = {};
+  /* TTS 防抖（仅限 praise） */
+  let lastPraiseAt = 0;
+  let lastPraiseText = '';
 
   function ensureCtx() {
     if (!window.AudioContext && !window.webkitAudioContext) return null;
@@ -67,37 +74,56 @@
 
   const muted = () => !!(window.Store && window.Store.state && Store.state.sound === false);
 
+  /* 节流助手：50ms 内同名音效只播一次。漏过 munch/fanfare 这种多帧音效，
+     因为它们本身就有内部错开；只对短促单帧音效生效。 */
+  function throttle(name, fn) {
+    const now = Date.now();
+    if (lastPlayedAt[name] && now - lastPlayedAt[name] < PLAY_THROTTLE_MS) return;
+    lastPlayedAt[name] = now;
+    return fn();
+  }
+
   const Sound = {
     /* 点击/拿起物品：轻快泡泡音 */
     pop() {
-      if (muted()) return;
-      tone(520, 0, 0.09, { type: 'sine', vol: 0.2, slide: 260 });
+      throttle('pop', () => {
+        if (muted()) return;
+        tone(520, 0, 0.09, { type: 'sine', vol: 0.2, slide: 260 });
+      });
     },
     /* 穿上衣服/选中：叮 */
     chime() {
-      if (muted()) return;
-      tone(N.E5, 0, 0.16, { type: 'triangle', vol: 0.22 });
-      tone(N.G5, 0.07, 0.22, { type: 'triangle', vol: 0.18 });
+      throttle('chime', () => {
+        if (muted()) return;
+        tone(N.E5, 0, 0.16, { type: 'triangle', vol: 0.22 });
+        tone(N.G5, 0.07, 0.22, { type: 'triangle', vol: 0.18 });
+      });
     },
     /* 闪光庆祝：上行琶音 */
     sparkle() {
-      if (muted()) return;
-      [N.C5, N.E5, N.G5, N.C6].forEach((f, i) =>
-        tone(f, i * 0.07, 0.18, { type: 'triangle', vol: 0.16 }));
+      throttle('sparkle', () => {
+        if (muted()) return;
+        [N.C5, N.E5, N.G5, N.C6].forEach((f, i) =>
+          tone(f, i * 0.07, 0.18, { type: 'triangle', vol: 0.16 }));
+      });
     },
     /* 放置家具：咚 */
     thud() {
-      if (muted()) return;
-      tone(180, 0, 0.12, { type: 'sine', vol: 0.25, slide: -60 });
-      noise(0, 0.05, 0.05);
+      throttle('thud', () => {
+        if (muted()) return;
+        tone(180, 0, 0.12, { type: 'sine', vol: 0.25, slide: -60 });
+        noise(0, 0.05, 0.05);
+      });
     },
     /* 收走物品：嗖+泡泡 */
     poof() {
-      if (muted()) return;
-      tone(700, 0, 0.14, { type: 'sine', vol: 0.15, slide: -420 });
-      noise(0, 0.1, 0.08);
+      throttle('poof', () => {
+        if (muted()) return;
+        tone(700, 0, 0.14, { type: 'sine', vol: 0.15, slide: -420 });
+        noise(0, 0.1, 0.08);
+      });
     },
-    /* 搅拌：咕嘟 */
+    /* 搅拌：咕嘟（多帧音效：靠 halfturn 节流即可，不进短节流） */
     stir() {
       if (muted()) return;
       tone(240 + Math.random() * 80, 0, 0.1, { type: 'sine', vol: 0.12, slide: 90 });
@@ -105,12 +131,14 @@
     },
     /* 吃东西：咀嚼 */
     munch() {
-      if (muted()) return;
-      noise(0, 0.09, 0.2);
-      noise(0.16, 0.09, 0.16);
-      tone(340, 0.3, 0.08, { type: 'sine', vol: 0.1 });
+      throttle('munch', () => {
+        if (muted()) return;
+        noise(0, 0.09, 0.2);
+        noise(0.16, 0.09, 0.16);
+        tone(340, 0.3, 0.08, { type: 'sine', vol: 0.1 });
+      });
     },
-    /* 大功告成：小号角旋律 */
+    /* 大功告成：小号角旋律（结尾长音不节流；玩家主动按魔法键时一次性播完） */
     fanfare() {
       if (muted()) return;
       const seq = [[N.C5, 0], [N.E5, 0.12], [N.G5, 0.24], [N.C6, 0.4]];
@@ -119,27 +147,39 @@
     },
     /* 门/切换：吱呀开门 */
     door() {
-      if (muted()) return;
-      tone(300, 0, 0.18, { type: 'sawtooth', vol: 0.06, slide: 160 });
-      tone(N.C5, 0.14, 0.2, { type: 'triangle', vol: 0.15 });
+      throttle('door', () => {
+        if (muted()) return;
+        tone(300, 0, 0.18, { type: 'sawtooth', vol: 0.06, slide: 160 });
+        tone(N.C5, 0.14, 0.2, { type: 'triangle', vol: 0.15 });
+      });
     },
     /* 小黄鸭：嘎嘎 */
     squeak() {
-      if (muted()) return;
-      tone(880, 0, 0.09, { type: 'square', vol: 0.08, slide: 340 });
-      tone(760, 0.12, 0.1, { type: 'square', vol: 0.08, slide: 300 });
+      throttle('squeak', () => {
+        if (muted()) return;
+        tone(880, 0, 0.09, { type: 'square', vol: 0.08, slide: 340 });
+        tone(760, 0.12, 0.1, { type: 'square', vol: 0.08, slide: 300 });
+      });
     },
     /* 水泡：咕噜 */
     blub() {
-      if (muted()) return;
-      tone(200, 0, 0.16, { type: 'sine', vol: 0.16, slide: 160 });
-      tone(260, 0.12, 0.16, { type: 'sine', vol: 0.14, slide: 180 });
+      throttle('blub', () => {
+        if (muted()) return;
+        tone(200, 0, 0.16, { type: 'sine', vol: 0.16, slide: 160 });
+        tone(260, 0.12, 0.16, { type: 'sine', vol: 0.14, slide: 180 });
+      });
     },
 
     /* 中文语音夸奖（TTS 可用才说，不可用静默） */
     praise(text) {
       try {
         if (!window.speechSynthesis || !Store.state.sound) return;
+        const now = Date.now();
+        /* 同一句 1.5s 内不重复：iOS speechSynthesis 启动延迟 200~500ms，
+           频繁 cancel 会让上一句只播一半就被打断 */
+        if (text === lastPraiseText && now - lastPraiseAt < 1500) return;
+        lastPraiseAt = now;
+        lastPraiseText = text;
         const u = new SpeechSynthesisUtterance(text);
         u.lang = 'zh-CN';
         u.rate = 0.95;
