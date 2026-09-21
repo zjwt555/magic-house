@@ -57,9 +57,11 @@ html, body {
   z-index: 5;
 }
 .home-scene {
-  width: min(94vw, calc(94vh * 1.35));
+  /* 横屏 iPad mini（1024×768 可视区约 980×700）容易贴上下边。
+     min(96vw, ...) 是稳的最宽比例；max-height: 90dvh 留状态栏/横条安全区。 */
+  width: min(96vw, calc(90dvh * 1.35));
   height: auto;
-  max-height: 88dvh;
+  max-height: 90dvh;
   display: block;
 }
 .home-scene .door-group {
@@ -703,6 +705,44 @@ html, body {
 .btn-corner svg { width: 32px; height: 32px; }
 .btn-corner.off { background: #b8bcc4; box-shadow: 0 4px 0 #8f949c; }
 .btn-corner.btn-help { background: #7ec8e3; box-shadow: 0 4px 0 #4f9cc0, 0 8px 16px rgba(60, 130, 170, .25); }
+.btn-corner.btn-reset { background: #ffb38a; box-shadow: 0 4px 0 #d97a52, 0 8px 16px rgba(180, 100, 60, .25); }
+
+/* ---------- 全部还原（家长救命按钮） ---------- */
+.reset-confirm {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(60, 30, 80, .35);
+  z-index: 200;
+}
+.reset-confirm.hidden { display: none; }
+.reset-card {
+  background: #fff8f3;
+  border-radius: 22px;
+  padding: 26px 30px;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(80, 40, 60, .35);
+  border: 3px solid #ffd0c2;
+}
+.reset-card h3 { font-size: 24px; color: #d97a52; margin: 0 0 12px; }
+.reset-card p { font-size: 16px; color: #5a3a2a; margin: 0 0 20px; line-height: 1.6; }
+.reset-card b { color: #d94a2a; }
+.reset-buttons { display: flex; gap: 12px; justify-content: center; }
+.reset-buttons button {
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+}
+.reset-no { background: #d8e8f0; color: #4a7a90; }
+.reset-yes { background: #ff8a6a; color: #fff; box-shadow: 0 4px 0 #d96a4a; }
+.reset-yes:active { transform: translateY(2px); box-shadow: 0 2px 0 #d96a4a; }
 
 /* ---------- 家长指南 ---------- */
 .help-overlay {
