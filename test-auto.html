@@ -216,10 +216,57 @@
         Store.state.char.girl.holding === null && Store.state.props.find(p => p.uid === 'hold-test-apple'),
         `holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.map(p => p.uid).join(',')}`);
 
-      /* 清理：把我加的 hold-test-* props 删掉，恢复 girl/cat 的 holding 为 null，
+      /* ---- v0.7.1：Phase 1.2 跨场景物品携带 ---- */
+      /* 给 girl 拿一个苹果（在 kitchen）。注意：这里直接设 holding，**不** push 到 props
+         —— 持有中的物品不在 state.props 里，只跟着角色。等点 girl 落地时才会进 props。 */
+      Store.state.char.girl.holding = { uid: 'hold-cross-1', id: 'apple' };
+      Store.state.char.girl.room = 'kitchen';
+      Store.state.char.girl.x = 0.5; Store.state.char.girl.y = 0.6;
+      Store.save();
+      window.World.renderRoom('kitchen');
+      window.World.refreshCharacters();
+      await sleep(60);
+      /* 把 girl 拖到 bedroom（placeChar 模拟跨房间拖动放下） */
+      window.World.placeChar('girl', 'bedroom', 0.5, 0.55);
+      window.World.renderRoom('bedroom');
+      window.World.refreshCharacters();
+      await sleep(80);
+      log('跨场景：物品跟着角色到新房间',
+        Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' &&
+        Store.state.char.girl.room === 'bedroom',
+        `room=${Store.state.char.girl.room} holding=${JSON.stringify(Store.state.char.girl.holding)}`);
+      log('跨场景：女孩 bedroom 时手里持有的苹果可见',
+        $('#char-girl .char-holding').classList.contains('hidden') === false &&
+        $('#char-girl .char-holding').innerHTML.length > 0,
+        `hidden=${$('#char-girl .char-holding').classList.contains('hidden')} html=${$('#char-girl .char-holding').innerHTML.length}b`);
+      log('跨场景：原房间没有苹果残留',
+        !Store.state.props.find(p => p.uid === 'hold-cross-1'),
+        `props=${Store.state.props.map(p => p.uid).join(',')}`);
+      /* 再跨场景到 park */
+      window.World.placeChar('girl', 'park', 0.4, 0.6);
+      window.World.renderRoom('park');
+      window.World.refreshCharacters();
+      await sleep(60);
+      log('二次跨场景：物品仍在手里',
+        Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' &&
+        Store.state.char.girl.room === 'park',
+        `room=${Store.state.char.girl.room} holding=${JSON.stringify(Store.state.char.girl.holding)}`);
+      /* 跳到 girl 所在房间把物品落回地板：物品应落在 park，不是 kitchen */
+      window.World.jumpTo('park');
+      await sleep(80);
+      const girlR4 = $('#char-girl').getBoundingClientRect();
+      pe('pointerdown', $('#char-girl'), girlR4.left + girlR4.width / 2, girlR4.top + girlR4.height * 0.6);
+      pe('pointerup', $('#char-girl'), girlR4.left + girlR4.width / 2, girlR4.top + girlR4.height * 0.6);
+      await sleep(80);
+      const droppedApple = Store.state.props.find(p => p.uid === 'hold-cross-1');
+      log('跨场景：物品落回当前房间（park）而非原房间',
+        Store.state.char.girl.holding === null && droppedApple && droppedApple.room === 'park',
+        `holding=${JSON.stringify(Store.state.char.girl.holding)} dropRoom=${droppedApple ? droppedApple.room : 'none'}`);
+
+      /* 清理：把我加的 hold-test-* / hold-cross-* props 删掉，恢复 girl/cat 的 holding 为 null，
          不影响后续单元测试对 props 数量的预期（不要污染 fridge/feed 测试）。
          同时把相机跳回 balcony，让后续箭头测试的起点符合预期 */
-      Store.state.props = Store.state.props.filter(p => !p.uid.startsWith('hold-test-'));
+      Store.state.props = Store.state.props.filter(p => !p.uid.startsWith('hold-'));
       Store.state.char.girl.holding = null;
       Store.state.char.cat.holding = null;
       Store.save();
