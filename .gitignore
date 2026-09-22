@@ -5,6 +5,7 @@ test-dom.txt
 _dom.txt
 _chrome-err.txt
 _*.txt
+_*.html
 node_modules/
 *.log
 .zcode/
