@@ -146,22 +146,23 @@
     return trimmed.replace(/<svg([^>]*)>/, '<svg$1 width="50" height="50" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">');
   }
 
-  /* 角色头顶 hitbox：覆盖角色上半身（顶 30%）+ 上方 60px 的"空中"区。
-     UX 上孩子拖到角色头上方即可触发；下方 70%（胸口以下）算嘴边/身体。 */
-  function charHeadHitbox(who) {
+  /* 角色手部 hitbox：覆盖角色右半 + 中段（高度 25%~80%）+ 周围一圈。
+     "手里拿"应该比"头顶放"更直观：孩子拖到角色身体右侧（手伸出的位置）即可触发。
+     同时也覆盖角色上方 60px 的空中区，方便孩子手抖也能拿到。 */
+  function charHoldHitbox(who) {
     const nr = charEl(who).getBoundingClientRect();
     const sr = stage.getBoundingClientRect();
     if (nr.left === 0 && nr.top === 0) return null;        // 角色不在可见区域
-    const padX = Math.max(20, nr.width * 0.25);
+    const padX = Math.max(30, nr.width * 0.35);
     return {
-      left: nr.left - padX,
+      left: nr.left + nr.width * 0.25,
       right: nr.right + padX,
-      top: Math.max(sr.top, nr.top - 60),
-      bottom: nr.top + nr.height * 0.30
+      top: Math.max(sr.top, nr.top + nr.height * 0.20),
+      bottom: nr.top + nr.height * 0.80
     };
   }
-  function overHead(who, px, py) {
-    const b = charHeadHitbox(who);
+  function overHold(who, px, py) {
+    const b = charHoldHitbox(who);
     return b && px >= b.left && px <= b.right && py >= b.top && py <= b.bottom;
   }
 
@@ -551,14 +552,14 @@
         basket.classList.toggle('hover', overBox);
       }
       /* 持续检测是否悬在角色头顶（松手即拿）或嘴边（松手即喂）。
-         头顶优先于嘴边 —— 拖到角色上方就锁定为头顶，松手时拿物品而非喂掉。
-         onUp 的优先级：筐 > 头顶 > 嘴边 > 地板 */
+         手部优先于嘴边 —— 拖到角色身体右侧（手伸出位置）就锁定为手部，
+         松手时把物品放到手里而非喂掉。onUp 的优先级：筐 > 手部 > 嘴边 > 地板 */
       drag.feedWho = null;
       drag.feedTarget = null;
       for (const who of ['girl', 'cat']) {
-        if (overHead(who, e.clientX, e.clientY)) {
+        if (overHold(who, e.clientX, e.clientY)) {
           drag.feedWho = who;
-          drag.feedTarget = 'head';
+          drag.feedTarget = 'hand';
           break;
         }
         if (canFeed(who, e.clientX, e.clientY)) {
@@ -569,7 +570,7 @@
       }
       for (const who of ['girl', 'cat']) {
         charEl(who).classList.toggle('feed-hint', drag.feedWho === who && drag.feedTarget === 'mouth' && !overBox);
-        charEl(who).classList.toggle('hold-hint', drag.feedWho === who && drag.feedTarget === 'head');
+        charEl(who).classList.toggle('hold-hint', drag.feedWho === who && drag.feedTarget === 'hand');
       }
       return;
     }
@@ -684,10 +685,10 @@
         FX.poof(el, e.clientX, e.clientY);
         Sound.poof();
       } else if (d.moved && d.feedWho && d.feedTarget === 'mouth') {
-        /* 优先检查头顶：松手时若悬在头顶 hitbox 上，落到角色头上；
-           没在头顶、且在嘴边时再喂。feedTarget 在 onMove 里设 */
-      } else if (d.moved && d.feedWho && d.feedTarget === 'head') {
-        /* 落到角色头顶：从 props 删，加入该角色的 holding */
+        /* 优先检查手部：松手时若悬在手部 hitbox 上，物品落到角色手里；
+           没在手里、且在嘴边时再喂。feedTarget 在 onMove 里设 */
+      } else if (d.moved && d.feedWho && d.feedTarget === 'hand') {
+        /* 落到角色手里：从 props 删，加入该角色的 holding */
         const who = d.feedWho;
         if (Store.state.char[who].holding) {
           /* 头顶已有东西，摇头拒绝 */
