@@ -787,6 +787,9 @@
   window.World = {
     init(root) {
       el = root;
+      /* v0.7：第一次进入世界时跑一次 ROOM_SETS 迁移，把不在新分配里的旧 item 清掉。
+         比如 wardrobe 不再有 piano，女儿摆的 piano 自动消失。幂等：旧存档没变化时无影响。 */
+      Store.migrateRoomSets();
       const N = R().WORLD_ROOMS.length;
       el.innerHTML = `
         <div class="game-top">${window.homeButtonHTML}${window.roomsButtonHTML}</div>
