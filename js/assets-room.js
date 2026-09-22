@@ -698,6 +698,99 @@
         <text x="108" y="67" text-anchor="middle" font-size="13" font-weight="800" fill="#5a9e56">B</text>
         <ellipse cx="24" cy="84" rx="16" ry="6" fill="rgba(90,140,90,.3)"/>
         <ellipse cx="66" cy="88" rx="26" ry="6" fill="rgba(90,140,90,.3)"/>
+      </svg>` },
+    /* ===== Phase 2 · 学校场景样品（中精致）=====
+       三件样品已入库但未注册到 WORLD_ROOMS，让老吴先用 visual-page 看效果再上。
+       风格：描边 + 多层高光 + 细节彩蛋 + 锐利几何。暖色调保持。 */
+    blackboard: { w: 0.22, svg: `
+      <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+        <!-- 木边框底（深棕描边） -->
+        <rect x="8" y="8" width="224" height="164" rx="6" fill="#8b6f47" stroke="#5a3f1f" stroke-width="2"/>
+        <!-- 木纹（几道浅色 line） -->
+        <line x1="12" y1="14" x2="20" y2="170" stroke="#a4845a" stroke-width="1" opacity=".7"/>
+        <line x1="228" y1="14" x2="220" y2="170" stroke="#a4845a" stroke-width="1" opacity=".7"/>
+        <line x1="10" y1="100" x2="230" y2="98" stroke="#6b4f2e" stroke-width="1" opacity=".5"/>
+        <!-- 内边框（板面与外框之间留一道阴影） -->
+        <rect x="20" y="20" width="200" height="120" rx="3" fill="#3a6a4d" stroke="#2a4f37" stroke-width="1.5"/>
+        <!-- 板面高光层（左上方模拟反光） -->
+        <ellipse cx="62" cy="40" rx="48" ry="14" fill="rgba(255,255,255,.14)"/>
+        <ellipse cx="180" cy="130" rx="60" ry="10" fill="rgba(0,0,0,.10)"/>
+        <!-- 粉笔字 "ABC"（白/黄/粉三色，歪歪扭扭手写感） -->
+        <text x="40" y="68" font-family="Comic Sans MS, cursive" font-size="34" font-weight="800" fill="#fff" opacity=".95">A</text>
+        <text x="84" y="74" font-family="Comic Sans MS, cursive" font-size="32" font-weight="800" fill="#ffd166">B</text>
+        <text x="128" y="68" font-family="Comic Sans MS, cursive" font-size="32" font-weight="800" fill="#ff9eb5">C</text>
+        <!-- 数学题 "1+1=?"（白粉笔） -->
+        <text x="40" y="118" font-family="Comic Sans MS, cursive" font-size="22" font-weight="700" fill="#fff" opacity=".85">1 + 1 = ?</text>
+        <!-- 磁铁字母（彩色小方块贴板面） -->
+        <rect x="174" y="36" width="22" height="22" rx="3" fill="#ffd166" stroke="#c69418" stroke-width="1.5"/>
+        <text x="185" y="52" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="800" fill="#7a4d1d">A</text>
+        <rect x="196" y="44" width="20" height="20" rx="3" fill="#98d8a0" stroke="#5a9e56" stroke-width="1.5"/>
+        <text x="206" y="58" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="#2a6b2a">B</text>
+        <!-- 粉笔托（板下方细木条 + 3 段粉笔头） -->
+        <rect x="20" y="142" width="200" height="10" rx="2" fill="#a4845a" stroke="#5a3f1f" stroke-width="1"/>
+        <rect x="38" y="144" width="22" height="6" rx="2" fill="#fff"/>
+        <rect x="38" y="144" width="22" height="6" rx="2" fill="rgba(0,0,0,0)" stroke="#ddd" stroke-width=".5"/>
+        <rect x="68" y="144" width="20" height="6" rx="2" fill="#ffd166"/>
+        <rect x="68" y="144" width="20" height="6" rx="2" fill="rgba(0,0,0,0)" stroke="#c69418" stroke-width=".5"/>
+        <rect x="96" y="144" width="18" height="6" rx="2" fill="#ff9eb5"/>
+        <rect x="96" y="144" width="18" height="6" rx="2" fill="rgba(0,0,0,0)" stroke="#c4738a" stroke-width=".5"/>
+        <!-- 板下悬挂的小黑板擦（带粉笔灰痕迹） -->
+        <rect x="180" y="144" width="28" height="18" rx="3" fill="#3a3026" stroke="#1a1410" stroke-width="1.2"/>
+        <rect x="180" y="144" width="28" height="4" rx="2" fill="#5a4a36"/>
+        <!-- 整体下方阴影（贴墙效果） -->
+        <rect x="10" y="172" width="220" height="6" rx="3" fill="rgba(0,0,0,.10)"/>
+      </svg>` },
+    ball: { w: 0.10, svg: `
+      <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- 投影（球下方椭圆） -->
+        <ellipse cx="65" cy="116" rx="40" ry="6" fill="rgba(0,0,0,.18)"/>
+        <!-- 球右半（深色，让球有体积感） -->
+        <circle cx="65" cy="62" r="50" fill="#e07a96"/>
+        <!-- 球左半（主色） -->
+        <path d="M65,12 A50,50 0 0,0 65,112 Z" fill="#ff9eb5"/>
+        <!-- 锐利边缘描边 -->
+        <circle cx="65" cy="62" r="50" fill="none" stroke="#c45875" stroke-width="2"/>
+        <!-- 缝线（横向曲线 + 竖向曲线） -->
+        <path d="M16,62 Q65,72 114,62" fill="none" stroke="#a83057" stroke-width="1.5" stroke-dasharray="4 3" opacity=".75"/>
+        <path d="M65,12 Q75,62 65,112" fill="none" stroke="#a83057" stroke-width="1.5" stroke-dasharray="4 3" opacity=".75"/>
+        <!-- 高光层（左上方大椭圆 + 小圆点） -->
+        <ellipse cx="48" cy="44" rx="18" ry="10" fill="rgba(255,255,255,.55)" transform="rotate(-30 48 44)"/>
+        <ellipse cx="42" cy="38" rx="6" ry="4" fill="rgba(255,255,255,.85)" transform="rotate(-30 42 38)"/>
+        <!-- 右下半球暗部（让球更立体） -->
+        <path d="M65,112 A50,50 0 0,0 114,62 Q90,90 65,112 Z" fill="rgba(0,0,0,.10)"/>
+      </svg>` },
+    pencilbox: { w: 0.16, svg: `
+      <svg viewBox="0 0 180 110" xmlns="http://www.w3.org/2000/svg">
+        <!-- 盒底主体（金属蓝 + 描边） -->
+        <rect x="14" y="44" width="152" height="54" rx="6" fill="#6c8ebf" stroke="#3a5a87" stroke-width="2"/>
+        <!-- 盒盖（半开，浅蓝 + 描边，左侧稍微翘起） -->
+        <path d="M16,44 L166,44 L160,14 Q90,8 20,14 Z" fill="#8aabe0" stroke="#3a5a87" stroke-width="2"/>
+        <!-- 盒盖顶面高光 -->
+        <rect x="28" y="18" width="124" height="4" rx="2" fill="rgba(255,255,255,.6)"/>
+        <!-- 盒盖装饰花纹（几颗小星点） -->
+        <circle cx="60" cy="30" r="2.5" fill="#ffd166"/>
+        <circle cx="90" cy="26" r="2.5" fill="#ff9eb5"/>
+        <circle cx="120" cy="30" r="2.5" fill="#98d8a0"/>
+        <!-- 盒身花纹（一条装饰横线） -->
+        <line x1="22" y1="78" x2="158" y2="78" stroke="rgba(255,255,255,.4)" stroke-width="2"/>
+        <!-- 卡扣（中间金色方块） -->
+        <rect x="80" y="40" width="20" height="14" rx="3" fill="#f7b967" stroke="#a06820" stroke-width="1.5"/>
+        <rect x="84" y="44" width="12" height="6" rx="2" fill="rgba(255,255,255,.5)"/>
+        <!-- 露出铅笔头部（盒盖内可见 3 根不同色铅笔） -->
+        <rect x="40" y="38" width="6" height="20" rx="2" fill="#ffd166" stroke="#a06820" stroke-width="1"/>
+        <polygon points="40,38 46,38 43,32" fill="#3a3026"/>
+        <rect x="56" y="38" width="6" height="20" rx="2" fill="#ff9eb5" stroke="#c4738a" stroke-width="1"/>
+        <polygon points="56,38 62,38 59,32" fill="#3a3026"/>
+        <rect x="72" y="38" width="6" height="20" rx="2" fill="#98d8a0" stroke="#5a9e56" stroke-width="1"/>
+        <polygon points="72,38 78,38 75,32" fill="#3a3026"/>
+        <rect x="104" y="38" width="6" height="20" rx="2" fill="#7ec8e3" stroke="#3a6a8a" stroke-width="1"/>
+        <polygon points="104,38 110,38 107,32" fill="#3a3026"/>
+        <rect x="120" y="38" width="6" height="20" rx="2" fill="#b79ced" stroke="#5a3a87" stroke-width="1"/>
+        <polygon points="120,38 126,38 123,32" fill="#3a3026"/>
+        <rect x="136" y="38" width="6" height="20" rx="2" fill="#ffd166" stroke="#a06820" stroke-width="1"/>
+        <polygon points="136,38 142,38 139,32" fill="#3a3026"/>
+        <!-- 盒底下方投影 -->
+        <ellipse cx="90" cy="104" rx="76" ry="4" fill="rgba(0,0,0,.15)"/>
       </svg>` }
   };
 
