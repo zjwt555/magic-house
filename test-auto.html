@@ -546,6 +546,51 @@
       log('商店糖果墙默认', Store.state.rooms.shop.wall === 8, Store.state.rooms.shop.wall);
       log('商店含货架/收银台/冰柜', ['shopshelf', 'counter', 'freezer'].every(id =>
         [...$$('#screen-world .item-card')].some(c => c.dataset.id === id)));
+
+      /* ---- v0.7：ROOM_SETS 重分配后的抽屉内容验证 ---- */
+      click($$('.world-dot')[6]); // wardrobe
+      await sleep(180);
+      const wCards = [...$$('#screen-world .item-card')];
+      log('换衣间不再含钢琴（piano 已从 wardrobe 移除）',
+        !wCards.some(c => c.dataset.id === 'piano'),
+        `cards=${wCards.map(c => c.dataset.id).join(',')}`);
+      log('换衣间含试衣镜和挂衣架（新增换衣主题）',
+        wCards.some(c => c.dataset.id === 'bmirror') && wCards.some(c => c.dataset.id === 'towelrack'),
+        `has-bmirror=${wCards.some(c => c.dataset.id === 'bmirror')} has-towelrack=${wCards.some(c => c.dataset.id === 'towelrack')}`);
+      click($$('.world-dot')[1]); // bedroom
+      await sleep(180);
+      const bCards = [...$$('#screen-world .item-card')];
+      log('卧室不再含钢琴（piano 已从 bedroom 移除）',
+        !bCards.some(c => c.dataset.id === 'piano'),
+        `cards=${bCards.map(c => c.dataset.id).join(',')}`);
+      log('卧室仍含床（核心物品不能丢）',
+        bCards.some(c => c.dataset.id === 'bed'),
+        `has-bed=${bCards.some(c => c.dataset.id === 'bed')}`);
+      click($$('.world-dot')[3]); // living
+      await sleep(180);
+      const lCards = [...$$('#screen-world .item-card')];
+      log('客厅不再含钢琴（piano 已从 living 移除）',
+        !lCards.some(c => c.dataset.id === 'piano'),
+        `cards=${lCards.map(c => c.dataset.id).join(',')}`);
+      log('客厅仍含电视（核心物品不能丢）',
+        lCards.some(c => c.dataset.id === 'tv'),
+        `has-tv=${lCards.some(c => c.dataset.id === 'tv')}`);
+      /* 迁移测试：手动给 wardrobe push 一个 piano 和 sofa（不在新 ROOM_SETS 里），
+         调 migrateRoomSets 后应该被清掉。 */
+      Store.state.rooms.wardrobe.items.push({ id: 'piano', x: 0.5, y: 0.7 });
+      Store.state.rooms.wardrobe.items.push({ id: 'sofa', x: 0.3, y: 0.5 });
+      Store.state.rooms.bedroom.items.push({ id: 'piano', x: 0.5, y: 0.7 });
+      Store.save();
+      const migRes = Store.migrateRoomSets();
+      log('迁移：wardrobe 里的 piano 和 sofa 被自动清掉',
+        !Store.state.rooms.wardrobe.items.some(it => it.id === 'piano' || it.id === 'sofa'),
+        `wardrobe-items=${Store.state.rooms.wardrobe.items.map(it => it.id).join(',')} dropped=${migRes.dropped}`);
+      log('迁移：bedroom 里的 piano 也被清掉（piano 在 v0.7 全清）',
+        !Store.state.rooms.bedroom.items.some(it => it.id === 'piano'),
+        `bedroom-items=${Store.state.rooms.bedroom.items.map(it => it.id).join(',')}`);
+      /* 跳回 shop 继续后续测试 */
+      click($$('.world-dot')[9]); // shop
+      await sleep(180);
       /* 弹出条跳卧室（键名修复验证） */
       click($('#screen-world .btn-rooms'));
       await sleep(80);
