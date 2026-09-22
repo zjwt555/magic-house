@@ -759,6 +759,11 @@
       const outdoors = $$('#screen-map .map-outdoor');
       log('地图屏 3 室外区', outdoors.length === 3, `n=${outdoors.length}`);
 
+      /* Phase 2 v5：Toca 风格丰富化 —— 拟物数量检查 */
+      const mapAllShapes = $$('#screen-map svg *');
+      log('地图屏 SVG 子元素 ≥ 50（v5 拟物丰富）', mapAllShapes.length >= 50, `n=${mapAllShapes.length}`);
+      log('地图屏大房子含屋顶瓦片', $$('#screen-map .map-house polygon').length >= 1);
+
       /* 点大房子 → 进 interior 屏 */
       click(houseEl);
       await sleep(300);
@@ -767,6 +772,10 @@
       /* interior 屏 7 个房间块 */
       const intRooms = $$('#screen-interior .interior-room');
       log('interior 屏 7 个房间块', intRooms.length === 7, `n=${intRooms.length}`);
+
+      /* Phase 2 v5：interior 拟物丰富度（每房间有 2-3 个小家具） */
+      const intAllShapes = $$('#screen-interior svg *');
+      log('interior 屏 SVG 子元素 ≥ 60（v5 拟物丰富）', intAllShapes.length >= 60, `n=${intAllShapes.length}`);
 
       /* interior 屏返回按钮回地图 */
       click($('#screen-interior .interior-back'));
