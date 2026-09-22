@@ -31,9 +31,9 @@
       catAcc: 'bow'
     },
     rooms: DEFAULT_ROOMS(),
-    char: {                        // 角色：room=房间id，x/y=房间内相对坐标，face=朝向1/-1
-      girl: { room: 'living', x: 0.45, y: 0.55, face: 1 },
-      cat: { room: 'balcony', x: 0.55, y: 0.62, face: 1 }
+    char: {                        // 角色：room=房间id，x/y=房间内相对坐标，face=朝向1/-1，holding=头顶携带物
+      girl: { room: 'living', x: 0.45, y: 0.55, face: 1, holding: null },
+      cat:  { room: 'balcony', x: 0.55, y: 0.62, face: 1, holding: null }
     },
     props: [],                     // 场景里的食物道具 [{uid, id, room, x, y}]
     lastRoom: 'living',            // 相机所在的房间
@@ -79,6 +79,8 @@
       for (const f of ['room', 'x', 'y', 'face']) {
         if (state.char[who][f] === undefined) state.char[who][f] = DEFAULT_STATE.char[who][f];
       }
+      /* v0.7 起角色头顶可以顶物品；旧存档缺 holding 字段，默认 null（空着手） */
+      if (state.char[who].holding === undefined) state.char[who].holding = null;
     }
     /* c.y 上限改小后的视觉无感迁移（v0.6 → v0.7）
        旧存档里 c.y 可能到 0.9，会被新 clamp [0.42, 0.72] 直接夹到 0.72，让娃娃瞬间
