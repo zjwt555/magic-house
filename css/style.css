@@ -1170,9 +1170,18 @@ html, body {
   height: 100%;
   max-width: 980px;
   transition: transform .22s ease, opacity .22s ease;
+  transform: scale(0.82);
+  transform-origin: center center;
 }
-.map-canvas.map-leave { transform: scale(0.92); opacity: 0; pointer-events: none; }
-.map-canvas svg { width: 100%; height: 100%; display: block; }
+.map-canvas.map-leave { transform: scale(0.75); opacity: 0; pointer-events: none; }
+.map-canvas svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffe5f0 0%, #fff5e0 50%, #d8f5e6 100%);
+  box-shadow: 0 6px 18px rgba(180, 120, 160, .18);
+}
 
 .map-room {
   cursor: pointer;
@@ -1192,7 +1201,7 @@ html, body {
   border: 3px solid #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
   pointer-events: none;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.82);
   z-index: 5;
   opacity: 0;          /* 默认隐藏，等 _placeMarker 定位完再显 */
 }
@@ -1201,8 +1210,8 @@ html, body {
 .map-marker[data-target-room] { opacity: 1; }
 .map-marker.pulse { animation: marker-pulse 1.5s ease-in-out 1; }
 @keyframes marker-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50%      { transform: translate(-50%, -50%) scale(1.35); }
+  0%, 100% { transform: translate(-50%, -50%) scale(0.82); }
+  50%      { transform: translate(-50%, -50%) scale(1.15); }
 }
 
 .map-hint {
