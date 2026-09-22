@@ -119,6 +119,50 @@
     } else {
       node.querySelector('.char-body').innerHTML = window.catHTML(Store.state.doll.catAcc);
     }
+    /* 头顶携带物：null 时整块隐藏；非 null 时渲染对应 SVG 缩略图 */
+    const h = node.querySelector('.char-holding');
+    if (h) {
+      if (c.holding && c.holding.id) {
+        h.innerHTML = holdingSVG(c.holding.id);
+        h.classList.remove('hidden');
+      } else {
+        h.innerHTML = '';
+        h.classList.add('hidden');
+      }
+    }
+  }
+
+  /* 头顶携带物的 SVG 缩略图：从 K().ING（食物）或 R().ITEMS（道具）里取，再用 fixed 50px 缩放。
+     找不到时退到通用灰色圆，避免空白。 */
+  function holdingSVG(id) {
+    const ing = K() && K().ING && K().ING[id];
+    const itm = R() && R().ITEMS && R().ITEMS[id];
+    const src = ing || itm;
+    const svg = src ? (src.svgOpen || src.svg) : '';
+    if (!svg) return '<circle cx="25" cy="25" r="22" fill="#ccc"/>';
+    /* 简化 SVG：去掉 viewBox 自带的 width/height，避免在 50px 容器里失控 */
+    const trimmed = svg.replace(/\swidth="[^"]*"/g, '').replace(/\sheight="[^"]*"/g, '');
+    /* SVG 里填 fixed 50x50 viewBox；保留 fill/stroke */
+    return trimmed.replace(/<svg([^>]*)>/, '<svg$1 width="50" height="50" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">');
+  }
+
+  /* 角色头顶 hitbox：覆盖角色上半身（顶 30%）+ 上方 60px 的"空中"区。
+     UX 上孩子拖到角色头上方即可触发；下方 70%（胸口以下）算嘴边/身体。 */
+  function charHeadHitbox(who) {
+    const nr = charEl(who).getBoundingClientRect();
+    const sr = stage.getBoundingClientRect();
+    if (nr.left === 0 && nr.top === 0) return null;        // 角色不在可见区域
+    const padX = Math.max(20, nr.width * 0.25);
+    return {
+      left: nr.left - padX,
+      right: nr.right + padX,
+      top: Math.max(sr.top, nr.top - 60),
+      bottom: nr.top + nr.height * 0.30
+    };
+  }
+  function overHead(who, px, py) {
+    const b = charHeadHitbox(who);
+    return b && px >= b.left && px <= b.right && py >= b.top && py <= b.bottom;
   }
 
   function refreshCharacters() { renderChar('girl'); renderChar('cat'); }
@@ -423,7 +467,7 @@
         propNode.remove();
         return;
       }
-      drag = { kind: 'prop', node: propNode, p, origRoom: p.room, feedWho: null, startX: e.clientX, startY: e.clientY, moved: false, lastX: e.clientX, lastY: e.clientY };
+      drag = { kind: 'prop', node: propNode, p, origRoom: p.room, feedWho: null, feedTarget: null, startX: e.clientX, startY: e.clientY, moved: false, lastX: e.clientX, lastY: e.clientY };
       propNode.classList.add('lifted');
       try { document.body.appendChild(propNode); } catch (err) { /* 忽略 */ }
       propNode.style.position = 'fixed';
@@ -506,15 +550,26 @@
         basket.classList.add('show');
         basket.classList.toggle('hover', overBox);
       }
-      /* 持续检测是否悬在角色嘴边（松手即吃）。注意这里**不能**因为"在筐上方"
-         就清掉 feedWho：拖拽轨迹经常擦过筐的判定区，会导致喂食时灵时不灵。
-         筐的优先级交给 onUp 的分支顺序处理（在筐上方 → 收走，否则 → 喂掉）。 */
+      /* 持续检测是否悬在角色头顶（松手即拿）或嘴边（松手即喂）。
+         头顶优先于嘴边 —— 拖到角色上方就锁定为头顶，松手时拿物品而非喂掉。
+         onUp 的优先级：筐 > 头顶 > 嘴边 > 地板 */
       drag.feedWho = null;
+      drag.feedTarget = null;
       for (const who of ['girl', 'cat']) {
-        if (canFeed(who, e.clientX, e.clientY)) { drag.feedWho = who; break; }
+        if (overHead(who, e.clientX, e.clientY)) {
+          drag.feedWho = who;
+          drag.feedTarget = 'head';
+          break;
+        }
+        if (canFeed(who, e.clientX, e.clientY)) {
+          drag.feedWho = who;
+          drag.feedTarget = 'mouth';
+          break;
+        }
       }
       for (const who of ['girl', 'cat']) {
-        charEl(who).classList.toggle('feed-hint', drag.feedWho === who && !overBox);
+        charEl(who).classList.toggle('feed-hint', drag.feedWho === who && drag.feedTarget === 'mouth' && !overBox);
+        charEl(who).classList.toggle('hold-hint', drag.feedWho === who && drag.feedTarget === 'head');
       }
       return;
     }
@@ -581,17 +636,36 @@
     if (d.kind === 'char') {
       d.node.classList.remove('lifted');
       el.querySelectorAll('.feed-hint').forEach(n => n.classList.remove('feed-hint'));
+      el.querySelectorAll('.hold-hint').forEach(n => n.classList.remove('hold-hint'));
       if (d.moved) {
         placeChar(d.who, Store.state.char[d.who].room, Store.state.char[d.who].x, Store.state.char[d.who].y);
       } else {
-        /* 轻点角色 = 开心跳 */
-        d.node.classList.remove('happy-jump');
-        void d.node.offsetWidth;
-        d.node.classList.add('happy-jump');
-        Sound.sparkle();
-        Sound.praiseRandom(d.who === 'cat' ? ['喵～', '喵呜！'] : ['咯咯咯～', '抱抱！']);
-        const nr = d.node.getBoundingClientRect();
-        FX.sparkles(el, nr.left + nr.width / 2, nr.top + nr.height * 0.4, 7);
+        /* 轻点角色：手持物品 → 落回地板；空着手 → 开心跳 */
+        const c = Store.state.char[d.who];
+        if (c.holding && c.holding.id) {
+          const dropX = Math.min(0.95, Math.max(0.05, c.x));
+          const dropY = Math.min(0.92, Math.max(0.40, c.y - 0.12));
+          Store.state.props.push({
+            uid: c.holding.uid, id: c.holding.id, room: c.room, x: dropX, y: dropY
+          });
+          c.holding = null;
+          Store.save();
+          renderChar(d.who);
+          Sound.poof();
+          /* 物品落回位置生成可视化节点（renderRoom 自动渲染） */
+          renderRoom(c.room);
+          const nr = d.node.getBoundingClientRect();
+          FX.sparkles(el, nr.left + nr.width / 2, nr.top + nr.height * 0.2, 5);
+          Sound.praise('放下来啦');
+        } else {
+          d.node.classList.remove('happy-jump');
+          void d.node.offsetWidth;
+          d.node.classList.add('happy-jump');
+          Sound.sparkle();
+          Sound.praiseRandom(d.who === 'cat' ? ['喵～', '喵呜！'] : ['咯咯咯～', '抱抱！']);
+          const nr = d.node.getBoundingClientRect();
+          FX.sparkles(el, nr.left + nr.width / 2, nr.top + nr.height * 0.4, 7);
+        }
       }
       return;
     }
@@ -609,7 +683,38 @@
         d.node.remove();
         FX.poof(el, e.clientX, e.clientY);
         Sound.poof();
+      } else if (d.moved && d.feedWho && d.feedTarget === 'mouth') {
+        /* 优先检查头顶：松手时若悬在头顶 hitbox 上，落到角色头上；
+           没在头顶、且在嘴边时再喂。feedTarget 在 onMove 里设 */
+      } else if (d.moved && d.feedWho && d.feedTarget === 'head') {
+        /* 落到角色头顶：从 props 删，加入该角色的 holding */
+        const who = d.feedWho;
+        if (Store.state.char[who].holding) {
+          /* 头顶已有东西，摇头拒绝 */
+          const node = charEl(who);
+          node.classList.remove('shake');
+          void node.offsetWidth;
+          node.classList.add('shake');
+          Sound.blub();
+        } else if (d.p) {
+          const i = Store.state.props.indexOf(d.p);
+          if (i >= 0) Store.state.props.splice(i, 1);
+          Store.state.char[who].holding = { uid: d.p.uid, id: d.p.id };
+          Store.save();
+          d.node.remove();
+          const hr = charEl(who).getBoundingClientRect();
+          FX.sparkles(el, hr.left + hr.width / 2, hr.top, 6);
+          Sound.praise('拿上啦');
+          renderChar(who);
+        }
       } else if (d.moved && d.feedWho) {
+        /* 松手即喂：move 过程中已确认悬在嘴边 */
+        const i = Store.state.props.indexOf(d.p);
+        if (i >= 0) Store.state.props.splice(i, 1);
+        Store.save();
+        d.node.remove();
+        eat(d.feedWho, d.node.dataset.food);
+      } else if (d.moved && d.p) {
         /* 松手即喂：move 过程中已确认悬在嘴边 */
         const i = Store.state.props.indexOf(d.p);
         if (i >= 0) Store.state.props.splice(i, 1);
@@ -692,8 +797,8 @@
                 <div class="room-floor"></div>
                 <div class="room-layer"></div>
               </section>`).join('')}
-            <div class="world-char" id="char-girl" style="width:11%"><div class="char-inner"><div class="char-body"></div></div></div>
-            <div class="world-char" id="char-cat" style="width:8.2%"><div class="char-inner"><div class="char-body"></div></div></div>
+            <div class="world-char" id="char-girl" style="width:11%"><div class="char-inner"><div class="char-body"></div></div><div class="char-holding hidden"></div></div>
+            <div class="world-char" id="char-cat" style="width:8.2%"><div class="char-inner"><div class="char-body"></div></div><div class="char-holding hidden"></div></div>
           </div>
           <div class="world-dots"></div>
           <button class="world-arrow left">←</button>
@@ -823,6 +928,7 @@
     refreshCharacters,
     feedCharacter,
     walkTo,
+    renderRoom,
     placeChar,
     get currentRoomId() { return roomAt(cam); },
     /* 测试后门：模拟把某个食物喂给角色（与拖拽 up 走同一套 eat 链路） */
