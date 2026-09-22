@@ -735,15 +735,15 @@
 
   /* ---------- 墙纸 / 地板（CSS 背景） ---------- */
   const WALLS = [
-    { bg: 'repeating-linear-gradient(90deg,#ffe9f2 0 42px,#ffd9ea 42px 84px)' },                     // 粉条纹
-    { bg: 'radial-gradient(circle at 25% 30%,#fff 12px,transparent 13px),radial-gradient(circle at 72% 62%,#fff 16px,transparent 17px),linear-gradient(#d8f1ff,#eef9ff)', bgSize: '90px 90px' }, // 蓝天云朵
+    { bg: 'repeating-linear-gradient(90deg,#ffe9f2 0 42px,#ffd9ea 42px 84px)', bgColor: '#ffe9f2' },                     // 粉条纹
+    { bg: 'radial-gradient(circle at 25% 30%,#fff 12px,transparent 13px),radial-gradient(circle at 72% 62%,#fff 16px,transparent 17px),linear-gradient(#d8f1ff,#eef9ff)', bgColor: '#e3f4ff', bgSize: '90px 90px' }, // 蓝天云朵
     { bg: 'radial-gradient(circle,#cdecc9 9px,transparent 10px)', bgColor: '#e8f8e8', bgSize: '38px 38px' },   // 薄荷圆点
-    { bg: 'repeating-linear-gradient(45deg,#f3ecfb 0 30px,#e6d9f5 30px 60px)' },                     // 薰衣草斜纹
-    { bg: 'linear-gradient(#fff2e3,#ffe3c7)' },                                                      // 蜜桃渐变
-    { bg: 'repeating-linear-gradient(0deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),repeating-linear-gradient(90deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),#ffd9ea' }, // 粉格棋盘
+    { bg: 'repeating-linear-gradient(45deg,#f3ecfb 0 30px,#e6d9f5 30px 60px)', bgColor: '#eedaf0' },                     // 薰衣草斜纹
+    { bg: 'linear-gradient(#fff2e3,#ffe3c7)', bgColor: '#ffe5cf' },                                                      // 蜜桃渐变
+    { bg: 'repeating-linear-gradient(0deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),repeating-linear-gradient(90deg,rgba(255,255,255,.45) 0 24px,transparent 24px 48px),#ffd9ea', bgColor: '#ffd9ea' }, // 粉格棋盘
     { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#d8ecf5 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#d8ecf5 34px 38px)', bgColor: '#f4fbff' }, // 白瓷砖
     { bg: 'repeating-linear-gradient(0deg,transparent 0 34px,#a8d8d0 34px 38px),repeating-linear-gradient(90deg,transparent 0 34px,#a8d8d0 34px 38px)', bgColor: '#e4f5f2' }, // 薄荷瓷砖
-    { bg: 'repeating-linear-gradient(90deg,#fff0f6 0 28px,#ffd9ea 28px 56px),radial-gradient(circle at 50% 40%,#fff 6px,transparent 7px)', bgSize: '56px 72px' } // 糖果条纹+圆点
+    { bg: 'repeating-linear-gradient(90deg,#fff0f6 0 28px,#ffd9ea 28px 56px),radial-gradient(circle at 50% 40%,#fff 6px,transparent 7px)', bgColor: '#ffd9ea', bgSize: '56px 72px' } // 糖果条纹+圆点
   ];
 
   const FLOORS = [
