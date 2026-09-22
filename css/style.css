@@ -715,6 +715,7 @@ html, body {
 .btn-corner.off { background: #b8bcc4; box-shadow: 0 4px 0 #8f949c; }
 .btn-corner.btn-help { background: #7ec8e3; box-shadow: 0 4px 0 #4f9cc0, 0 8px 16px rgba(60, 130, 170, .25); }
 .btn-corner.btn-reset { background: #ffb38a; box-shadow: 0 4px 0 #d97a52, 0 8px 16px rgba(180, 100, 60, .25); }
+.btn-corner.btn-relayout { background: #b79ced; box-shadow: 0 4px 0 #8a6fc6, 0 8px 16px rgba(120, 90, 200, .25); }
 
 /* ---------- 全部还原（家长救命按钮） ---------- */
 .reset-confirm {
