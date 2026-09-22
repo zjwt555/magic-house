@@ -35,6 +35,12 @@
     if (right) right.classList.toggle('hidden', cam >= R().WORLD_ROOMS.length - 1);
     Store.state.lastRoom = roomAt(cam);
     Store.save();
+    /* 让世界屏外框跟随当前房间墙色：safe-area padding 让 toolbar 两侧露出一条边，
+       之前是 `#app` 浅蓝；现在统一为墙色，肉眼看不到"露蓝"。无 bgColor 时兜底肉色。 */
+    if (el) {
+      const wallDef = R().WALLS[roomState(roomAt(cam)).wall % R().WALLS.length];
+      el.style.background = wallDef.bgColor || '#f4e7d7';
+    }
   }
 
   function measure() {
