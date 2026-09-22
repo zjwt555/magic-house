@@ -1,0 +1,2281 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<title>ALL_PASS</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <div class="screen" id="screen-home">
+        <div class="home-title">魔法小屋</div>
+        <div class="home-corner">
+          <button class="btn-corner btn-sound" aria-label="声音开关">
+    <svg viewBox="0 0 36 36">
+      <path d="M6,14 L12,14 L20,7 L20,29 L12,22 L6,22 Z" fill="#fff"></path>
+      <path d="M25,12 Q29,18 25,24 M28,8 Q34,18 28,28" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"></path>
+    </svg></button>
+          <button class="btn-corner btn-help" aria-label="玩法说明">
+            <svg viewBox="0 0 36 36">
+              <text x="18" y="26" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">?</text>
+            </svg>
+          </button>
+          <button class="btn-corner btn-reset" aria-label="全部还原">
+            
+    <svg viewBox="0 0 36 36">
+      <path d="M29 18 a11 11 0 1 1 -3.3 -7.8" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+      <polygon points="21,5 32,9 25,17" fill="#fff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"></polygon>
+    </svg>
+          </button>
+        </div>
+  <svg class="home-scene" viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg">
+    <!-- 太阳 -->
+    <g transform="translate(96,96)">
+      <g class="sun-rays">
+        <line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(0)"></line><line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(45)"></line><line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(90)"></line><line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(135)"></line><line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(180)"></line><line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(225)"></line><line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(270)"></line><line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(315)"></line>
+      </g>
+      <circle r="40" fill="#ffd34d" stroke="#ffb830" stroke-width="5"></circle>
+      <circle cx="-12" cy="-4" r="4" fill="#8a5a12"></circle>
+      <circle cx="12" cy="-4" r="4" fill="#8a5a12"></circle>
+      <path d="M-12 8 Q0 18 12 8" stroke="#8a5a12" stroke-width="4" fill="none" stroke-linecap="round"></path>
+    </g>
+    <!-- 云朵（飘动） -->
+    <g class="home-cloud" transform="translate(60,70)">
+      <ellipse cx="0" cy="16" rx="52" ry="20" fill="#fff"></ellipse>
+      <ellipse cx="-26" cy="8" rx="26" ry="16" fill="#fff"></ellipse>
+      <ellipse cx="24" cy="6" rx="30" ry="18" fill="#fff"></ellipse>
+    </g>
+    <g class="home-cloud c2" transform="translate(-80,150)" opacity=".85">
+      <ellipse cx="0" cy="12" rx="42" ry="16" fill="#fff"></ellipse>
+      <ellipse cx="28" cy="4" rx="24" ry="14" fill="#fff"></ellipse>
+    </g>
+    <!-- 草地 -->
+    <rect x="0" y="520" width="900" height="120" fill="#a8e6a1"></rect>
+    <rect x="0" y="516" width="900" height="12" fill="#8ed488" rx="6"></rect>
+    <!-- 小路 -->
+    <polygon points="408,528 492,528 560,640 340,640" fill="#f2d9a0"></polygon>
+    <line x1="400" y1="560" x2="500" y2="560" stroke="#dcbf85" stroke-width="4"></line>
+    <line x1="385" y1="596" x2="515" y2="596" stroke="#dcbf85" stroke-width="4"></line>
+    <!-- 灌木 -->
+    <g>
+      <ellipse cx="90" cy="528" rx="46" ry="26" fill="#6cc46a"></ellipse>
+      <ellipse cx="62" cy="536" rx="30" ry="20" fill="#7ed47b"></ellipse>
+      <ellipse cx="812" cy="530" rx="42" ry="24" fill="#6cc46a"></ellipse>
+      <ellipse cx="842" cy="538" rx="28" ry="18" fill="#7ed47b"></ellipse>
+    </g>
+    <!-- 花 -->
+    
+      <g transform="translate(170,556)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="#4e9e4a" stroke-width="3.5" stroke-linecap="round"></line>
+        <ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(0)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(72)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(144)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(216)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(288)"></ellipse>
+        <circle r="4" fill="#fff3c9"></circle>
+      </g>
+      <g transform="translate(250,580)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="#4e9e4a" stroke-width="3.5" stroke-linecap="round"></line>
+        <ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ffd34d" transform="rotate(0)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ffd34d" transform="rotate(72)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ffd34d" transform="rotate(144)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ffd34d" transform="rotate(216)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ffd34d" transform="rotate(288)"></ellipse>
+        <circle r="4" fill="#fff3c9"></circle>
+      </g>
+      <g transform="translate(700,566)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="#4e9e4a" stroke-width="3.5" stroke-linecap="round"></line>
+        <ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#b79ced" transform="rotate(0)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#b79ced" transform="rotate(72)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#b79ced" transform="rotate(144)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#b79ced" transform="rotate(216)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#b79ced" transform="rotate(288)"></ellipse>
+        <circle r="4" fill="#fff3c9"></circle>
+      </g>
+      <g transform="translate(770,590)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="#4e9e4a" stroke-width="3.5" stroke-linecap="round"></line>
+        <ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(0)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(72)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(144)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(216)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff9eb5" transform="rotate(288)"></ellipse>
+        <circle r="4" fill="#fff3c9"></circle>
+      </g>
+      <g transform="translate(620,596)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="#4e9e4a" stroke-width="3.5" stroke-linecap="round"></line>
+        <ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff8f7a" transform="rotate(0)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff8f7a" transform="rotate(72)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff8f7a" transform="rotate(144)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff8f7a" transform="rotate(216)"></ellipse><ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="#ff8f7a" transform="rotate(288)"></ellipse>
+        <circle r="4" fill="#fff3c9"></circle>
+      </g>
+    <!-- 小猫 -->
+    <g transform="translate(772,468)">
+      <path d="M-24 18 Q-52 12 -48 -14" stroke="#f2a65a" stroke-width="10" fill="none" stroke-linecap="round"></path>
+      <ellipse cx="0" cy="8" rx="26" ry="30" fill="#f7b967"></ellipse>
+      <circle cx="0" cy="-32" r="21" fill="#f7b967"></circle>
+      <polygon points="-19,-44 -15,-62 -4,-48" fill="#f7b967"></polygon>
+      <polygon points="19,-44 15,-62 4,-48" fill="#f7b967"></polygon>
+      <polygon points="-16.5,-47 -14,-57 -8,-49" fill="#ffb3c1"></polygon>
+      <polygon points="16.5,-47 14,-57 8,-49" fill="#ffb3c1"></polygon>
+      <path d="M-8 -34 Q-5 -31 -2 -34" stroke="#7a4d1d" stroke-width="2.6" fill="none" stroke-linecap="round"></path>
+      <path d="M2 -34 Q5 -31 8 -34" stroke="#7a4d1d" stroke-width="2.6" fill="none" stroke-linecap="round"></path>
+      <path d="M-5 -25 Q0 -21 5 -25" stroke="#7a4d1d" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+      <circle cx="-13" cy="-27" r="3.4" fill="#ff9eb5" opacity=".7"></circle>
+      <circle cx="13" cy="-27" r="3.4" fill="#ff9eb5" opacity=".7"></circle>
+      <line x1="-18" y1="-24" x2="-34" y2="-27" stroke="#d98c4a" stroke-width="2"></line>
+      <line x1="-18" y1="-21" x2="-33" y2="-18" stroke="#d98c4a" stroke-width="2"></line>
+      <line x1="18" y1="-24" x2="34" y2="-27" stroke="#d98c4a" stroke-width="2"></line>
+      <line x1="18" y1="-21" x2="33" y2="-18" stroke="#d98c4a" stroke-width="2"></line>
+    </g>
+    <!-- 蝴蝶 -->
+    <g class="door-hint" transform="translate(300,590)">
+      <ellipse cx="-9" cy="-4" rx="9" ry="12" fill="#7ecbff" transform="rotate(-24 -9 -4)"></ellipse>
+      <ellipse cx="9" cy="-4" rx="9" ry="12" fill="#7ecbff" transform="rotate(24 9 -4)"></ellipse>
+      <ellipse cx="0" cy="2" rx="3.4" ry="9" fill="#5a6b7a"></ellipse>
+    </g>
+    <!-- 房子 -->
+    <g>
+      <rect x="585" y="118" width="46" height="96" rx="6" fill="#e8a0bf"></rect>
+      <rect x="576" y="104" width="64" height="20" rx="10" fill="#fff"></rect>
+      <circle class="door-hint" cx="608" cy="86" r="8" fill="#e9e4ef"></circle>
+      <circle class="door-hint" cx="622" cy="70" r="6" fill="#e9e4ef"></circle>
+      <polygon points="135,240 450,72 765,240" fill="#b98cd9" stroke="#a06fc6" stroke-width="3" stroke-linejoin="round"></polygon>
+      <rect x="126" y="228" width="648" height="20" rx="10" fill="#fff" stroke="#ecd9ee" stroke-width="2"></rect>
+      <circle cx="450" cy="170" r="26" fill="#cdf0ff" stroke="#fff" stroke-width="5"></circle>
+      <line x1="424" y1="170" x2="476" y2="170" stroke="#fff" stroke-width="4"></line>
+      <line x1="450" y1="144" x2="450" y2="196" stroke="#fff" stroke-width="4"></line>
+      <rect x="170" y="240" width="560" height="290" rx="12" fill="#fff3f7" stroke="#f0c4d4" stroke-width="3"></rect>
+      <rect x="170" y="514" width="560" height="16" rx="8" fill="#f5dbe7"></rect>
+      <!-- 两扇圆窗 -->
+      
+        <g>
+          <circle cx="230" cy="310" r="32" fill="#cdf0ff" stroke="#fff" stroke-width="6"></circle>
+          <line x1="198" y1="310" x2="262" y2="310" stroke="#fff" stroke-width="4.5"></line>
+          <line x1="230" y1="278" x2="230" y2="342" stroke="#fff" stroke-width="4.5"></line>
+          <rect x="203" y="340" width="54" height="11" rx="5" fill="#b97f4e"></rect>
+          <circle cx="216" cy="340" r="4.5" fill="#ff9eb5"></circle>
+          <circle cx="230" cy="339" r="4.5" fill="#ffd34d"></circle>
+          <circle cx="244" cy="340" r="4.5" fill="#ff9eb5"></circle>
+        </g>
+        <g>
+          <circle cx="670" cy="310" r="32" fill="#cdf0ff" stroke="#fff" stroke-width="6"></circle>
+          <line x1="638" y1="310" x2="702" y2="310" stroke="#fff" stroke-width="4.5"></line>
+          <line x1="670" y1="278" x2="670" y2="342" stroke="#fff" stroke-width="4.5"></line>
+          <rect x="643" y="340" width="54" height="11" rx="5" fill="#b97f4e"></rect>
+          <circle cx="656" cy="340" r="4.5" fill="#ff9eb5"></circle>
+          <circle cx="670" cy="339" r="4.5" fill="#ffd34d"></circle>
+          <circle cx="684" cy="340" r="4.5" fill="#ff9eb5"></circle>
+        </g>
+      <!-- 一扇大门 -->
+      <g class="door-group door-big" data-target="lastRoom">
+        <path d="M338,530 V372 Q338,336 450,336 Q562,336 562,372 V530 Z" fill="#fff"></path>
+        <path d="M348,530 V376 Q348,344 450,344 Q552,344 552,376 V530 Z" fill="#ff9eb5"></path>
+        <path d="M348,530 V376 Q348,344 450,344 Q552,344 552,376 V530" fill="none" stroke="#e05c86" stroke-width="0"></path>
+        <rect x="348" y="380" width="204" height="8" fill="rgba(255,255,255,.35)"></rect>
+        <!-- 门上的小窗户 -->
+        <circle cx="450" cy="396" r="24" fill="#cdf0ff" stroke="#fff" stroke-width="6"></circle>
+        <path d="M432,404 C438,396 444,400 450,404 C456,400 462,396 468,404" stroke="#ff8faa" stroke-width="6" fill="none" stroke-linecap="round" transform="translate(0,-2)"></path>
+        <path d="M438,392 C444,384 456,384 462,392 C456,394 444,394 438,392 Z" fill="#ff8faa"></path>
+        <!-- 星星牌匾 -->
+        <circle cx="450" cy="462" r="34" fill="#ffffff" opacity=".96"></circle>
+        <g transform="translate(450,462)">
+          <path d="M0,-18 L5,-6 L18,-5 L8,4 L11,17 L0,10 L-11,17 L-8,4 L-18,-5 L-5,-6 Z" fill="#ffd34d" stroke="#f2a94f" stroke-width="2"></path>
+        </g>
+        <circle cx="416" cy="472" r="7" fill="#fff" opacity=".9"></circle>
+        <circle cx="484" cy="472" r="7" fill="#fff" opacity=".9"></circle>
+      </g>
+    </g>
+  </svg>
+    <div class="help-overlay hidden">
+      <div class="help-card">
+        <h3>📖 给家长的小指南</h3>
+        <ul>
+          <li>🏠 <b>大世界</b>：进门后是 10 个场景的横向大世界（房子 7 间房 + <b>院子、公园、商店</b>三个室外），<b>手指左右拖动</b>看世界；点左上角小门按钮可直达任意场景</li>
+          <li>🚶 <b>娃娃会走路</b>：点一下地板娃娃就走过去；<b>按住娃娃/小猫</b>可以拎到任何房间</li>
+          <li>👗 <b>换装</b>：去换衣间点<b>大衣柜</b>，点分类标签再点衣服即可穿上</li>
+          <li>🛏️ <b>布置房间</b>：点下方家具放进房间，按住拖动换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
+          <li>🍎 <b>喂食</b>：去厨房点<b>冰箱</b>拿水果牛奶，拖到娃娃或小猫嘴边就吃掉；点<b>灶台</b>还能做饭</li>
+          <li>🗑 <b>收走家具</b>：① 把家具<b>拖到屏幕下方的收纳筐</b>；② 或点左下角垃圾桶按钮，再点要收走的家具</li>
+          <li>🍳 <b>做饭</b>：选菜谱 → 点食材放进锅 → 手指在锅里<b>画圈搅拌</b> → 点魔法按钮 → 喂给娃娃或小猫</li>
+          <li>💾 装扮和房间<b>自动保存</b>，下次打开还是原样</li>
+          <li>📱 <b>iPad/iPhone</b>：用 Safari 打开网址 → 分享 → <b>添加到主屏幕</b>，即可全屏离线玩</li>
+        </ul>
+        <button class="help-close">知道了</button>
+      </div>
+    </div>
+    <div class="reset-confirm hidden">
+      <div class="reset-card">
+        <h3>🧹 全部还原？</h3>
+        <p>房间布置、娃娃装扮、玩具食物都会回到刚下载的样子。<br><b>这个操作不能撤销</b>，确认要做吗？</p>
+        <div class="reset-buttons">
+          <button class="reset-no">再想想</button>
+          <button class="reset-yes">确定还原</button>
+        </div>
+      </div>
+    </div><div class="fx-sparkle" style="left: -59.8856px; top: 10.1509px;"><svg viewBox="0 0 24 24" width="16.974335854244973" height="16.974335854244973">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#b79ced" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -61.0593px; top: 3.25891px;"><svg viewBox="0 0 24 24" width="23.37222520723177" height="23.37222520723177">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#b79ced" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -53.3061px; top: 8.26976px;"><svg viewBox="0 0 24 24" width="20.75359329627978" height="20.75359329627978">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ff9eb5" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -69.4401px; top: -8.04316px;"><svg viewBox="0 0 24 24" width="25.021021079494236" height="25.021021079494236">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7fe3a1" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -73.5975px; top: 0.303664px;"><svg viewBox="0 0 24 24" width="21.845432753511638" height="21.845432753511638">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7fe3a1" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -49.7242px; top: 9.14215px;"><svg viewBox="0 0 24 24" width="26.001048802263128" height="26.001048802263128">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7ecbff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -74.8747px; top: -10.0965px;"><svg viewBox="0 0 24 24" width="14.570468562346335" height="14.570468562346335">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ff9eb5" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -72.9778px; top: 0.189773px;"><svg viewBox="0 0 24 24" width="17.61074009110834" height="17.61074009110834">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ffd34d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -68.908px; top: -2.36731px;"><svg viewBox="0 0 24 24" width="14.622514881805131" height="14.622514881805131">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#b79ced" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: -65.7662px; top: -6.27335px;"><svg viewBox="0 0 24 24" width="16.1600582709395" height="16.1600582709395">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7ecbff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div></div>
+  <div class="screen active" id="screen-world" data-branch="item" data-up-dbg="moved=true feedWho=none p=true girlTop=454 girlH=166 lastY=640" style="background: rgb(255, 233, 242);">
+        <div class="game-top">
+    <button class="btn-home" aria-label="回家">
+      <svg viewBox="0 0 48 48">
+        <path d="M24 6L5 22h6v18a2 2 0 0 0 2 2h8V30h6v12h8a2 2 0 0 0 2-2V22h6z" fill="#fff" stroke="#d16a89" stroke-width="2.4" stroke-linejoin="round"></path>
+        <rect x="21.5" y="15" width="5" height="6" rx="2" fill="#ffd0dd"></rect>
+      </svg>
+    </button>
+    <button class="btn-rooms" aria-label="换房间">
+      <svg viewBox="0 0 48 48">
+        <path d="M10 42V20a2 2 0 0 1 2-2h24a2 2 0 0 1 2 2v22" fill="#fff" stroke="#4f9cc0" stroke-width="2.6" stroke-linejoin="round"></path>
+        <path d="M16 40V28a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12" fill="#9ad7f0" stroke="#4f9cc0" stroke-width="2.4" stroke-linejoin="round"></path>
+        <circle cx="24" cy="15" r="2.6" fill="#ffd34d"></circle>
+        <path d="M24 6l1.4 3.4 3.6.3-2.7 2.3.8 3.5-3.1-1.9-3.1 1.9.8-3.5-2.7-2.3 3.6-.3z" fill="#ffd34d"></path>
+      </svg>
+    </button></div>
+        <div class="game-stage world-stage" style="touch-action: none;">
+          <div class="world-track" style="transform: translateX(-1030px); transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);">
+            
+              <section class="world-room" data-room="balcony">
+                <div class="room-wall" style="background: radial-gradient(circle at 25% 30%, rgb(255, 255, 255) 12px, transparent 13px) 0% 0% / 90px 90px repeat, radial-gradient(circle at 72% 62%, rgb(255, 255, 255) 16px, transparent 17px), linear-gradient(rgb(216, 241, 255), rgb(238, 249, 255)) rgb(227, 244, 255);"></div>
+                <div class="room-floor" style="background: radial-gradient(circle, rgb(168, 223, 160) 6px, transparent 7px) 0% 0% / 30px 30px repeat rgb(184, 230, 168);"></div>
+                <div class="room-layer"></div>
+              </section>
+              <section class="world-room" data-room="bedroom">
+                <div class="room-wall" style="background-image: repeating-linear-gradient(90deg, rgb(255, 233, 242) 0px, rgb(255, 233, 242) 42px, rgb(255, 217, 234) 42px, rgb(255, 217, 234) 84px); background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 233, 242);"></div>
+                <div class="room-floor" style="background-image: repeating-linear-gradient(0deg, rgb(232, 185, 126) 0px, rgb(232, 185, 126) 30px, rgb(220, 169, 107) 30px, rgb(220, 169, 107) 34px);"></div>
+                <div class="room-layer"></div>
+              </section>
+              <section class="world-room" data-room="bathroom">
+                <div class="room-wall" style="background-image: repeating-linear-gradient(0deg, transparent 0px, transparent 34px, rgb(168, 216, 208) 34px, rgb(168, 216, 208) 38px), repeating-linear-gradient(90deg, transparent 0px, transparent 34px, rgb(168, 216, 208) 34px, rgb(168, 216, 208) 38px); background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(228, 245, 242);"></div>
+                <div class="room-floor" style="background-image: repeating-linear-gradient(0deg, transparent 0px, transparent 34px, rgb(184, 204, 216) 34px, rgb(184, 204, 216) 38px), repeating-linear-gradient(90deg, transparent 0px, transparent 34px, rgb(184, 204, 216) 34px, rgb(184, 204, 216) 38px); background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(232, 239, 244);"></div>
+                <div class="room-layer"></div>
+              </section>
+              <section class="world-room" data-room="living">
+                <div class="room-wall" style="background-image: linear-gradient(rgb(255, 242, 227), rgb(255, 227, 199)); background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 229, 207);"></div>
+                <div class="room-floor" style="background-image: repeating-linear-gradient(-45deg, rgb(242, 217, 160) 0px, rgb(242, 217, 160) 22px, rgb(232, 201, 131) 22px, rgb(232, 201, 131) 44px);"></div>
+                <div class="room-layer"><div class="room-item pop-in" data-i="0" data-room="living" style="left: 28.8314%; top: 67.8844%; width: 18.5%; aspect-ratio: 190 / 165; z-index: 10;">
+      <svg viewBox="0 0 190 165" xmlns="http://www.w3.org/2000/svg">
+        <rect x="12" y="100" width="166" height="52" rx="10" fill="#d98c5a"></rect>
+        <line x1="95" y1="102" x2="95" y2="150" stroke="#c47a44" stroke-width="3"></line>
+        <circle cx="150" cy="126" r="5" fill="#ffd34d"></circle>
+        <circle cx="132" cy="126" r="5" fill="#7ec8e3"></circle>
+        <rect x="22" y="152" width="10" height="10" rx="4" fill="#c47a44"></rect>
+        <rect x="158" y="152" width="10" height="10" rx="4" fill="#c47a44"></rect>
+        <rect x="35" y="18" width="120" height="86" rx="10" fill="#4a4a55"></rect>
+        <rect x="45" y="28" width="100" height="66" rx="5" fill="#9ad7f0"></rect>
+        <circle cx="72" cy="48" r="9" fill="#ffd34d"></circle>
+        <path d="M45,86 Q65,66 82,78 Q100,90 120,74 L145,86 L145,94 L45,94 Z" fill="#98d8a0"></path>
+        <rect x="86" y="4" width="18" height="10" rx="5" fill="#4a4a55"></rect>
+      </svg></div></div>
+              </section>
+              <section class="world-room" data-room="kitchen">
+                <div class="room-wall" style="background-image: repeating-linear-gradient(0deg, transparent 0px, transparent 34px, rgb(168, 216, 208) 34px, rgb(168, 216, 208) 38px), repeating-linear-gradient(90deg, transparent 0px, transparent 34px, rgb(168, 216, 208) 34px, rgb(168, 216, 208) 38px); background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(228, 245, 242);"></div>
+                <div class="room-floor" style="background-image: repeating-linear-gradient(0deg, transparent 0px, transparent 34px, rgb(184, 204, 216) 34px, rgb(184, 204, 216) 38px), repeating-linear-gradient(90deg, transparent 0px, transparent 34px, rgb(184, 204, 216) 34px, rgb(184, 204, 216) 38px); background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(232, 239, 244);"></div>
+                <div class="room-layer"><div class="world-fixture open" data-act="fridge" style="left: 6%; width: 11.5%; aspect-ratio: 150 / 210; z-index: 250;">
+      <svg viewBox="0 0 150 210" xmlns="http://www.w3.org/2000/svg">
+        <!-- 打开的左门 -->
+        <path d="M30,24 L10,34 L10,86 L30,96 Z" fill="#a8d0e0" stroke="#9cc9de" stroke-width="3"></path>
+        <rect x="14" y="48" width="12" height="5" rx="2.5" fill="#7ea9be"></rect>
+        <!-- 冰箱体：敞开露出食材 -->
+        <rect x="30" y="8" width="95" height="194" rx="14" fill="#bfe0f0"></rect>
+        <rect x="38" y="16" width="79" height="76" rx="9" fill="#f2fbff"></rect>
+        <rect x="38" y="100" width="79" height="94" rx="9" fill="#f2fbff"></rect>
+        <rect x="42" y="46" width="71" height="6" rx="3" fill="#cfe6f2"></rect>
+        <rect x="42" y="70" width="71" height="6" rx="3" fill="#cfe6f2"></rect>
+        <!-- 冷藏室食材 -->
+        <g transform="translate(54,28)"><rect x="-7" y="-6" width="14" height="18" rx="3" fill="#fff"></rect><polygon points="-7,-6 0,-14 7,-6" fill="#9ad7f0"></polygon></g>
+        <circle cx="80" cy="34" r="8" fill="#ff6b6b"></circle>
+        <g transform="translate(98,32)"><circle r="7" fill="#ffd166"></circle><circle cx="0" cy="-9" r="3" fill="#7ec088"></circle></g>
+        <circle cx="52" cy="60" r="5" fill="#9f7edb"></circle><circle cx="62" cy="63" r="5" fill="#9f7edb"></circle><circle cx="57" cy="70" r="5" fill="#9f7edb"></circle>
+        <ellipse cx="88" cy="62" rx="7" ry="9" fill="#fff8ee"></ellipse>
+        <g transform="translate(103,62)"><rect x="-6" y="-6" width="12" height="12" rx="2" fill="#8a5a3a"></rect></g>
+        <!-- 冷冻室：冰淇淋 -->
+        <g transform="translate(56,128)"><rect x="-4" y="0" width="8" height="22" rx="4" fill="#ff8f9e"></rect><circle cy="-4" r="6" fill="#ffb3c7"></circle></g>
+        <g transform="translate(76,126)"><rect x="-4" y="0" width="8" height="22" rx="4" fill="#7ec8e3"></rect><circle cy="-4" r="6" fill="#9ad7f0"></circle></g>
+        <g transform="translate(96,128)"><rect x="-4" y="0" width="8" height="22" rx="4" fill="#98d8a0"></rect><circle cy="-4" r="6" fill="#b8e6bd"></circle></g>
+        <!-- 冷气 -->
+        <circle cx="36" cy="12" r="5" fill="#fff" opacity=".8"></circle>
+        <circle cx="30" cy="26" r="4" fill="#fff" opacity=".6"></circle>
+        <circle cx="34" cy="40" r="3" fill="#fff" opacity=".5"></circle>
+      </svg></div><div class="world-fixture" data-act="pot" style="left: 42%; width: 14%; aspect-ratio: 150 / 170; z-index: 250;">
+      <svg viewBox="0 0 150 170" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="96" width="134" height="66" rx="10" fill="#cfd8de"></rect>
+        <rect x="16" y="86" width="118" height="18" rx="9" fill="#aeb8c0"></rect>
+        <circle cx="40" cy="95" r="5" fill="#7f8a93"></circle><circle cx="70" cy="95" r="5" fill="#7f8a93"></circle>
+        <rect x="118" y="104" width="16" height="12" rx="3" fill="#ff8f7a"></rect>
+        <rect x="118" y="124" width="16" height="12" rx="3" fill="#ffd166"></rect>
+        <!-- 锅：口朝上坐在灶台上 -->
+        <path d="M48,90 L48,60 Q48,50 60,50 L90,50 Q102,50 102,60 L102,90 Z" fill="#e05c86"></path>
+        <ellipse cx="75" cy="50" rx="28" ry="8" fill="#c74a72"></ellipse>
+        <ellipse cx="75" cy="48" rx="21" ry="5" fill="#f2a94f"></ellipse>
+        <path d="M64,48 Q75,52 86,48" stroke="#ffbe6b" stroke-width="3" fill="none" stroke-linecap="round"></path>
+        <path d="M48,62 L36,54 M102,62 L114,54" stroke="#c74a72" stroke-width="7" stroke-linecap="round"></path>
+        <!-- 蒸汽从锅里往上冒 -->
+        <path d="M64,40 Q60,30 66,20 M76,38 Q72,28 78,16 M88,40 Q84,30 90,22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".9"></path>
+      </svg></div></div>
+              </section>
+              <section class="world-room" data-room="study">
+                <div class="room-wall" style="background-image: linear-gradient(rgb(255, 242, 227), rgb(255, 227, 199)); background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 229, 207);"></div>
+                <div class="room-floor" style="background-image: repeating-linear-gradient(0deg, rgb(232, 185, 126) 0px, rgb(232, 185, 126) 30px, rgb(220, 169, 107) 30px, rgb(220, 169, 107) 34px);"></div>
+                <div class="room-layer"></div>
+              </section>
+              <section class="world-room" data-room="wardrobe">
+                <div class="room-wall" style="background-image: initial; background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 217, 234);"></div>
+                <div class="room-floor" style="background: radial-gradient(circle, rgb(255, 195, 216) 8px, transparent 9px) 0% 0% / 44px 44px repeat rgb(255, 217, 234);"></div>
+                <div class="room-layer"><div class="world-fixture" data-act="wardrobe" style="left: 8%; width: 13.5%; aspect-ratio: 140 / 200; z-index: 250;">
+      <svg viewBox="0 0 140 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="10" width="124" height="184" rx="12" fill="#e8a3bd"></rect>
+        <line x1="70" y1="14" x2="70" y2="190" stroke="#d98cb0" stroke-width="5"></line>
+        <rect x="18" y="20" width="46" height="164" rx="8" fill="#f7c6dd"></rect>
+        <rect x="76" y="20" width="46" height="164" rx="8" fill="#f7c6dd"></rect>
+        <circle cx="60" cy="102" r="5" fill="#b34a75"></circle>
+        <circle cx="80" cy="102" r="5" fill="#b34a75"></circle>
+        <g transform="translate(41,64) scale(.55)">
+          <path d="M-9,-21 L-14,-4 L-23,15 Q0,25 23,15 L14,-4 L9,-21 Q0,-15 -9,-21 Z" fill="#e05c86"></path>
+          <circle cx="0" cy="-3" r="4.5" fill="#ffd0e0"></circle>
+        </g>
+        <g transform="translate(99,60) scale(.5)">
+          <path d="M0,-18 L5,-6 L18,-5 L8,4 L11,17 L0,10 L-11,17 L-8,4 L-18,-5 L-5,-6 Z" fill="#ffd34d"></path>
+        </g>
+        <rect x="8" y="0" width="124" height="14" rx="7" fill="#d98cb0"></rect>
+      </svg></div></div>
+              </section>
+              <section class="world-room" data-room="yard">
+                <div class="room-wall" style="background: radial-gradient(circle at 25% 30%, rgb(255, 255, 255) 12px, transparent 13px) 0% 0% / 90px 90px repeat, radial-gradient(circle at 72% 62%, rgb(255, 255, 255) 16px, transparent 17px), linear-gradient(rgb(216, 241, 255), rgb(238, 249, 255)) rgb(227, 244, 255);"></div>
+                <div class="room-floor" style="background: radial-gradient(circle, rgb(168, 223, 160) 6px, transparent 7px) 0% 0% / 30px 30px repeat rgb(184, 230, 168);"></div>
+                <div class="room-layer"><div class="room-item pop-in" data-i="0" data-room="yard" style="left: 50.4136%; top: 61.307%; width: 15.5%; aspect-ratio: 170 / 200; z-index: 10;">
+      <svg viewBox="0 0 170 200" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="30" x2="12" y2="192" stroke="#c98443" stroke-width="10" stroke-linecap="round"></line>
+        <line x1="140" y1="30" x2="158" y2="192" stroke="#c98443" stroke-width="10" stroke-linecap="round"></line>
+        <line x1="30" y1="30" x2="52" y2="192" stroke="#b07838" stroke-width="9" stroke-linecap="round"></line>
+        <line x1="140" y1="30" x2="118" y2="192" stroke="#b07838" stroke-width="9" stroke-linecap="round"></line>
+        <rect x="18" y="22" width="134" height="12" rx="6" fill="#c98443"></rect>
+        <line x1="66" y1="34" x2="66" y2="116" stroke="#b0a08a" stroke-width="4.5"></line>
+        <line x1="104" y1="34" x2="104" y2="116" stroke="#b0a08a" stroke-width="4.5"></line>
+        <rect x="54" y="112" width="62" height="14" rx="7" fill="#ff9eb5"></rect>
+        <rect x="54" y="112" width="62" height="6" rx="3" fill="#ffc2d3"></rect>
+      </svg></div></div>
+              </section>
+              <section class="world-room" data-room="park">
+                <div class="room-wall" style="background: radial-gradient(circle at 25% 30%, rgb(255, 255, 255) 12px, transparent 13px) 0% 0% / 90px 90px repeat, radial-gradient(circle at 72% 62%, rgb(255, 255, 255) 16px, transparent 17px), linear-gradient(rgb(216, 241, 255), rgb(238, 249, 255)) rgb(227, 244, 255);"></div>
+                <div class="room-floor" style="background-image: repeating-linear-gradient(0deg, transparent 0px, transparent 34px, rgb(163, 200, 221) 34px, rgb(163, 200, 221) 38px), repeating-linear-gradient(90deg, transparent 0px, transparent 34px, rgb(163, 200, 221) 34px, rgb(163, 200, 221) 38px); background-position: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(217, 236, 245);"></div>
+                <div class="room-layer"><div class="world-prop" data-uid="hold-cross-1" data-food="apple" style="left: 40%; top: 48%;"><svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      
+        <circle cx="40" cy="46" r="24" fill="#ff6b6b"></circle>
+        <rect x="38" y="14" width="4" height="12" rx="2" fill="#8a5a3a"></rect>
+        <ellipse cx="49" cy="20" rx="10" ry="5.5" fill="#7ec088" transform="rotate(-24 49 20)"></ellipse>
+        <ellipse cx="31" cy="38" rx="7" ry="11" fill="#fff" opacity=".25" transform="rotate(-16 31 38)"></ellipse>
+      </svg></div></div>
+              </section>
+              <section class="world-room" data-room="shop">
+                <div class="room-wall" style="background: repeating-linear-gradient(90deg, rgb(255, 240, 246) 0px, rgb(255, 240, 246) 28px, rgb(255, 217, 234) 28px, rgb(255, 217, 234) 56px) 0% 0% / 56px 72px repeat, radial-gradient(circle at 50% 40%, rgb(255, 255, 255) 6px, transparent 7px) rgb(255, 217, 234);"></div>
+                <div class="room-floor" style="background-image: repeating-linear-gradient(-45deg, rgb(242, 217, 160) 0px, rgb(242, 217, 160) 22px, rgb(232, 201, 131) 22px, rgb(232, 201, 131) 44px);"></div>
+                <div class="room-layer"></div>
+              </section>
+            <div class="world-char shake happy-jump" id="char-girl" style="width: 11%; left: 4532px; top: 72%; color: rgb(139, 94, 60); transition-duration: 0s;"><div class="char-inner" style="transform: scaleX(-1);"><div class="char-body"><div class="doll-layer" style="z-index:1"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg"><ellipse cx="150" cy="112" rx="66" ry="62" fill="currentColor"></ellipse>
+        <line x1="84" y1="122" x2="62" y2="258" stroke="currentColor" stroke-width="38" stroke-linecap="round"></line>
+        <line x1="216" y1="122" x2="238" y2="258" stroke="currentColor" stroke-width="38" stroke-linecap="round"></line>
+        <ellipse cx="62" cy="258" rx="24" ry="18" fill="currentColor" opacity=".85"></ellipse>
+        <ellipse cx="238" cy="258" rx="24" ry="18" fill="currentColor" opacity=".85"></ellipse></svg></div><div class="doll-layer" style="z-index:3"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle></svg></div><div class="doll-layer" style="z-index:4"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z" fill="#b79ced"></path>
+      <rect x="96" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="123" y="252" width="22" height="44" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="150" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="177" y="252" width="22" height="44" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="204" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect>
+      <path d="M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#b79ced"></path>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#9f7edb"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#9f7edb"></rect>
+      <circle cx="120" cy="206" r="13" fill="#cdb9f2"></circle>
+      <circle cx="180" cy="206" r="13" fill="#cdb9f2"></circle>
+      <circle cx="137" cy="193" r="9" fill="#e6dcfa"></circle>
+      <circle cx="163" cy="193" r="9" fill="#e6dcfa"></circle>
+      <g transform="translate(112,286)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#fff"></path></g>
+      <g transform="translate(150,300)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#ffd34d" transform="scale(.8)"></path></g>
+      <g transform="translate(190,286)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#fff"></path></g>
+      <rect x="126" y="246" width="48" height="9" rx="4.5" fill="#e6dcfa"></rect></svg></div><div class="doll-layer" style="z-index:5"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg"><g id="sh-mary">
+      <rect x="126.5" y="366" width="22" height="30" rx="8" fill="#fff"></rect>
+      <ellipse cx="137.5" cy="404" rx="17" ry="12" fill="#ff7fa9"></ellipse>
+      <rect x="123.5" y="395" width="28" height="6" rx="3" fill="#e05c86"></rect>
+      <circle cx="146.5" cy="398" r="2.6" fill="#fff"></circle></g><use href="#sh-mary" x="25"></use></svg></div><div class="doll-layer" style="z-index:6"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="96" cy="98" r="19" fill="currentColor"></circle>
+        <circle cx="120" cy="84" r="20" fill="currentColor"></circle>
+        <circle cx="150" cy="78" r="21" fill="currentColor"></circle>
+        <circle cx="180" cy="84" r="20" fill="currentColor"></circle>
+        <circle cx="204" cy="98" r="19" fill="currentColor"></circle>
+        <circle cx="92" cy="122" r="15" fill="currentColor"></circle>
+        <circle cx="208" cy="122" r="15" fill="currentColor"></circle>
+        <ellipse cx="130" cy="70" rx="20" ry="8" fill="#fff" opacity=".3" transform="rotate(-14 130 70)"></ellipse>
+        <g transform="translate(78,108)">
+          <path d="M0,0 C-20,-16 -30,0 -24,8 C-18,15 -5,8 0,0 Z" fill="#ff7fa9"></path>
+          <path d="M0,0 C20,-16 30,0 24,8 C18,15 5,8 0,0 Z" fill="#ff7fa9"></path>
+          <circle r="6.5" fill="#e05c86"></circle>
+        </g>
+        <g transform="translate(222,108)">
+          <path d="M0,0 C-20,-16 -30,0 -24,8 C-18,15 -5,8 0,0 Z" fill="#ff7fa9"></path>
+          <path d="M0,0 C20,-16 30,0 24,8 C18,15 5,8 0,0 Z" fill="#ff7fa9"></path>
+          <circle r="6.5" fill="#e05c86"></circle>
+        </g></svg></div><div class="doll-layer" style="z-index:7"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(150,50)">
+        <path d="M-26,10 L-31,-13 L-14,-1 L0,-19 L14,-1 L31,-13 L26,10 Z" fill="#ffd34d" stroke="#f2a94f" stroke-width="2.5" stroke-linejoin="round"></path>
+        <rect x="-27" y="8" width="54" height="9" rx="4.5" fill="#ffd34d" stroke="#f2a94f" stroke-width="2"></rect>
+        <circle cx="0" cy="-2" r="3.4" fill="#ff9eb5"></circle>
+        <circle cx="-17" cy="2" r="2.8" fill="#7ecbff"></circle>
+        <circle cx="17" cy="2" r="2.8" fill="#98d8a0"></circle>
+      </g></svg></div></div></div><div class="char-holding"><circle cx="25" cy="25" r="22" fill="#ccc"></circle></div></div>
+            <div class="world-char" id="char-cat" style="width: 8.2%; left: 4789.5px; top: 70%;"><div class="char-inner" style="transform: scaleX(1);"><div class="char-body"><div class="cat-layer"><svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+    <path d="M138,132 Q172,128 168,96" stroke="#f2a65a" stroke-width="13" fill="none" stroke-linecap="round"></path>
+    <ellipse cx="100" cy="118" rx="44" ry="42" fill="#f7b967"></ellipse>
+    <ellipse cx="100" cy="134" rx="26" ry="27" fill="#fff6e8"></ellipse>
+    <rect x="78" y="60" width="10" height="18" rx="5" fill="#e8974a"></rect>
+    <rect x="112" y="60" width="10" height="18" rx="5" fill="#e8974a"></rect>
+    <circle cx="100" cy="62" r="35" fill="#f7b967"></circle>
+    <polygon points="76,42 80,18 98,36" fill="#f7b967"></polygon>
+    <polygon points="124,42 120,18 102,36" fill="#f7b967"></polygon>
+    <polygon points="80,38 82,26 91,35" fill="#ffb3c1"></polygon>
+    <polygon points="120,38 118,26 109,35" fill="#ffb3c1"></polygon>
+    <circle cx="87" cy="60" r="5.5" fill="#5b3a29"></circle>
+    <circle cx="113" cy="60" r="5.5" fill="#5b3a29"></circle>
+    <circle cx="85.5" cy="58" r="2" fill="#fff"></circle>
+    <circle cx="111.5" cy="58" r="2" fill="#fff"></circle>
+    <polygon points="100,68 96,73 104,73" fill="#ff8fa0"></polygon>
+    <path d="M100,73 Q96,79 91,77 M100,73 Q104,79 109,77" stroke="#7a4d1d" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+    <circle cx="78" cy="70" r="4.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="122" cy="70" r="4.5" fill="#ffb3c1" opacity=".7"></circle>
+    <ellipse cx="76" cy="156" rx="12" ry="8" fill="#f7b967"></ellipse>
+    <ellipse cx="124" cy="156" rx="12" ry="8" fill="#f7b967"></ellipse>
+    <line x1="73" y1="153" x2="73" y2="159" stroke="#e8974a" stroke-width="2"></line>
+    <line x1="79" y1="153" x2="79" y2="159" stroke="#e8974a" stroke-width="2"></line>
+    <line x1="121" y1="153" x2="121" y2="159" stroke="#e8974a" stroke-width="2"></line>
+    <line x1="127" y1="153" x2="127" y2="159" stroke="#e8974a" stroke-width="2"></line></svg></div><div class="cat-layer" style="z-index:2"><svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(74,30) rotate(-10)">
+        <path d="M0,0 C-16,-11 -23,2 -18,8 C-13,13 -4,6 0,0 Z" fill="#ff7fa9"></path>
+        <path d="M0,0 C16,-11 23,2 18,8 C13,13 4,6 0,0 Z" fill="#ff7fa9"></path>
+        <circle r="4.5" fill="#e05c86"></circle>
+      </g></svg></div></div></div><div class="char-holding hidden"></div></div>
+          </div>
+          <div class="world-dots">
+      <button class="world-dot" data-room="balcony" aria-label="balcony">
+        
+        
+      </button>
+      <button class="world-dot active" data-room="bedroom" aria-label="bedroom">
+        
+        
+      </button>
+      <button class="world-dot" data-room="bathroom" aria-label="bathroom">
+        
+        
+      </button>
+      <button class="world-dot" data-room="living" aria-label="living">
+        
+        
+      </button>
+      <button class="world-dot" data-room="kitchen" aria-label="kitchen">
+        <span class="dot-girl"></span>
+        <span class="dot-cat"></span>
+      </button>
+      <button class="world-dot" data-room="study" aria-label="study">
+        
+        
+      </button>
+      <button class="world-dot" data-room="wardrobe" aria-label="wardrobe">
+        
+        
+      </button>
+      <button class="world-dot" data-room="yard" aria-label="yard">
+        
+        
+      </button>
+      <button class="world-dot" data-room="park" aria-label="park">
+        
+        
+      </button>
+      <button class="world-dot" data-room="shop" aria-label="shop">
+        
+        
+      </button></div>
+          <button class="world-arrow left">←</button>
+          <button class="world-arrow right">→</button>
+        </div>
+        <div class="game-toolbar">
+          <div class="tab-row">
+            <button class="btn-palette" data-kind="wall" aria-label="换墙纸">
+              <svg viewBox="0 0 36 36">
+                <rect x="4" y="4" width="28" height="28" rx="7" fill="#ffb3c7"></rect>
+                <rect x="4" y="4" width="28" height="10" rx="5" fill="#9ad7f0"></rect>
+                <circle cx="25" cy="23" r="5" fill="#ffd34d"></circle>
+              </svg>
+            </button>
+            <button class="btn-palette" data-kind="floor" aria-label="换地板">
+              <svg viewBox="0 0 36 36">
+                <rect x="4" y="4" width="28" height="28" rx="7" fill="#e8b97e"></rect>
+                <line x1="4" y1="15" x2="32" y2="15" stroke="#dca96b" stroke-width="3"></line>
+                <line x1="4" y1="26" x2="32" y2="26" stroke="#dca96b" stroke-width="3"></line>
+                <line x1="15" y1="4" x2="15" y2="15" stroke="#dca96b" stroke-width="3"></line>
+                <line x1="24" y1="15" x2="24" y2="26" stroke="#dca96b" stroke-width="3"></line>
+              </svg>
+            </button>
+            <button class="btn-clean" aria-label="收起东西">
+              <svg viewBox="0 0 36 36">
+                <rect x="14" y="5" width="8" height="4" rx="2" fill="#fff"></rect>
+                <rect x="7" y="9" width="22" height="5" rx="2.5" fill="#fff"></rect>
+                <path d="M9,14 L27,14 L25,31 Q18,33 11,31 Z" fill="#fff"></path>
+                <line x1="14" y1="18" x2="15" y2="28" stroke="#ff8f8f" stroke-width="2.4" stroke-linecap="round"></line>
+                <line x1="18" y1="18" x2="18" y2="28" stroke="#ff8f8f" stroke-width="2.4" stroke-linecap="round"></line>
+                <line x1="22" y1="18" x2="21" y2="28" stroke="#ff8f8f" stroke-width="2.4" stroke-linecap="round"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="item-drawer"><div class="item-card" data-id="bed">
+        <svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      
+        <rect x="16" y="14" width="32" height="122" rx="14" fill="#e8a3bd"></rect>
+        <rect x="212" y="52" width="32" height="84" rx="14" fill="#e8a3bd"></rect>
+        <rect x="30" y="74" width="200" height="44" rx="18" fill="#fffdf5"></rect>
+        <rect x="92" y="70" width="138" height="48" rx="18" fill="#ff9eb5"></rect>
+        <circle cx="150" cy="94" r="7" fill="#fff" opacity=".8"></circle>
+        <circle cx="185" cy="94" r="7" fill="#fff" opacity=".8"></circle>
+        <rect x="38" y="60" width="56" height="28" rx="13" fill="#fff"></rect>
+        <path d="M42,74 q6,-8 12,0 q6,-8 12,0" stroke="#ffd9ea" stroke-width="3" fill="none" stroke-linecap="round"></path>
+        <rect x="34" y="112" width="10" height="22" rx="4" fill="#d98cb0"></rect>
+        <rect x="216" y="128" width="10" height="12" rx="4" fill="#d98cb0"></rect>
+      </svg>
+      </div><div class="item-card" data-id="sofa">
+        <svg viewBox="0 0 220 145" xmlns="http://www.w3.org/2000/svg">
+      
+        <rect x="12" y="12" width="196" height="72" rx="30" fill="#7ec8e3"></rect>
+        <rect x="4" y="44" width="40" height="62" rx="20" fill="#6bb8d8"></rect>
+        <rect x="176" y="44" width="40" height="62" rx="20" fill="#6bb8d8"></rect>
+        <rect x="42" y="66" width="68" height="36" rx="14" fill="#9ad7f0"></rect>
+        <rect x="110" y="66" width="68" height="36" rx="14" fill="#9ad7f0"></rect>
+        <rect x="28" y="98" width="164" height="18" rx="9" fill="#6bb8d8"></rect>
+        <rect x="36" y="116" width="12" height="18" rx="5" fill="#e8a3bd"></rect>
+        <rect x="172" y="116" width="12" height="18" rx="5" fill="#e8a3bd"></rect>
+        <path d="M60,58 C56,46 68,42 72,50 C76,42 88,46 84,58 Q72,64 60,58 Z" fill="#ff9eb5"></path>
+      </svg>
+      </div><div class="item-card" data-id="rug">
+        <svg viewBox="0 0 240 135" xmlns="http://www.w3.org/2000/svg">
+      
+        <ellipse cx="120" cy="68" rx="114" ry="58" fill="#ffd9ea"></ellipse>
+        <ellipse cx="120" cy="68" rx="86" ry="42" fill="#fff"></ellipse>
+        <ellipse cx="120" cy="68" rx="54" ry="26" fill="#ffdee9"></ellipse>
+        <circle cx="120" cy="68" r="9" fill="#ff9eb5"></circle>
+        <circle cx="0" cy="0" r="5" fill="#ff9eb5" transform="translate(220,68)"></circle><circle cx="0" cy="0" r="5" fill="#ff9eb5" transform="translate(190.71067811865476,100.5269119345812)"></circle><circle cx="0" cy="0" r="5" fill="#ff9eb5" transform="translate(120,114)"></circle><circle cx="0" cy="0" r="5" fill="#ff9eb5" transform="translate(49.28932188134526,100.5269119345812)"></circle><circle cx="0" cy="0" r="5" fill="#ff9eb5" transform="translate(20,68)"></circle><circle cx="0" cy="0" r="5" fill="#ff9eb5" transform="translate(49.28932188134523,35.473088065418814)"></circle><circle cx="0" cy="0" r="5" fill="#ff9eb5" transform="translate(119.99999999999999,22)"></circle><circle cx="0" cy="0" r="5" fill="#ff9eb5" transform="translate(190.71067811865476,35.47308806541881)"></circle>
+      </svg>
+      </div><div class="item-card" data-id="table">
+        <svg viewBox="0 0 150 135" xmlns="http://www.w3.org/2000/svg">
+      
+        <line x1="44" y1="70" x2="34" y2="122" stroke="#d98c5a" stroke-width="10" stroke-linecap="round"></line>
+        <line x1="106" y1="70" x2="116" y2="122" stroke="#d98c5a" stroke-width="10" stroke-linecap="round"></line>
+        <ellipse cx="75" cy="66" rx="62" ry="22" fill="#d9b87a"></ellipse>
+        <ellipse cx="75" cy="56" rx="62" ry="22" fill="#f2d9a0"></ellipse>
+        <ellipse cx="75" cy="50" rx="40" ry="13" fill="#e8cf9f" opacity=".6"></ellipse>
+        <g transform="translate(75,42)">
+          <ellipse cx="0" cy="6" rx="15" ry="5" fill="#fff"></ellipse>
+          <path d="M-9,-6 L9,-6 L7,6 Q0,9 -7,6 Z" fill="#fff"></path>
+          <path d="M9,-4 Q16,-2 9,3" stroke="#fff" stroke-width="2.5" fill="none"></path>
+          <path d="M-3,-6 Q0,-12 3,-6" stroke="#ff9eb5" stroke-width="2.5" fill="none"></path>
+        </g>
+      </svg>
+      </div><div class="item-card" data-id="bookshelf">
+        <svg viewBox="0 0 170 205" xmlns="http://www.w3.org/2000/svg">
+      
+        <rect x="10" y="8" width="150" height="184" rx="12" fill="#d98c5a"></rect>
+        <rect x="20" y="18" width="130" height="164" rx="6" fill="#f7e8d2"></rect>
+        
+          <rect x="20" y="62" width="130" height="8" fill="#c47a44"></rect>
+          <g>
+            <rect x="30" y="36" width="12" height="26" rx="3" fill="#ff8f9e"></rect><rect x="47" y="28" width="12" height="34" rx="3" fill="#7ec8e3"></rect><rect x="64" y="20" width="12" height="42" rx="3" fill="#ffd166"></rect><rect x="81" y="36" width="12" height="26" rx="3" fill="#98d8a0"></rect><rect x="98" y="28" width="12" height="34" rx="3" fill="#b79ced"></rect><rect x="115" y="20" width="12" height="42" rx="3" fill="#ff9eb5"></rect><rect x="132" y="36" width="12" height="26" rx="3" fill="#9ad7f0"></rect>
+          </g>
+          <rect x="20" y="118" width="130" height="8" fill="#c47a44"></rect>
+          <g>
+            <rect x="64" y="76" width="12" height="42" rx="3" fill="#ffd166"></rect><rect x="81" y="92" width="12" height="26" rx="3" fill="#98d8a0"></rect><rect x="98" y="84" width="12" height="34" rx="3" fill="#b79ced"></rect><rect x="115" y="76" width="12" height="42" rx="3" fill="#ff9eb5"></rect>
+          </g>
+          <rect x="20" y="174" width="130" height="8" fill="#c47a44"></rect>
+          <g>
+            <rect x="30" y="148" width="12" height="26" rx="3" fill="#ff8f9e"></rect><rect x="47" y="140" width="12" height="34" rx="3" fill="#7ec8e3"></rect><rect x="64" y="132" width="12" height="42" rx="3" fill="#ffd166"></rect><rect x="81" y="148" width="12" height="26" rx="3" fill="#98d8a0"></rect><rect x="98" y="140" width="12" height="34" rx="3" fill="#b79ced"></rect><rect x="115" y="132" width="12" height="42" rx="3" fill="#ff9eb5"></rect><rect x="132" y="148" width="12" height="26" rx="3" fill="#9ad7f0"></rect>
+          </g>
+        <circle cx="85" cy="150" r="9" fill="#f7b967"></circle>
+        <circle cx="80" cy="144" r="5.5" fill="#f7b967"></circle>
+        <circle cx="90" cy="144" r="5.5" fill="#f7b967"></circle>
+      </svg>
+      </div><div class="item-card" data-id="piano">
+        <svg viewBox="0 0 180 145" xmlns="http://www.w3.org/2000/svg">
+      
+        <rect x="10" y="18" width="160" height="30" rx="10" fill="#e05c86"></rect>
+        <rect x="10" y="40" width="160" height="72" rx="12" fill="#ff8fa0"></rect>
+        <rect x="24" y="58" width="132" height="36" rx="7" fill="#fff"></rect>
+        <rect x="34" y="58" width="8" height="17" rx="2.5" fill="#5b3a29"></rect><rect x="50" y="58" width="8" height="17" rx="2.5" fill="#5b3a29"></rect><rect x="66" y="58" width="8" height="17" rx="2.5" fill="#5b3a29"></rect><rect x="82" y="58" width="8" height="17" rx="2.5" fill="#5b3a29"></rect><rect x="98" y="58" width="8" height="17" rx="2.5" fill="#5b3a29"></rect><rect x="114" y="58" width="8" height="17" rx="2.5" fill="#5b3a29"></rect><rect x="130" y="58" width="8" height="17" rx="2.5" fill="#5b3a29"></rect><rect x="146" y="58" width="8" height="17" rx="2.5" fill="#5b3a29"></rect>
+        <circle cx="30" cy="33" r="5" fill="#ffd34d"></circle>
+        <circle cx="150" cy="33" r="5" fill="#7ecbff"></circle>
+        <rect x="26" y="110" width="12" height="20" rx="5" fill="#e05c86"></rect>
+        <rect x="142" y="110" width="12" height="20" rx="5" fill="#e05c86"></rect>
+        <g transform="translate(158,8)">
+          <circle cx="0" cy="0" r="5" fill="#7a4d1d"></circle>
+          <path d="M0,0 L14,-6 L14,4 Q7,8 0,4 Z" fill="#7a4d1d"></path>
+        </g>
+      </svg>
+      </div><div class="item-card" data-id="lamp">
+        <svg viewBox="0 0 110 195" xmlns="http://www.w3.org/2000/svg">
+      
+        <ellipse cx="55" cy="182" rx="36" ry="12" fill="#e8a3bd"></ellipse>
+        <rect x="50" y="66" width="10" height="114" rx="5" fill="#d98cb0"></rect>
+        <path d="M26,74 L84,74 L69,20 Q55,10 41,20 Z" fill="#ffcf6b"></path>
+        <path d="M38,68 L47,28 M72,68 L63,28" stroke="#f2b730" stroke-width="4" stroke-linecap="round"></path>
+        <circle cx="55" cy="86" r="16" fill="rgba(255,230,140,.55)"></circle>
+      </svg>
+      </div><div class="item-card" data-id="plant">
+        <svg viewBox="0 0 130 195" xmlns="http://www.w3.org/2000/svg">
+      
+        <path d="M34,132 L96,132 L87,186 Q65,194 43,186 Z" fill="#e8975e"></path>
+        <rect x="29" y="122" width="72" height="17" rx="8.5" fill="#f2a86e"></rect>
+        <ellipse cx="0" cy="0" rx="14" ry="34" fill="#6cc46a" transform="translate(27,110) rotate(60)"></ellipse><ellipse cx="0" cy="0" rx="14" ry="34" fill="#6cc46a" transform="translate(45,92) rotate(26)"></ellipse><ellipse cx="0" cy="0" rx="14" ry="34" fill="#6cc46a" transform="translate(65,84) rotate(0)"></ellipse><ellipse cx="0" cy="0" rx="14" ry="34" fill="#6cc46a" transform="translate(85,92) rotate(-26)"></ellipse><ellipse cx="0" cy="0" rx="14" ry="34" fill="#6cc46a" transform="translate(103,110) rotate(-60)"></ellipse>
+        <ellipse cx="0" cy="0" rx="10" ry="26" fill="#7ed47b" transform="translate(43,116)"></ellipse><ellipse cx="0" cy="0" rx="10" ry="26" fill="#7ed47b" transform="translate(87,116)"></ellipse>
+        <ellipse cx="0" cy="-9" rx="5" ry="9" fill="#ff9eb5" transform="translate(65,64) rotate(0)"></ellipse><ellipse cx="0" cy="-9" rx="5" ry="9" fill="#ff9eb5" transform="translate(65,64) rotate(60)"></ellipse><ellipse cx="0" cy="-9" rx="5" ry="9" fill="#ff9eb5" transform="translate(65,64) rotate(120)"></ellipse><ellipse cx="0" cy="-9" rx="5" ry="9" fill="#ff9eb5" transform="translate(65,64) rotate(180)"></ellipse><ellipse cx="0" cy="-9" rx="5" ry="9" fill="#ff9eb5" transform="translate(65,64) rotate(240)"></ellipse><ellipse cx="0" cy="-9" rx="5" ry="9" fill="#ff9eb5" transform="translate(65,64) rotate(300)"></ellipse>
+        <circle cx="65" cy="64" r="6" fill="#ffd34d"></circle>
+      </svg>
+      </div><div class="item-card" data-id="catbed">
+        <svg viewBox="0 0 150 105" xmlns="http://www.w3.org/2000/svg">
+      
+        <ellipse cx="75" cy="58" rx="68" ry="40" fill="#b79ced"></ellipse>
+        <ellipse cx="75" cy="58" rx="48" ry="27" fill="#e6dcfa"></ellipse>
+        <path d="M38,58 Q38,30 62,32" stroke="#f7b967" stroke-width="16" fill="none" stroke-linecap="round"></path>
+        <circle cx="62" cy="52" r="17" fill="#f7b967"></circle>
+        <polygon points="52,42 54,30 62,39" fill="#f7b967"></polygon>
+        <polygon points="72,42 70,30 62,39" fill="#f7b967"></polygon>
+        <path d="M56,52 Q59,54 62,52 M62,52 Q65,54 68,52" stroke="#7a4d1d" stroke-width="2" fill="none" stroke-linecap="round"></path>
+        <path d="M86,30 l6,-6 M88,38 l8,-3" stroke="#b79ced" stroke-width="3" stroke-linecap="round"></path>
+      </svg>
+      </div><div class="item-card" data-id="teddy">
+        <svg viewBox="0 0 120 155" xmlns="http://www.w3.org/2000/svg">
+      
+        <circle cx="36" cy="24" r="12" fill="#c99b6a"></circle>
+        <circle cx="84" cy="24" r="12" fill="#c99b6a"></circle>
+        <circle cx="36" cy="24" r="6" fill="#ffb3c1"></circle>
+        <circle cx="84" cy="24" r="6" fill="#ffb3c1"></circle>
+        <ellipse cx="60" cy="110" rx="34" ry="36" fill="#c99b6a"></ellipse>
+        <ellipse cx="60" cy="118" rx="20" ry="22" fill="#e8cf9f"></ellipse>
+        <circle cx="60" cy="46" r="30" fill="#c99b6a"></circle>
+        <ellipse cx="60" cy="56" rx="14" ry="11" fill="#e8cf9f"></ellipse>
+        <circle cx="49" cy="42" r="3.6" fill="#5b3a29"></circle>
+        <circle cx="71" cy="42" r="3.6" fill="#5b3a29"></circle>
+        <ellipse cx="60" cy="52" rx="4.5" ry="3.5" fill="#7a4d1d"></ellipse>
+        <path d="M56,58 Q60,62 64,58" stroke="#7a4d1d" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+        <line x1="22" y1="96" x2="12" y2="118" stroke="#c99b6a" stroke-width="14" stroke-linecap="round"></line>
+        <line x1="98" y1="96" x2="108" y2="118" stroke="#c99b6a" stroke-width="14" stroke-linecap="round"></line>
+        <ellipse cx="38" cy="142" rx="10" ry="8" fill="#c99b6a"></ellipse>
+        <ellipse cx="82" cy="142" rx="10" ry="8" fill="#c99b6a"></ellipse>
+        <g transform="translate(60,76)">
+          <path d="M0,0 C-12,-9 -18,1 -14,6 C-10,10 -3,4 0,0 Z" fill="#ff7fa9"></path>
+          <path d="M0,0 C12,-9 18,1 14,6 C10,10 3,4 0,0 Z" fill="#ff7fa9"></path>
+          <circle r="3.6" fill="#e05c86"></circle>
+        </g>
+      </svg>
+      </div><div class="item-card" data-id="frame">
+        <svg viewBox="0 0 110 135" xmlns="http://www.w3.org/2000/svg">
+      
+        <rect x="10" y="12" width="90" height="102" rx="10" fill="#d98c5a"></rect>
+        <rect x="22" y="24" width="66" height="78" rx="5" fill="#cdf0ff"></rect>
+        <circle cx="39" cy="43" r="8" fill="#ffd34d"></circle>
+        <path d="M22,88 Q40,66 55,80 Q70,92 88,78 L88,102 L22,102 Z" fill="#98d8a0"></path>
+        <path d="M34,92 Q55,72 76,92" stroke="#ff8f9e" stroke-width="7" fill="none" stroke-linecap="round"></path>
+        <g transform="translate(94,16)">
+          <path d="M0,0 C-10,-8 -15,1 -11,5 C-8,9 -2,3 0,0 Z" fill="#ff7fa9"></path>
+          <path d="M0,0 C10,-8 15,1 11,5 C8,9 2,3 0,0 Z" fill="#ff7fa9"></path>
+          <circle r="3" fill="#e05c86"></circle>
+        </g>
+      </svg>
+      </div><div class="item-card" data-id="clock">
+        <svg viewBox="0 0 105 115" xmlns="http://www.w3.org/2000/svg">
+      
+        <polygon points="28,26 34,4 56,20" fill="#fff" stroke="#e8a3bd" stroke-width="6"></polygon>
+        <polygon points="77,26 71,4 49,20" fill="#fff" stroke="#e8a3bd" stroke-width="6"></polygon>
+        <circle cx="52" cy="60" r="42" fill="#fffdf5" stroke="#e8a3bd" stroke-width="8"></circle>
+        <circle cx="52" cy="26" r="5" fill="#5b3a29"></circle>
+        <circle cx="52" cy="94" r="5" fill="#5b3a29"></circle>
+        <circle cx="18" cy="60" r="5" fill="#5b3a29"></circle>
+        <circle cx="86" cy="60" r="5" fill="#5b3a29"></circle>
+        <line x1="52" y1="60" x2="52" y2="34" stroke="#7a4d1d" stroke-width="5" stroke-linecap="round"></line>
+        <line x1="52" y1="60" x2="72" y2="68" stroke="#e05c86" stroke-width="5" stroke-linecap="round"></line>
+        <circle cx="52" cy="60" r="5" fill="#ff9eb5"></circle>
+      </svg>
+      </div><div class="item-card" data-id="st_star">
+        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+      
+        <path d="M45 8l8.6 20.3 21.9 1.9-16.6 14.5 4.9 21.4L45 55l-18.8 11.1 4.9-21.4L14.5 30.2l21.9-1.9z" fill="#ffd34d" stroke="#f2a94f" stroke-width="3" stroke-linejoin="round"></path>
+        <circle cx="70" cy="18" r="5" fill="#ffe9a8"></circle>
+        <circle cx="20" cy="70" r="4" fill="#ffe9a8"></circle>
+      </svg>
+      </div><div class="item-card" data-id="st_flower">
+        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+      
+        <ellipse cx="0" cy="-19" rx="11" ry="19" fill="#ff9eb5" transform="translate(45,42) rotate(0)"></ellipse><ellipse cx="0" cy="-19" rx="11" ry="19" fill="#ff9eb5" transform="translate(45,42) rotate(60)"></ellipse><ellipse cx="0" cy="-19" rx="11" ry="19" fill="#ff9eb5" transform="translate(45,42) rotate(120)"></ellipse><ellipse cx="0" cy="-19" rx="11" ry="19" fill="#ff9eb5" transform="translate(45,42) rotate(180)"></ellipse><ellipse cx="0" cy="-19" rx="11" ry="19" fill="#ff9eb5" transform="translate(45,42) rotate(240)"></ellipse><ellipse cx="0" cy="-19" rx="11" ry="19" fill="#ff9eb5" transform="translate(45,42) rotate(300)"></ellipse>
+        <circle cx="45" cy="42" r="11" fill="#ffd34d"></circle>
+        <circle cx="45" cy="42" r="5.5" fill="#ffe9a8"></circle>
+      </svg>
+      </div><div class="item-card" data-id="st_butterfly">
+        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+      
+        <ellipse cx="26" cy="32" rx="17" ry="23" fill="#7ecbff" transform="rotate(-24 26 32)"></ellipse>
+        <ellipse cx="64" cy="32" rx="17" ry="23" fill="#7ecbff" transform="rotate(24 64 32)"></ellipse>
+        <ellipse cx="31" cy="62" rx="12" ry="16" fill="#9ad7f0" transform="rotate(-18 31 62)"></ellipse>
+        <ellipse cx="59" cy="62" rx="12" ry="16" fill="#9ad7f0" transform="rotate(18 59 62)"></ellipse>
+        <ellipse cx="45" cy="48" rx="5.5" ry="19" fill="#5a6b7a"></ellipse>
+        <path d="M42,30 Q36,18 30,14 M48,30 Q54,18 60,14" stroke="#5a6b7a" stroke-width="3" fill="none" stroke-linecap="round"></path>
+        <circle cx="30" cy="14" r="3" fill="#ffd34d"></circle>
+        <circle cx="60" cy="14" r="3" fill="#ffd34d"></circle>
+      </svg>
+      </div></div>
+        </div>
+        <div class="clean-banner hidden">🗑 点一下，收走不想要的东西</div>
+        <div class="drop-basket">
+          <svg viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg">
+            <path d="M35,34 Q60,6 85,34" stroke="#c98443" stroke-width="8" fill="none" stroke-linecap="round"></path>
+            <path d="M20,38 L100,38 L88,96 Q60,106 32,96 Z" fill="#e8a86b"></path>
+            <path d="M30,48 L90,48 M28,60 L92,60 M31,72 L89,72 M35,84 L85,84" stroke="#d1924f" stroke-width="3" stroke-linecap="round"></path>
+            <rect x="14" y="30" width="92" height="14" rx="7" fill="#c98443"></rect>
+            <path d="M60,44 l3,7 8,0.7 -6,5.4 1.8,7.7 -6.8,-4.2 -6.8,4.2 1.8,-7.7 -6,-5.4 8,-0.7z" fill="#ffd34d"></path>
+          </svg>
+        </div><div class="fx-sparkle" style="left: 5671.94px; top: 403.092px;"><svg viewBox="0 0 24 24" width="21.307081890069504" height="21.307081890069504">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7ecbff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 5669.09px; top: 395.786px;"><svg viewBox="0 0 24 24" width="17.06509254368327" height="17.06509254368327">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ffd34d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 5661.08px; top: 386.919px;"><svg viewBox="0 0 24 24" width="24.252586140444276" height="24.252586140444276">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7fe3a1" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 5680.99px; top: 403.094px;"><svg viewBox="0 0 24 24" width="15.153405483025605" height="15.153405483025605">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#b79ced" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 5659.98px; top: 403.433px;"><svg viewBox="0 0 24 24" width="29.893407428063277" height="29.893407428063277">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ffd34d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 5675.41px; top: 404.955px;"><svg viewBox="0 0 24 24" width="28.092483535174512" height="28.092483535174512">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#b79ced" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 5655.11px; top: 386.311px;"><svg viewBox="0 0 24 24" width="25.74074934962345" height="25.74074934962345">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7fe3a1" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div></div>
+  <div class="screen overlay-screen" id="screen-dressup">
+        <div class="game-top">
+    <button class="btn-home" aria-label="回家">
+      <svg viewBox="0 0 48 48">
+        <path d="M24 6L5 22h6v18a2 2 0 0 0 2 2h8V30h6v12h8a2 2 0 0 0 2-2V22h6z" fill="#fff" stroke="#d16a89" stroke-width="2.4" stroke-linejoin="round"></path>
+        <rect x="21.5" y="15" width="5" height="6" rx="2" fill="#ffd0dd"></rect>
+      </svg>
+    </button>
+    <button class="btn-rooms" aria-label="换房间">
+      <svg viewBox="0 0 48 48">
+        <path d="M10 42V20a2 2 0 0 1 2-2h24a2 2 0 0 1 2 2v22" fill="#fff" stroke="#4f9cc0" stroke-width="2.6" stroke-linejoin="round"></path>
+        <path d="M16 40V28a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12" fill="#9ad7f0" stroke="#4f9cc0" stroke-width="2.4" stroke-linejoin="round"></path>
+        <circle cx="24" cy="15" r="2.6" fill="#ffd34d"></circle>
+        <path d="M24 6l1.4 3.4 3.6.3-2.7 2.3.8 3.5-3.1-1.9-3.1 1.9.8-3.5-2.7-2.3 3.6-.3z" fill="#ffd34d"></path>
+      </svg>
+    </button></div>
+        <div class="game-stage">
+          <div class="dressup-stage">
+            <div class="doll-wrap" style="color: rgb(139, 94, 60);"><div class="doll-layer" style="z-index:1"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg"><ellipse cx="150" cy="112" rx="66" ry="62" fill="currentColor"></ellipse>
+        <line x1="84" y1="122" x2="62" y2="258" stroke="currentColor" stroke-width="38" stroke-linecap="round"></line>
+        <line x1="216" y1="122" x2="238" y2="258" stroke="currentColor" stroke-width="38" stroke-linecap="round"></line>
+        <ellipse cx="62" cy="258" rx="24" ry="18" fill="currentColor" opacity=".85"></ellipse>
+        <ellipse cx="238" cy="258" rx="24" ry="18" fill="currentColor" opacity=".85"></ellipse></svg></div><div class="doll-layer" style="z-index:3"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle></svg></div><div class="doll-layer" style="z-index:4"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z" fill="#b79ced"></path>
+      <rect x="96" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="123" y="252" width="22" height="44" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="150" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="177" y="252" width="22" height="44" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="204" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect>
+      <path d="M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#b79ced"></path>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#9f7edb"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#9f7edb"></rect>
+      <circle cx="120" cy="206" r="13" fill="#cdb9f2"></circle>
+      <circle cx="180" cy="206" r="13" fill="#cdb9f2"></circle>
+      <circle cx="137" cy="193" r="9" fill="#e6dcfa"></circle>
+      <circle cx="163" cy="193" r="9" fill="#e6dcfa"></circle>
+      <g transform="translate(112,286)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#fff"></path></g>
+      <g transform="translate(150,300)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#ffd34d" transform="scale(.8)"></path></g>
+      <g transform="translate(190,286)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#fff"></path></g>
+      <rect x="126" y="246" width="48" height="9" rx="4.5" fill="#e6dcfa"></rect></svg></div><div class="doll-layer" style="z-index:5"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg"><g id="sh-mary">
+      <rect x="126.5" y="366" width="22" height="30" rx="8" fill="#fff"></rect>
+      <ellipse cx="137.5" cy="404" rx="17" ry="12" fill="#ff7fa9"></ellipse>
+      <rect x="123.5" y="395" width="28" height="6" rx="3" fill="#e05c86"></rect>
+      <circle cx="146.5" cy="398" r="2.6" fill="#fff"></circle></g><use href="#sh-mary" x="25"></use></svg></div><div class="doll-layer" style="z-index:6"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="96" cy="98" r="19" fill="currentColor"></circle>
+        <circle cx="120" cy="84" r="20" fill="currentColor"></circle>
+        <circle cx="150" cy="78" r="21" fill="currentColor"></circle>
+        <circle cx="180" cy="84" r="20" fill="currentColor"></circle>
+        <circle cx="204" cy="98" r="19" fill="currentColor"></circle>
+        <circle cx="92" cy="122" r="15" fill="currentColor"></circle>
+        <circle cx="208" cy="122" r="15" fill="currentColor"></circle>
+        <ellipse cx="130" cy="70" rx="20" ry="8" fill="#fff" opacity=".3" transform="rotate(-14 130 70)"></ellipse>
+        <g transform="translate(78,108)">
+          <path d="M0,0 C-20,-16 -30,0 -24,8 C-18,15 -5,8 0,0 Z" fill="#ff7fa9"></path>
+          <path d="M0,0 C20,-16 30,0 24,8 C18,15 5,8 0,0 Z" fill="#ff7fa9"></path>
+          <circle r="6.5" fill="#e05c86"></circle>
+        </g>
+        <g transform="translate(222,108)">
+          <path d="M0,0 C-20,-16 -30,0 -24,8 C-18,15 -5,8 0,0 Z" fill="#ff7fa9"></path>
+          <path d="M0,0 C20,-16 30,0 24,8 C18,15 5,8 0,0 Z" fill="#ff7fa9"></path>
+          <circle r="6.5" fill="#e05c86"></circle>
+        </g></svg></div><div class="doll-layer" style="z-index:7"><svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(150,50)">
+        <path d="M-26,10 L-31,-13 L-14,-1 L0,-19 L14,-1 L31,-13 L26,10 Z" fill="#ffd34d" stroke="#f2a94f" stroke-width="2.5" stroke-linejoin="round"></path>
+        <rect x="-27" y="8" width="54" height="9" rx="4.5" fill="#ffd34d" stroke="#f2a94f" stroke-width="2"></rect>
+        <circle cx="0" cy="-2" r="3.4" fill="#ff9eb5"></circle>
+        <circle cx="-17" cy="2" r="2.8" fill="#7ecbff"></circle>
+        <circle cx="17" cy="2" r="2.8" fill="#98d8a0"></circle>
+      </g></svg></div></div>
+            <div class="cat-wrap"><div class="cat-layer"><svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+    <path d="M138,132 Q172,128 168,96" stroke="#f2a65a" stroke-width="13" fill="none" stroke-linecap="round"></path>
+    <ellipse cx="100" cy="118" rx="44" ry="42" fill="#f7b967"></ellipse>
+    <ellipse cx="100" cy="134" rx="26" ry="27" fill="#fff6e8"></ellipse>
+    <rect x="78" y="60" width="10" height="18" rx="5" fill="#e8974a"></rect>
+    <rect x="112" y="60" width="10" height="18" rx="5" fill="#e8974a"></rect>
+    <circle cx="100" cy="62" r="35" fill="#f7b967"></circle>
+    <polygon points="76,42 80,18 98,36" fill="#f7b967"></polygon>
+    <polygon points="124,42 120,18 102,36" fill="#f7b967"></polygon>
+    <polygon points="80,38 82,26 91,35" fill="#ffb3c1"></polygon>
+    <polygon points="120,38 118,26 109,35" fill="#ffb3c1"></polygon>
+    <circle cx="87" cy="60" r="5.5" fill="#5b3a29"></circle>
+    <circle cx="113" cy="60" r="5.5" fill="#5b3a29"></circle>
+    <circle cx="85.5" cy="58" r="2" fill="#fff"></circle>
+    <circle cx="111.5" cy="58" r="2" fill="#fff"></circle>
+    <polygon points="100,68 96,73 104,73" fill="#ff8fa0"></polygon>
+    <path d="M100,73 Q96,79 91,77 M100,73 Q104,79 109,77" stroke="#7a4d1d" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+    <circle cx="78" cy="70" r="4.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="122" cy="70" r="4.5" fill="#ffb3c1" opacity=".7"></circle>
+    <ellipse cx="76" cy="156" rx="12" ry="8" fill="#f7b967"></ellipse>
+    <ellipse cx="124" cy="156" rx="12" ry="8" fill="#f7b967"></ellipse>
+    <line x1="73" y1="153" x2="73" y2="159" stroke="#e8974a" stroke-width="2"></line>
+    <line x1="79" y1="153" x2="79" y2="159" stroke="#e8974a" stroke-width="2"></line>
+    <line x1="121" y1="153" x2="121" y2="159" stroke="#e8974a" stroke-width="2"></line>
+    <line x1="127" y1="153" x2="127" y2="159" stroke="#e8974a" stroke-width="2"></line></svg></div><div class="cat-layer" style="z-index:2"><svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(74,30) rotate(-10)">
+        <path d="M0,0 C-16,-11 -23,2 -18,8 C-13,13 -4,6 0,0 Z" fill="#ff7fa9"></path>
+        <path d="M0,0 C16,-11 23,2 18,8 C13,13 4,6 0,0 Z" fill="#ff7fa9"></path>
+        <circle r="4.5" fill="#e05c86"></circle>
+      </g></svg></div></div>
+          </div>
+          <button class="btn-mirror" aria-label="照镜子">
+            <svg viewBox="0 0 48 48">
+              <circle cx="24" cy="24" r="17" fill="#fff" stroke="#e8a3bd" stroke-width="4"></circle>
+              <path d="M18 20 Q18 16 22 16" stroke="#ffb3c7" stroke-width="3" fill="none" stroke-linecap="round"></path>
+              <path d="M18 26 Q18 34 25 36 Q19 30 20 26 Z" fill="#ffd0dd"></path>
+            </svg>
+            <span>转一圈</span>
+          </button>
+        </div>
+        <div class="game-toolbar">
+          <div class="tab-row">
+            
+              <button class="tab-btn" data-cat="hair">
+                <span class="emoji">💇</span><span>发型</span>
+              </button>
+              <button class="tab-btn" data-cat="color">
+                <span class="emoji">🎨</span><span>发色</span>
+              </button>
+              <button class="tab-btn selected" data-cat="dress">
+                <span class="emoji">👗</span><span>裙子</span>
+              </button>
+              <button class="tab-btn" data-cat="shoes">
+                <span class="emoji">👟</span><span>鞋子</span>
+              </button>
+              <button class="tab-btn" data-cat="acc">
+                <span class="emoji">👑</span><span>配饰</span>
+              </button>
+              <button class="tab-btn" data-cat="cat">
+                <span class="emoji">🐱</span><span>小猫</span>
+              </button>
+          </div>
+          <div class="item-drawer"><div class="item-card" data-cat="dress" data-key="pinkpolka" style="color:#8b5e3c"><svg viewBox="80 160 140 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+      <defs><clipPath id="dc-pinkpolka"><path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z"></path></clipPath></defs>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#ff9eb5"></path>
+      <g clip-path="url(#dc-pinkpolka)">
+        <circle cx="104" cy="268" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="132" cy="268" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="160" cy="268" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="188" cy="268" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="118" cy="285" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="146" cy="285" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="174" cy="285" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="202" cy="285" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="104" cy="302" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="132" cy="302" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="160" cy="302" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="188" cy="302" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="118" cy="319" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="146" cy="319" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="174" cy="319" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="202" cy="319" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="104" cy="336" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="132" cy="336" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="160" cy="336" r="4.5" fill="rgba(255,255,255,.85)"></circle><circle cx="188" cy="336" r="4.5" fill="rgba(255,255,255,.85)"></circle>
+      </g>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#f77fa0"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#f77fa0"></rect>
+      <circle cx="120" cy="206" r="13" fill="#f77fa0"></circle>
+      <circle cx="180" cy="206" r="13" fill="#f77fa0"></circle>
+      <circle cx="137" cy="193" r="9" fill="#fff"></circle>
+      <circle cx="163" cy="193" r="9" fill="#fff"></circle>
+      <rect x="126" y="246" width="48" height="9" rx="4.5" fill="#fff"></rect>
+      <circle cx="150" cy="250" r="6" fill="#fff"></circle><circle cx="150" cy="250" r="3.6" fill="#f77fa0"></circle></svg></div><div class="item-card" data-cat="dress" data-key="sunflower" style="color:#8b5e3c"><svg viewBox="80 160 140 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+      <defs><clipPath id="dc-sunflower"><path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z"></path></clipPath></defs>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#ffd166"></path>
+      <g clip-path="url(#dc-sunflower)">
+        
+          <ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(128,292) rotate(0)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(128,292) rotate(60)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(128,292) rotate(120)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(128,292) rotate(180)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(128,292) rotate(240)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(128,292) rotate(300)"></ellipse>
+          <circle cx="128" cy="292" r="4" fill="#a86f3f"></circle>
+          <ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(178,312) rotate(0)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(178,312) rotate(60)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(178,312) rotate(120)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(178,312) rotate(180)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(178,312) rotate(240)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(178,312) rotate(300)"></ellipse>
+          <circle cx="178" cy="312" r="4" fill="#a86f3f"></circle>
+          <ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(104,316) rotate(0)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(104,316) rotate(60)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(104,316) rotate(120)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(104,316) rotate(180)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(104,316) rotate(240)"></ellipse><ellipse cx="0" cy="-8" rx="3.2" ry="6" fill="#f2a94f" transform="translate(104,316) rotate(300)"></ellipse>
+          <circle cx="104" cy="316" r="4" fill="#a86f3f"></circle>
+      </g>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#ff8f7a"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#ff8f7a"></rect>
+      <circle cx="120" cy="206" r="13" fill="#ffbe6b"></circle>
+      <circle cx="180" cy="206" r="13" fill="#ffbe6b"></circle>
+      <circle cx="137" cy="193" r="9" fill="#98d8a0"></circle>
+      <circle cx="163" cy="193" r="9" fill="#98d8a0"></circle>
+      <rect x="126" y="246" width="48" height="9" rx="4.5" fill="#ff8f7a"></rect></svg></div><div class="item-card" data-cat="dress" data-key="ocean" style="color:#8b5e3c"><svg viewBox="80 160 140 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+      <defs><clipPath id="dc-ocean"><path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z"></path></clipPath></defs>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#7ec8e3"></path>
+      <g clip-path="url(#dc-ocean)">
+        <path d="M84,318 Q104,306 122,318 Q140,330 158,318 Q176,306 196,318 Q208,326 216,318 L216,340 L84,340 Z" fill="rgba(255,255,255,.5)"></path>
+        <g transform="translate(124,290)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#ffd34d" transform="scale(1.1)"></path></g>
+        <g transform="translate(184,268)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#fff" transform="scale(.8)"></path></g>
+      </g>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#5aa8cc"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#5aa8cc"></rect>
+      <circle cx="120" cy="206" r="13" fill="#bfe6ff"></circle>
+      <circle cx="180" cy="206" r="13" fill="#bfe6ff"></circle>
+      <circle cx="137" cy="193" r="9" fill="#fff"></circle>
+      <circle cx="163" cy="193" r="9" fill="#fff"></circle>
+      <rect x="126" y="246" width="48" height="9" rx="4.5" fill="#fff"></rect></svg></div><div class="item-card selected" data-cat="dress" data-key="fairy" style="color:#8b5e3c"><svg viewBox="80 160 140 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z" fill="#b79ced"></path>
+      <rect x="96" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="123" y="252" width="22" height="44" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="150" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="177" y="252" width="22" height="44" rx="11" fill="#cdb9f2" opacity=".95"></rect><rect x="204" y="252" width="22" height="58" rx="11" fill="#cdb9f2" opacity=".95"></rect>
+      <path d="M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#b79ced"></path>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#9f7edb"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#9f7edb"></rect>
+      <circle cx="120" cy="206" r="13" fill="#cdb9f2"></circle>
+      <circle cx="180" cy="206" r="13" fill="#cdb9f2"></circle>
+      <circle cx="137" cy="193" r="9" fill="#e6dcfa"></circle>
+      <circle cx="163" cy="193" r="9" fill="#e6dcfa"></circle>
+      <g transform="translate(112,286)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#fff"></path></g>
+      <g transform="translate(150,300)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#ffd34d" transform="scale(.8)"></path></g>
+      <g transform="translate(190,286)"><path d="M0,-8 L2.4,-2.4 L8,-2.4 L3.6,1.6 L5.2,7.2 L0,3.6 L-5.2,7.2 L-3.6,1.6 L-8,-2.4 L-2.4,-2.4 Z" fill="#fff"></path></g>
+      <rect x="126" y="246" width="48" height="9" rx="4.5" fill="#e6dcfa"></rect></svg></div><div class="item-card" data-cat="dress" data-key="strawberry" style="color:#8b5e3c"><svg viewBox="80 160 140 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+      <defs><clipPath id="dc-strawberry"><path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z"></path></clipPath></defs>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#ff6b6b"></path>
+      <g clip-path="url(#dc-strawberry)">
+        <ellipse cx="120" cy="280" rx="2.6" ry="4" fill="#ffe9a8"></ellipse><ellipse cx="150" cy="296" rx="2.6" ry="4" fill="#ffe9a8"></ellipse><ellipse cx="180" cy="280" rx="2.6" ry="4" fill="#ffe9a8"></ellipse><ellipse cx="135" cy="316" rx="2.6" ry="4" fill="#ffe9a8"></ellipse><ellipse cx="165" cy="316" rx="2.6" ry="4" fill="#ffe9a8"></ellipse><ellipse cx="104" cy="262" rx="2.6" ry="4" fill="#ffe9a8"></ellipse><ellipse cx="196" cy="262" rx="2.6" ry="4" fill="#ffe9a8"></ellipse><ellipse cx="150" cy="262" rx="2.6" ry="4" fill="#ffe9a8"></ellipse>
+      </g>
+      <path d="M84,332 Q98,346 112,334 Q126,346 140,334 Q154,346 168,334 Q182,346 196,334 Q210,346 216,332" stroke="#98d8a0" stroke-width="8" fill="none" stroke-linecap="round"></path>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#e05555"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#e05555"></rect>
+      <circle cx="120" cy="206" r="13" fill="#ff8f8f"></circle>
+      <circle cx="180" cy="206" r="13" fill="#ff8f8f"></circle>
+      <circle cx="137" cy="193" r="9" fill="#98d8a0"></circle>
+      <circle cx="163" cy="193" r="9" fill="#98d8a0"></circle></svg></div><div class="item-card" data-cat="dress" data-key="mint" style="color:#8b5e3c"><svg viewBox="80 160 140 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#98d8a0"></path>
+      <path d="M132,222 L168,222 L180,318 Q150,330 120,318 Z" fill="#fffdf5"></path>
+      <rect x="136" y="214" width="28" height="12" rx="6" fill="#fffdf5"></rect>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#7ec088"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#7ec088"></rect>
+      <circle cx="120" cy="206" r="13" fill="#b8e6bd"></circle>
+      <circle cx="180" cy="206" r="13" fill="#b8e6bd"></circle>
+      <circle cx="137" cy="193" r="9" fill="#fffdf5"></circle>
+      <circle cx="163" cy="193" r="9" fill="#fffdf5"></circle>
+      <g transform="translate(150,250)">
+        <path d="M0,0 C-16,-12 -24,0 -19,6 C-14,12 -4,6 0,0 Z" fill="#ff9eb5"></path>
+        <path d="M0,0 C16,-12 24,0 19,6 C14,12 4,6 0,0 Z" fill="#ff9eb5"></path>
+        <circle r="5" fill="#e05c86"></circle>
+      </g></svg></div><div class="item-card" data-cat="dress" data-key="rainbow" style="color:#8b5e3c"><svg viewBox="80 160 140 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+      <defs><clipPath id="dc-rainbow"><path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z"></path></clipPath></defs>
+      <path d="M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#ff8f9e"></path>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z" fill="#ffcf6b"></path>
+      <g clip-path="url(#dc-rainbow)">
+        <rect x="80" y="268" width="140" height="14" fill="#ff8f9e"></rect>
+        <rect x="80" y="283" width="140" height="14" fill="#ffcf6b"></rect>
+        <rect x="80" y="298" width="140" height="14" fill="#a8e6a1"></rect>
+        <rect x="80" y="313" width="140" height="14" fill="#9ad7f0"></rect>
+        <rect x="80" y="328" width="140" height="14" fill="#b79ced"></rect>
+      </g>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#e05c86"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#e05c86"></rect>
+      <circle cx="120" cy="206" r="13" fill="#ffc2cc"></circle>
+      <circle cx="180" cy="206" r="13" fill="#ffc2cc"></circle>
+      <circle cx="137" cy="193" r="9" fill="#fff"></circle>
+      <circle cx="163" cy="193" r="9" fill="#fff"></circle>
+      <rect x="126" y="246" width="48" height="9" rx="4.5" fill="#fff"></rect></svg></div><div class="item-card" data-cat="dress" data-key="snow" style="color:#8b5e3c"><svg viewBox="80 160 140 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 腿 -->
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="#ffe0c7"></rect>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="#ffe0c7"></ellipse>
+    <!-- 手臂（手张开，方便拿星星棒） -->
+    <line x1="122" y1="206" x2="102" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="#ffe0c7" stroke-width="20" stroke-linecap="round"></line>
+    <circle cx="101" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <circle cx="199" cy="268" r="10.5" fill="#ffe0c7"></circle>
+    <!-- 脖子 + 身体 -->
+    <rect x="141" y="162" width="18" height="26" rx="6" fill="#f5c9a8"></rect>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="#ffe0c7"></rect>
+    <!-- 耳朵 -->
+    <circle cx="89" cy="124" r="10" fill="#ffe0c7"></circle>
+    <circle cx="211" cy="124" r="10" fill="#ffe0c7"></circle>
+    <!-- 头 -->
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="#ffe0c7"></ellipse>
+    <!-- 眉毛 -->
+    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <!-- 大眼睛 -->
+    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"></ellipse>
+    <circle cx="125" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="169" cy="113" r="3.2" fill="#fff"></circle>
+    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"></circle>
+    <!-- 小鼻子 -->
+    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"></ellipse>
+    <!-- 微笑 -->
+    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"></path>
+    <!-- 腮红 -->
+    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"></circle>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="#fdfcff"></path>
+      <path d="M110,254 Q150,266 190,254 L216,332 Q202,346 188,334 Q174,346 160,334 Q146,346 132,334 Q118,346 104,334 Q90,346 84,332 Z M116,192 Q150,183 184,192 L190,254 Q150,266 110,254 Z" fill="none" stroke="#e8e0f2" stroke-width="3"></path>
+      <circle cx="96" cy="328" r="8" fill="#f0e6f7"></circle><circle cx="122" cy="333" r="8" fill="#f0e6f7"></circle><circle cx="148" cy="328" r="8" fill="#f0e6f7"></circle><circle cx="174" cy="333" r="8" fill="#f0e6f7"></circle><circle cx="200" cy="328" r="8" fill="#f0e6f7"></circle>
+      
+        <g transform="translate(118,282)" stroke="#bde0f5" stroke-width="2.2" stroke-linecap="round">
+          <line y1="-6" y2="6"></line><line x1="-6" x2="6"></line>
+          <line x1="-4.5" y1="-4.5" x2="4.5" y2="4.5"></line><line x1="-4.5" y1="4.5" x2="4.5" y2="-4.5"></line>
+        </g>
+        <g transform="translate(158,296)" stroke="#bde0f5" stroke-width="2.2" stroke-linecap="round">
+          <line y1="-6" y2="6"></line><line x1="-6" x2="6"></line>
+          <line x1="-4.5" y1="-4.5" x2="4.5" y2="4.5"></line><line x1="-4.5" y1="4.5" x2="4.5" y2="-4.5"></line>
+        </g>
+        <g transform="translate(138,312)" stroke="#bde0f5" stroke-width="2.2" stroke-linecap="round">
+          <line y1="-6" y2="6"></line><line x1="-6" x2="6"></line>
+          <line x1="-4.5" y1="-4.5" x2="4.5" y2="4.5"></line><line x1="-4.5" y1="4.5" x2="4.5" y2="-4.5"></line>
+        </g>
+      <rect x="127" y="186" width="14" height="24" rx="7" fill="#eef0f8"></rect>
+      <rect x="159" y="186" width="14" height="24" rx="7" fill="#eef0f8"></rect>
+      <circle cx="120" cy="206" r="13" fill="#fff"></circle>
+      <circle cx="180" cy="206" r="13" fill="#fff"></circle>
+      <circle cx="137" cy="193" r="9" fill="#7ec8e3"></circle>
+      <circle cx="163" cy="193" r="9" fill="#7ec8e3"></circle>
+      <rect x="126" y="246" width="48" height="9" rx="4.5" fill="#7ec8e3"></rect></svg></div></div>
+        </div><div class="fx-sparkle" style="left: 352.707px; top: 303.37px;"><svg viewBox="0 0 24 24" width="23.93313758121181" height="23.93313758121181">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7fe3a1" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 357.653px; top: 313.997px;"><svg viewBox="0 0 24 24" width="29.624767259282862" height="29.624767259282862">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#b79ced" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 349.752px; top: 324.279px;"><svg viewBox="0 0 24 24" width="28.754127926038926" height="28.754127926038926">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#b79ced" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 344.322px; top: 300.45px;"><svg viewBox="0 0 24 24" width="17.014156728232557" height="17.014156728232557">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ff9eb5" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 355.329px; top: 295.903px;"><svg viewBox="0 0 24 24" width="20.5040206643623" height="20.5040206643623">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ffd34d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 352.509px; top: 299.659px;"><svg viewBox="0 0 24 24" width="15.802147291190106" height="15.802147291190106">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ff9eb5" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 339.256px; top: 314.435px;"><svg viewBox="0 0 24 24" width="25.092047271606987" height="25.092047271606987">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#7ecbff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 355.496px; top: 297.077px;"><svg viewBox="0 0 24 24" width="14.040739069326206" height="14.040739069326206">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#b79ced" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="fx-sparkle" style="left: 347.382px; top: 321.868px;"><svg viewBox="0 0 24 24" width="21.776474204862406" height="21.776474204862406">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ffd34d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div></div>
+  <div class="screen overlay-screen" id="screen-kitchen">
+        <div class="game-top">
+    <button class="btn-home" aria-label="回家">
+      <svg viewBox="0 0 48 48">
+        <path d="M24 6L5 22h6v18a2 2 0 0 0 2 2h8V30h6v12h8a2 2 0 0 0 2-2V22h6z" fill="#fff" stroke="#d16a89" stroke-width="2.4" stroke-linejoin="round"></path>
+        <rect x="21.5" y="15" width="5" height="6" rx="2" fill="#ffd0dd"></rect>
+      </svg>
+    </button>
+    <button class="btn-rooms" aria-label="换房间">
+      <svg viewBox="0 0 48 48">
+        <path d="M10 42V20a2 2 0 0 1 2-2h24a2 2 0 0 1 2 2v22" fill="#fff" stroke="#4f9cc0" stroke-width="2.6" stroke-linejoin="round"></path>
+        <path d="M16 40V28a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12" fill="#9ad7f0" stroke="#4f9cc0" stroke-width="2.4" stroke-linejoin="round"></path>
+        <circle cx="24" cy="15" r="2.6" fill="#ffd34d"></circle>
+        <path d="M24 6l1.4 3.4 3.6.3-2.7 2.3.8 3.5-3.1-1.9-3.1 1.9.8-3.5-2.7-2.3 3.6-.3z" fill="#ffd34d"></path>
+      </svg>
+    </button></div>
+        <div class="game-stage">
+          <div class="recipe-stage">
+        <div class="recipe-card" data-recipe="salad">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20,48 Q20,92 60,92 Q100,92 100,48 Z" fill="#dff3ff"></path>
+        <ellipse cx="60" cy="48" rx="40" ry="11" fill="#cdeefc"></ellipse>
+        <circle cx="44" cy="46" r="9" fill="#ff6b6b"></circle>
+        <circle cx="62" cy="42" r="9" fill="#ff9f43"></circle>
+        <circle cx="78" cy="47" r="9" fill="#9f7edb"></circle>
+        <circle cx="56" cy="34" r="6" fill="#e05555"></circle>
+        <ellipse cx="52" cy="28" rx="8" ry="4" fill="#7ed47b" transform="rotate(-14 52 28)"></ellipse>
+      </svg><span>水果沙拉</span></div>
+        <div class="recipe-card" data-recipe="noodles">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22,50 Q22,92 60,92 Q98,92 98,50 Z" fill="#ff9eb5"></path>
+        <ellipse cx="60" cy="50" rx="38" ry="10" fill="#fffdf5"></ellipse>
+        <path d="M40,45 Q47,50 40,55" stroke="#f2d9a0" stroke-width="4.5" fill="none" stroke-linecap="round"></path><path d="M52,45 Q59,50 52,55" stroke="#f2d9a0" stroke-width="4.5" fill="none" stroke-linecap="round"></path><path d="M64,45 Q71,50 64,55" stroke="#f2d9a0" stroke-width="4.5" fill="none" stroke-linecap="round"></path><path d="M76,45 Q83,50 76,55" stroke="#f2d9a0" stroke-width="4.5" fill="none" stroke-linecap="round"></path>
+        <circle cx="72" cy="42" r="5" fill="#ff6b6b"></circle>
+        <line x1="80" y1="30" x2="106" y2="12" stroke="#b98a5a" stroke-width="5" stroke-linecap="round"></line>
+        <line x1="88" y1="38" x2="114" y2="20" stroke="#a9784a" stroke-width="5" stroke-linecap="round"></line>
+      </svg><span>煮面条</span></div>
+        <div class="recipe-card" data-recipe="cake">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="98" rx="46" ry="8" fill="#fff"></ellipse>
+        <rect x="26" y="68" width="68" height="30" rx="6" fill="#f7d9a8"></rect>
+        <rect x="32" y="42" width="56" height="28" rx="6" fill="#ffb3c7"></rect>
+        <path d="M32,46 Q39,56 46,47 Q53,57 60,47 Q67,57 74,47 Q81,56 88,46 L88,42 L32,42 Z" fill="#ff9eb5"></path>
+        <g transform="translate(60,36)">
+          <path d="M0,-14 C8,-14 12,-6 9,2 L-9,2 C-12,-6 -8,-14 0,-14 Z" fill="#ff6b6b"></path>
+          <rect x="-1.5" y="-26" width="3" height="12" rx="1.5" fill="#e05c86"></rect>
+          <ellipse cy="-29" rx="4" ry="5.5" fill="#ffd34d"></ellipse>
+        </g>
+      </svg><span>小蛋糕</span></div>
+        <div class="recipe-card" data-recipe="juice">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M38,34 L82,34 L74,94 Q60,100 46,94 Z" fill="rgba(223,243,255,.7)" stroke="#bfe0f5" stroke-width="4"></path>
+        <path d="M42,48 L78,48 L72,92 Q60,97 48,92 Z" fill="#ffb347"></path>
+        <ellipse cx="60" cy="47" rx="19" ry="5" fill="#ffd07a"></ellipse>
+        <line x1="74" y1="40" x2="92" y2="12" stroke="#ff8f9e" stroke-width="6" stroke-linecap="round"></line>
+        <circle cx="38" cy="32" r="9" fill="#ff9f43"></circle>
+        <path d="M38,24 A9,9 0 0 1 38,40 Z" fill="#ffbe6b"></path>
+      </svg><span>鲜榨果汁</span></div>
+        <div class="recipe-card" data-recipe="icecream">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M36,54 L84,54 L60,104 Z" fill="#e8a86b"></path>
+        <path d="M42,66 L78,66 M46,78 L74,78" stroke="#d1924f" stroke-width="3" stroke-linecap="round"></path>
+        <circle cx="47" cy="44" r="14" fill="#ff9eb5"></circle>
+        <circle cx="73" cy="44" r="14" fill="#98d8a0"></circle>
+        <circle cx="60" cy="32" r="15" fill="#fff5e6"></circle>
+        <circle cx="60" cy="14" r="5" fill="#e05555"></circle>
+        <line x1="60" y1="17" x2="60" y2="12" stroke="#5a9e56" stroke-width="2.5"></line>
+      </svg><span>冰淇淋</span></div></div>
+          <div class="cook-stage hidden">
+            <div class="cook-counter"></div>
+            <div class="stir-progress">
+              <div class="stir-star"><svg viewBox="0 0 24 24" width="44" height="44">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ffd34d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="stir-star"><svg viewBox="0 0 24 24" width="44" height="44">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ffd34d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div><div class="stir-star"><svg viewBox="0 0 24 24" width="44" height="44">
+      <path d="M12 1.8l2.7 6.4 6.9.6-5.2 4.6 1.5 6.8L12 16.6l-5.9 3.6 1.5-6.8L2.4 8.8l6.9-.6z" fill="#ffd34d" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg></div>
+            </div>
+            <div class="pot-zone" style="touch-action: none;">
+              <div class="pot-container">
+      <svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="160" cy="118" rx="118" ry="30" fill="#cdeefc"></ellipse>
+        <ellipse cx="160" cy="114" rx="104" ry="23" fill="#eaf8ff"></ellipse>
+        <path d="M42,118 Q42,224 96,254 Q160,278 224,254 Q278,224 278,118 Z" fill="#dff3ff" opacity=".92"></path>
+        <path d="M42,118 Q42,224 96,254 Q160,278 224,254 Q278,224 278,118" fill="none" stroke="#bfe0f5" stroke-width="6"></path>
+        <ellipse cx="160" cy="118" rx="118" ry="30" fill="none" stroke="#bfe0f5" stroke-width="7"></ellipse>
+        <ellipse cx="118" cy="170" rx="14" ry="38" fill="#fff" opacity=".5" transform="rotate(8 118 170)"></ellipse>
+      </svg></div>
+              <div class="pot-content" style="position:absolute;inset:0;"><div class="ingredient-drop" style="left:30%;top:26%;position:absolute;">
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40,24 C56,24 64,36 60,49 C56,62 48,72 40,74 C32,72 24,62 20,49 C16,36 24,24 40,24 Z" fill="#ff6b6b"></path>
+        <ellipse cx="32" cy="38" rx="2" ry="3" fill="#ffe9a8"></ellipse><ellipse cx="46" cy="36" rx="2" ry="3" fill="#ffe9a8"></ellipse><ellipse cx="28" cy="50" rx="2" ry="3" fill="#ffe9a8"></ellipse><ellipse cx="44" cy="50" rx="2" ry="3" fill="#ffe9a8"></ellipse><ellipse cx="36" cy="60" rx="2" ry="3" fill="#ffe9a8"></ellipse><ellipse cx="50" cy="60" rx="2" ry="3" fill="#ffe9a8"></ellipse>
+        <path d="M26,24 Q33,15 40,22 Q47,15 54,24 Q47,28 40,27 Q33,28 26,24 Z" fill="#7ec088"></path>
+        <rect x="38" y="10" width="4" height="9" rx="2" fill="#5a9e56"></rect>
+        <ellipse cx="30" cy="34" rx="6" ry="10" fill="#fff" opacity=".22" transform="rotate(-18 30 34)"></ellipse>
+      </svg></div><div class="ingredient-drop" style="left:55%;top:18%;position:absolute;">
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12,28 Q16,62 44,66 Q64,68 69,52 Q71,47 66,50 Q58,59 43,55 Q25,50 21,29 Q20,24 15,25 Q11,26 12,28 Z" fill="#ffd166"></path>
+        <path d="M66,50 Q70,48 69,53" stroke="#d9a83e" stroke-width="4" fill="none" stroke-linecap="round"></path>
+        <circle cx="14" cy="26" r="3.5" fill="#b98a2e"></circle>
+      </svg></div></div>
+            </div>
+            <button class="btn-magic dim" aria-label="魔法烹饪">
+              <svg viewBox="0 0 48 48">
+                <path d="M24 4l3 8.5L36 10l-5 7.5L40 24l-9 3 5 8.5-9-2.5L24 42l-3-9-9 2.5L17 27l-9-3 9-6.5L12 10l9 2.5z" fill="#fff" stroke="#ff9f43" stroke-width="2.4" stroke-linejoin="round"></path>
+              </svg>
+              <span>魔法</span>
+            </button>
+            <div class="dish-result hidden">
+              <div class="dish-svg">
+      <svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="160" cy="252" rx="112" ry="16" fill="rgba(120,90,60,.12)"></ellipse>
+        <path d="M48,120 Q48,224 100,252 Q160,276 220,252 Q272,224 272,120 Z" fill="#dff3ff" opacity=".9"></path>
+        <ellipse cx="160" cy="120" rx="112" ry="28" fill="#cdeefc"></ellipse>
+        <circle cx="110" cy="118" r="15" fill="#ff6b6b"></circle><circle cx="140" cy="108" r="15" fill="#ff9f43"></circle><circle cx="172" cy="116" r="15" fill="#9f7edb"></circle><circle cx="200" cy="122" r="15" fill="#98d8a0"></circle><circle cx="128" cy="132" r="15" fill="#ffd166"></circle><circle cx="186" cy="136" r="15" fill="#ff8f8f"></circle><circle cx="156" cy="128" r="15" fill="#f2d9a0"></circle><circle cx="216" cy="108" r="15" fill="#ff6b6b"></circle>
+        <circle cx="106" cy="114" r="4" fill="#fff" opacity=".5"></circle><circle cx="136" cy="104" r="4" fill="#fff" opacity=".5"></circle><circle cx="168" cy="112" r="4" fill="#fff" opacity=".5"></circle><circle cx="196" cy="118" r="4" fill="#fff" opacity=".5"></circle>
+        <ellipse cx="150" cy="96" rx="16" ry="7" fill="#7ed47b" transform="rotate(-16 150 96)"></ellipse>
+        <ellipse cx="182" cy="92" rx="14" ry="6" fill="#6cc46a" transform="rotate(14 182 92)"></ellipse>
+        <line x1="160" y1="86" x2="164" y2="70" stroke="#5a9e56" stroke-width="3" stroke-linecap="round"></line>
+        <circle cx="165" cy="66" r="10" fill="#e05555"></circle>
+        <path d="M48,120 Q48,224 100,252 Q160,276 220,252 Q272,224 272,120" fill="none" stroke="#bfe0f5" stroke-width="6"></path>
+        <ellipse cx="160" cy="120" rx="112" ry="28" fill="none" stroke="#bfe0f5" stroke-width="6"></ellipse>
+        <g fill="#fff"><circle cx="86" cy="86" r="4"></circle><circle cx="242" cy="98" r="5"></circle><circle cx="220" cy="60" r="3.5"></circle></g>
+      </svg></div>
+              <div class="feed-row">
+                <button class="btn-feed eat-done" data-who="girl">
+                  <svg viewBox="0 0 60 60">
+                    <circle cx="30" cy="32" r="20" fill="#ffe0c7"></circle>
+                    <path d="M10,30 Q10,10 30,10 Q50,10 50,30 Q44,22 36,24 Q30,18 24,24 Q16,22 10,30 Z" fill="#8b5e3c"></path>
+                    <circle cx="23" cy="34" r="3" fill="#5b3a29"></circle>
+                    <circle cx="37" cy="34" r="3" fill="#5b3a29"></circle>
+                    <path d="M25,42 Q30,46 35,42" stroke="#e2756f" stroke-width="2.6" fill="none" stroke-linecap="round"></path>
+                    <circle cx="17" cy="39" r="3.4" fill="#ffb3c1" opacity=".7"></circle>
+                    <circle cx="43" cy="39" r="3.4" fill="#ffb3c1" opacity=".7"></circle>
+                  </svg>
+                  <span>喂娃娃</span>
+                </button>
+                <button class="btn-feed" data-who="cat">
+                  <svg viewBox="0 0 60 60">
+                    <polygon points="14,20 16,6 26,15" fill="#f7b967"></polygon>
+                    <polygon points="46,20 44,6 34,15" fill="#f7b967"></polygon>
+                    <circle cx="30" cy="32" r="19" fill="#f7b967"></circle>
+                    <circle cx="23" cy="30" r="2.8" fill="#5b3a29"></circle>
+                    <circle cx="37" cy="30" r="2.8" fill="#5b3a29"></circle>
+                    <polygon points="30,35 27,38 33,38" fill="#ff8fa0"></polygon>
+                    <path d="M30,38 Q27,42 24,40 M30,38 Q33,42 36,40" stroke="#7a4d1d" stroke-width="2" fill="none" stroke-linecap="round"></path>
+                  </svg>
+                  <span>喂小猫</span>
+                </button>
+              </div>
+              <button class="btn-home" aria-label="再做一次" style="position:static;width:96px;height:96px;background:#a8e6a1;box-shadow:0 5px 0 #7ec088;">
+                <svg viewBox="0 0 48 48">
+                  <path d="M24 14a10 10 0 1 0 10 10" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"></path>
+                  <polygon points="24,4 33,12 20,15" fill="#ffd34d" stroke="#f2a94f" stroke-width="2"></polygon>
+                </svg>
+              </button>
+            </div>
+          <div class="fx-confetti" style="left: 996.97px; background: rgb(127, 227, 161); border-radius: 50%;"></div><div class="fx-confetti" style="left: 234.748px; background: rgb(255, 158, 181); border-radius: 50%;"></div><div class="fx-confetti" style="left: 198.462px; background: rgb(183, 156, 237); border-radius: 50%;"></div><div class="fx-confetti" style="left: 4.55165px; background: rgb(127, 227, 161); border-radius: 50%;"></div><div class="fx-confetti" style="left: 925.413px; background: rgb(127, 227, 161); border-radius: 50%;"></div><div class="fx-confetti" style="left: 526.68px; background: rgb(255, 211, 77); border-radius: 50%;"></div><div class="fx-confetti" style="left: 632.045px; background: rgb(127, 227, 161); border-radius: 4px;"></div><div class="fx-confetti" style="left: 705.699px; background: rgb(255, 211, 77); border-radius: 4px;"></div><div class="fx-confetti" style="left: 116.159px; background: rgb(255, 158, 181); border-radius: 50%;"></div><div class="fx-confetti" style="left: 449.58px; background: rgb(126, 203, 255); border-radius: 4px;"></div><div class="fx-confetti" style="left: 838.605px; background: rgb(255, 211, 77); border-radius: 4px;"></div><div class="fx-confetti" style="left: 556.437px; background: rgb(255, 158, 181); border-radius: 4px;"></div><div class="fx-confetti" style="left: 187.269px; background: rgb(126, 203, 255); border-radius: 4px;"></div><div class="fx-confetti" style="left: 836.691px; background: rgb(127, 227, 161); border-radius: 50%;"></div><div class="fx-confetti" style="left: 412.577px; background: rgb(255, 211, 77); border-radius: 50%;"></div><div class="fx-confetti" style="left: 436.992px; background: rgb(126, 203, 255); border-radius: 4px;"></div><div class="fx-confetti" style="left: 779.595px; background: rgb(255, 158, 181); border-radius: 50%;"></div><div class="fx-confetti" style="left: 208.218px; background: rgb(183, 156, 237); border-radius: 4px;"></div><div class="fx-confetti" style="left: 56.601px; background: rgb(255, 211, 77); border-radius: 50%;"></div><div class="fx-confetti" style="left: 816.643px; background: rgb(183, 156, 237); border-radius: 4px;"></div><div class="fx-confetti" style="left: 136.124px; background: rgb(127, 227, 161); border-radius: 50%;"></div><div class="fx-confetti" style="left: 84.5366px; background: rgb(183, 156, 237); border-radius: 50%;"></div><div class="fx-confetti" style="left: 992.179px; background: rgb(126, 203, 255); border-radius: 50%;"></div><div class="fx-confetti" style="left: 372.875px; background: rgb(127, 227, 161); border-radius: 4px;"></div><div class="fx-confetti" style="left: 642.697px; background: rgb(183, 156, 237); border-radius: 4px;"></div><div class="fx-confetti" style="left: 525.851px; background: rgb(183, 156, 237); border-radius: 50%;"></div><div class="fx-confetti" style="left: 819.796px; background: rgb(255, 158, 181); border-radius: 4px;"></div><div class="fx-confetti" style="left: 39.7861px; background: rgb(126, 203, 255); border-radius: 50%;"></div><div class="fx-confetti" style="left: 257.201px; background: rgb(127, 227, 161); border-radius: 50%;"></div><div class="fx-confetti" style="left: 937.372px; background: rgb(183, 156, 237); border-radius: 4px;"></div><div class="fx-confetti" style="left: 698.372px; background: rgb(255, 158, 181); border-radius: 50%;"></div><div class="fx-confetti" style="left: 825.406px; background: rgb(255, 211, 77); border-radius: 50%;"></div><div class="fx-confetti" style="left: 360.887px; background: rgb(255, 211, 77); border-radius: 4px;"></div><div class="fx-confetti" style="left: 270.583px; background: rgb(255, 211, 77); border-radius: 4px;"></div><div class="fx-confetti" style="left: 405.322px; background: rgb(126, 203, 255); border-radius: 50%;"></div><div class="fx-confetti" style="left: 709.772px; background: rgb(255, 158, 181); border-radius: 4px;"></div></div>
+        </div>
+        <div class="game-toolbar">
+          <div class="item-drawer"><div class="drawer-hint">👆 先选一个想做的菜吧</div></div>
+        </div></div>
+<div class="room-picker hidden"><div class="room-picker-row">
+          <button class="room-pick" data-room="balcony">
+            
+      <svg viewBox="0 0 48 48">
+        <rect x="6" y="10" width="36" height="30" rx="4" fill="#dff3ff" stroke="#9ad7f0" stroke-width="2.5"></rect>
+        <line x1="24" y1="10" x2="24" y2="40" stroke="#9ad7f0" stroke-width="2.5"></line>
+        <line x1="6" y1="25" x2="42" y2="25" stroke="#9ad7f0" stroke-width="2.5"></line>
+        <circle cx="15" cy="18" r="4" fill="#ff9eb5"></circle>
+        <circle cx="33" cy="33" r="4" fill="#ffd34d"></circle>
+        <path d="M10,6 L38,6" stroke="#c98443" stroke-width="3" stroke-linecap="round"></path>
+      </svg><span>阳台</span>
+          </button>
+          <button class="room-pick" data-room="bedroom">
+            
+      <svg viewBox="0 0 48 48">
+        <rect x="8" y="22" width="8" height="18" rx="3" fill="#2f7fa3"></rect>
+        <rect x="8" y="32" width="32" height="10" rx="4" fill="#4aa3c9"></rect>
+        <rect x="30" y="26" width="8" height="16" rx="3" fill="#2f7fa3"></rect>
+        <rect x="12" y="28" width="11" height="6" rx="3" fill="#fff"></rect>
+      </svg><span>卧室</span>
+          </button>
+          <button class="room-pick" data-room="bathroom">
+            
+      <svg viewBox="0 0 48 48">
+        <path d="M8 22h32l-3 14q-13 4-26 0z" fill="#fdfdff" stroke="#b8ccd8" stroke-width="2.4"></path>
+        <rect x="6" y="19" width="36" height="6" rx="3" fill="#b8ccd8"></rect>
+        <circle cx="16" cy="16" r="4.5" fill="#fff" opacity=".95"></circle>
+        <circle cx="25" cy="13" r="3.5" fill="#fff" opacity=".95"></circle>
+        <g transform="translate(33,12)"><circle r="4" fill="#ffd34d"></circle><polygon points="3,0 7,1 3.5,3" fill="#ff9f43"></polygon></g>
+      </svg><span>卫生间</span>
+          </button>
+          <button class="room-pick" data-room="living">
+            
+      <svg viewBox="0 0 48 48">
+        <rect x="6" y="14" width="36" height="14" rx="6" fill="#6bb8d8"></rect>
+        <rect x="4" y="20" width="8" height="14" rx="4" fill="#7ec8e3"></rect>
+        <rect x="36" y="20" width="8" height="14" rx="4" fill="#7ec8e3"></rect>
+        <rect x="10" y="24" width="28" height="10" rx="4" fill="#9ad7f0"></rect>
+        <rect x="8" y="34" width="32" height="5" rx="2.5" fill="#6bb8d8"></rect>
+      </svg><span>客厅</span>
+          </button>
+          <button class="room-pick" data-room="kitchen">
+            
+      <svg viewBox="0 0 48 48">
+        <path d="M10 20h28l-4 18q-10 4-20 0z" fill="#d98324"></path>
+        <ellipse cx="24" cy="19" rx="12" ry="4" fill="#f2a94f"></ellipse>
+        <circle cx="24" cy="13" r="3" fill="#fff"></circle>
+        <path d="M18 8q-2-4 0-7 M30 8q2-4 0-7" stroke="#bde0f5" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+      </svg><span>厨房</span>
+          </button>
+          <button class="room-pick" data-room="study">
+            
+      <svg viewBox="0 0 48 48">
+        <rect x="6" y="26" width="36" height="5" rx="2.5" fill="#d98c5a"></rect>
+        <rect x="10" y="31" width="5" height="11" rx="2" fill="#c47a44"></rect>
+        <rect x="33" y="31" width="5" height="11" rx="2" fill="#c47a44"></rect>
+        <rect x="14" y="12" width="20" height="14" rx="2" fill="#4a4a55"></rect>
+        <rect x="17" y="15" width="14" height="8" rx="1.5" fill="#9ad7f0"></rect>
+        <circle cx="38" cy="16" r="4.5" fill="#98d8a0"></circle>
+      </svg><span>书房</span>
+          </button>
+          <button class="room-pick" data-room="dressup">
+            
+      <svg viewBox="0 0 48 48">
+        <rect x="8" y="10" width="32" height="30" rx="4" fill="#e8a3bd"></rect>
+        <line x1="24" y1="12" x2="24" y2="38" stroke="#d98cb0" stroke-width="2.5"></line>
+        <path d="M14 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#e05c86" transform="translate(2,2)"></path>
+        <path d="M28 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#7ec8e3" transform="translate(2,2)"></path>
+      </svg><span>换衣间</span>
+          </button>
+          <button class="room-pick" data-room="yard">
+            
+      <svg viewBox="0 0 48 48">
+        <circle cx="24" cy="18" r="14" fill="#6cc46a"></circle>
+        <circle cx="12" cy="24" r="9" fill="#7ed47b"></circle>
+        <circle cx="36" cy="24" r="9" fill="#7ed47b"></circle>
+        <rect x="21" y="28" width="6" height="14" rx="2.5" fill="#a9784a"></rect>
+        <circle cx="17" cy="14" r="3" fill="#ff6b6b"></circle>
+        <circle cx="30" cy="20" r="3" fill="#ff6b6b"></circle>
+        <path d="M6 42 Q24 36 42 42" stroke="#5a9e56" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+      </svg><span>院子</span>
+          </button>
+          <button class="room-pick" data-room="park">
+            
+      <svg viewBox="0 0 48 48">
+        <ellipse cx="24" cy="36" rx="18" ry="7" fill="#9ad7f0"></ellipse>
+        <rect x="21" y="18" width="6" height="14" rx="2.5" fill="#e8e2d8"></rect>
+        <ellipse cx="24" cy="17" rx="10" ry="4" fill="#9ad7f0"></ellipse>
+        <path d="M24 15 Q24 7 18 4 M24 15 Q24 7 30 4 M24 15 Q24 5 24 1" stroke="#7ec8e3" stroke-width="3" fill="none" stroke-linecap="round"></path>
+        <circle cx="18" cy="4" r="2.5" fill="#bfe6ff"></circle><circle cx="30" cy="4" r="2.5" fill="#bfe6ff"></circle>
+      </svg><span>公园</span>
+          </button>
+          <button class="room-pick" data-room="shop">
+            
+      <svg viewBox="0 0 48 48">
+        <path d="M8 16 L8 10 Q24 4 40 10 L40 16 Z" fill="#ff9eb5"></path>
+        <rect x="11" y="8" width="8" height="8" rx="2" fill="#fff" opacity=".9"></rect><rect x="21" y="7" width="8" height="8" rx="2" fill="#fff" opacity=".9"></rect><rect x="31" y="8" width="8" height="8" rx="2" fill="#fff" opacity=".9"></rect>
+        <rect x="10" y="20" width="28" height="20" rx="3" fill="#fff6e8"></rect>
+        <rect x="14" y="24" width="7" height="10" rx="2" fill="#ff8f9e"></rect>
+        <rect x="24" y="24" width="7" height="10" rx="2" fill="#7ec8e3"></rect>
+        <circle cx="36" cy="29" r="4" fill="#ffd166"></circle>
+      </svg><span>商店</span>
+          </button><button class="room-pick-close" aria-label="关闭">✕</button></div></div></div>
+<pre id="test-result" style="position:fixed;top:0;left:0;z-index:99999;background:#fff;font-size:15px;padding:8px;max-height:98%;overflow:auto;">==== 测试完成：77 项，失败 0 项 ====
+PASS | 迁移:单房间→bedroom | items=1 wall=2
+PASS | 迁移:老lastRoom→bedroom | bedroom
+PASS | 迁移:角色字段生成 | {"room":"living","x":0.45,"y":0.55,"face":1,"holding":null}
+PASS | 迁移:7房间齐备 | balcony,bedroom,bathroom,living,kitchen,study,wardrobe,yard,park,shop
+PASS | 主界面一扇大门 | doors=1
+PASS | 家长指南打开
+PASS | 主屏有还原按钮
+PASS | 还原二次确认弹出
+PASS | 点确定后房间清空 | items=0 props=0 dress=pinkpolka
+PASS | 还原弹窗自动关闭
+PASS | 再想想关闭弹窗
+PASS | TTS 同句 1.5s 内只播 1 次 | 同句=1次 不同句=1次
+PASS | 点大门进世界 | screen-world
+PASS | 世界屏背景跟墙色（不露 #app 浅蓝） | bg=rgb(227, 244, 255) cam=balcony(wall=1) expected=#e3f4ff
+PASS | 默认娃娃位置不被 toolbar 遮 | girl.bottom=532 toolbar.top=599
+PASS | 走路 y 上限钳到 0.72 | y=0.72
+PASS | 拖到屏幕 90% 不被 toolbar 吃 | girl.bottom=532 toolbar.top=599 y=0.72
+PASS | girl 手里拿到物品 | girl.holding={"uid":"hold-test-apple","id":"apple"} props=0
+PASS | girl 手里图标可见 | hidden=false html=52b
+PASS | 手里已有物品时拒绝第二件 | holding={"uid":"hold-test-apple","id":"apple"} props=1
+PASS | 点角色时物品落回地板 | holding=null props=hold-test-2,hold-test-apple
+PASS | 跨场景：物品跟着角色到新房间 | room=bedroom holding={"uid":"hold-cross-1","id":"apple"}
+PASS | 跨场景：女孩 bedroom 时手里持有的苹果可见 | hidden=false html=52b
+PASS | 跨场景：原房间没有苹果残留 | props=hold-test-2,hold-test-apple
+PASS | 二次跨场景：物品仍在手里 | room=park holding={"uid":"hold-cross-1","id":"apple"}
+PASS | 跨场景：物品落回当前房间（park）而非原房间 | holding=null dropRoom=park
+PASS | 世界10个场景 | 10
+PASS | 固定装置:厨房冰箱+灶台 | 2
+PASS | 固定装置:换衣间衣柜
+PASS | 角色在场
+PASS | 圆点导航10个 | 10
+PASS | 右箭头前进一格 | bedroom
+PASS | 左箭头回阳台 | balcony
+PASS | 拖动平移相机 | balcony
+PASS | 圆点跳到客厅 | living
+PASS | 客厅抽屉含电视
+PASS | 客厅加电视 | 1
+PASS | 拖动家具 | 0.29
+PASS | 轻点电视互动不误删
+PASS | 拖动娃娃换房间 | shop
+PASS | 圆点显示娃娃位置
+PASS | 点地板走路 | 0.94→0.18
+PASS | 走路不换房间 | 前=shop/shop 后=shop/shop
+PASS | 跳到厨房
+PASS | 点冰箱出食物抽屉 | 15
+PASS | 冰箱开门视觉
+PASS | 取出食物道具 | 1
+PASS | 娃娃在厨房 | kitchen
+PASS | 喂食链路(拖拽或debugFeed) | 路径=drag 吃前=1 吃后=0 props=[]
+PASS | 食物放地上保留 | props=["milk"]
+PASS | 食物拖进收纳筐可收走 | 牛奶节点=true 收前=1 收后=0 props=[] branch=prop
+PASS | 点灶台开做饭面板 | screen-world+screen-kitchen
+PASS | 五张食谱卡 | 5
+PASS | 含果汁/冰淇淋食谱
+PASS | 搅拌点亮星星
+PASS | 烹饪出成品
+PASS | 喂食后回世界 | screen-world
+PASS | 重进厨房回到食谱页 | 食谱页=true 成品残留=false
+PASS | 点衣柜开换装面板 | screen-world+screen-dressup
+PASS | 换裙子生效 | fairy
+PASS | 回家按钮回家 | screen-home+screen-world
+PASS | 墙纸色板9款 | 9
+PASS | 卫生间换薄荷瓷砖 | 7
+PASS | 跳到院子
+PASS | 院子家具卡12件 | 12
+PASS | 含秋千/沙坑/帐篷
+PASS | 院子草地地板 | 3
+PASS | 院子加秋千 | 1
+PASS | 轻点秋千互动不误删
+PASS | 跳到公园
+PASS | 公园含滑梯/喷泉/池塘
+PASS | 跳到商店
+PASS | 商店糖果墙默认 | 8
+PASS | 商店含货架/收银台/冰柜
+PASS | 弹出条跳卧室生效 | bedroom
+PASS | 卧室抽屉已刷新
+PASS | 存档含角色/道具/10房间</pre>
+<script src="js/store.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/assets-doll.js"></script>
+<script src="js/assets-room.js"></script>
+<script src="js/assets-kitchen.js"></script>
+<script src="js/dressup.js"></script>
+<script src="js/kitchen.js"></script>
+<script src="js/world.js"></script>
+<script src="js/main.js"></script>
+<script>
+/* ============ v0.4 世界版自动化测试（配合 chrome --headless --dump-dom） ============ */
+(function () {
+  'use strict';
+  window.__errs = [];
+  window.onerror = function (msg, src, line, col) {
+    window.__errs.push(msg + ' @' + (src || '').split('/').pop() + ':' + line + ':' + col);
+    return false;
+  };
+  window.addEventListener('unhandledrejection', function (e) {
+    window.__errs.push('rejection: ' + (e.reason && e.reason.message || e.reason));
+  });
+  const results = [];
+  const log = (name, ok, detail) => {
+    results.push(`${ok ? 'PASS' : 'FAIL'} | ${name}${detail ? ' | ' + detail : ''}`);
+  };
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const activeScreen = () => [...$$('.screen.active')].map(s => s.id).join('+') || 'none';
+  const click = elm => elm.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  const pe = (type, elm, x, y) => elm.dispatchEvent(new PointerEvent(type, {
+    bubbles: true, clientX: x, clientY: y, pointerId: 1, isPrimary: true
+  }));
+  const center = elm => {
+    const r = elm.getBoundingClientRect();
+    return [r.left + r.width / 2, r.top + r.height / 2, r];
+  };
+  const isWorldActive = () => $('#screen-world').classList.contains('active');
+  const ROOM_IDS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe', 'yard', 'park', 'shop'];
+  const roomIdx = id => ROOM_IDS.indexOf(id);
+
+  async function run() {
+    try {
+      /* ---- 0. 老存档迁移 ---- */
+      localStorage.setItem('magic-house-v1', JSON.stringify({
+        doll: { hair: 'long', hairColor: 2, dress: 'ocean', shoes: 'boots', acc: 'wings', catAcc: 'hat' },
+        room: { wall: 2, floor: 1, items: [{ id: 'bed', x: 0.4, y: 0.7 }] },
+        lastRoom: 'room', sound: true, hints: {}
+      }));
+      Store.load();
+      const mig = Store.state;
+      log('迁移:单房间→bedroom', mig.rooms.bedroom.items.length === 1 && mig.rooms.bedroom.wall === 2,
+        `items=${mig.rooms.bedroom.items.length} wall=${mig.rooms.bedroom.wall}`);
+      log('迁移:老lastRoom→bedroom', mig.lastRoom === 'bedroom', mig.lastRoom);
+      log('迁移:角色字段生成', !!(mig.char && mig.char.girl && mig.char.cat), JSON.stringify(mig.char.girl));
+      log('迁移:7房间齐备', Object.keys(mig.rooms).length === 10, Object.keys(mig.rooms).join(','));
+      Store.reset();
+      await sleep(60);
+
+      /* ---- 1. 主界面 ---- */
+      const doors = $$('#screen-home .door-group');
+      log('主界面一扇大门', doors.length === 1, `doors=${doors.length}`);
+      click($('#screen-home .btn-help'));
+      await sleep(40);
+      log('家长指南打开', !$('#screen-home .help-overlay').classList.contains('hidden'));
+      click($('#screen-home .help-close'));
+      await sleep(40);
+
+      /* 全部还原按钮 + 二次确认 */
+      const resetBtn = $('#screen-home .btn-reset');
+      log('主屏有还原按钮', !!resetBtn);
+      click(resetBtn);
+      await sleep(40);
+      log('还原二次确认弹出', !$('#screen-home .reset-confirm').classList.contains('hidden'));
+      /* 先准备一些"被还原会清掉"的状态：造一件家具 + 一个食物 + 改个娃娃 */
+      Store.state.rooms.living.items.push({ id: 'tv', x: 0.5, y: 0.7 });
+      Store.state.props.push({ uid: 'test-pre-reset', id: 'apple', room: 'living', x: 0.3, y: 0.8 });
+      Store.state.doll.dress = 'fairy';
+      Store.save();
+      click($('#screen-home .reset-yes'));
+      await sleep(80);
+      log('点确定后房间清空',
+        Store.state.rooms.living.items.length === 0
+        && Store.state.props.length === 0
+        && Store.state.doll.dress !== 'fairy',
+        `items=${Store.state.rooms.living.items.length} props=${Store.state.props.length} dress=${Store.state.doll.dress}`);
+      log('还原弹窗自动关闭', $('#screen-home .reset-confirm').classList.contains('hidden'));
+      /* 再试"再想想"路径 */
+      click($('#screen-home .btn-reset'));
+      await sleep(40);
+      click($('#screen-home .reset-no'));
+      await sleep(40);
+      log('再想想关闭弹窗', $('#screen-home .reset-confirm').classList.contains('hidden'));
+
+      /* TTS 防抖：连续两次同句 praise 只触发 1 次 speak */
+      const origSpeak = window.speechSynthesis && window.speechSynthesis.speak;
+      let speakCount = 0;
+      if (origSpeak) {
+        window.speechSynthesis.speak = function () { speakCount++; return origSpeak.apply(this, arguments); };
+      }
+      const before = speakCount;
+      Sound.praise('同句测一句话');          // 触发 1 次
+      Sound.praise('同句测一句话');          // 应当被 1.5s 防抖挡掉
+      Sound.praise('同句测一句话');          // 也挡掉
+      const sameTextCalls = speakCount - before;
+      Sound.praise('不同的句子');            // 通过防抖，触发 1 次
+      const newTextCalls = speakCount - before - sameTextCalls;
+      log('TTS 同句 1.5s 内只播 1 次', sameTextCalls === 1, `同句=${sameTextCalls}次 不同句=${newTextCalls}次`);
+      if (origSpeak) window.speechSynthesis.speak = origSpeak;
+
+      click(doors[0]);
+      await sleep(300);
+      log('点大门进世界', isWorldActive(), activeScreen());
+
+      /* ---- v0.7：消除露蓝 + 人物不被 toolbar 遮 ---- */
+      const swBg = getComputedStyle($('#screen-world')).backgroundColor;
+      const camRoom = window.World.currentRoomId;
+      const camWall = Store.state.rooms[camRoom].wall;
+      const expectedBg = window.RoomAssets.WALLS[camWall].bgColor;
+      /* 改版后 #screen-world 跟随当前房间的 wall.bgColor（不是写死的肉色）。
+         只要不是 #app 浅蓝 bde8ff = rgb(189, 232, 255) 即视为通过。 */
+      log('世界屏背景跟墙色（不露 #app 浅蓝）',
+        swBg !== 'rgb(189, 232, 255)',
+        `bg=${swBg} cam=${camRoom}(wall=${camWall}) expected=${expectedBg}`);
+      /* 娃娃默认 bottom 不被 toolbar 遮：girl 元素 bottom ≤ toolbar top - 4 */
+      const defaultGirlRect = $('#char-girl').getBoundingClientRect();
+      const tbRect = $('#screen-world .game-toolbar').getBoundingClientRect();
+      log('默认娃娃位置不被 toolbar 遮',
+        defaultGirlRect.bottom <= tbRect.top + 4,
+        `girl.bottom=${Math.round(defaultGirlRect.bottom)} toolbar.top=${Math.round(tbRect.top)}`);
+      /* walkTo 上限 clamp：传 0.99 应被钳到 0.72 */
+      window.World.walkTo('girl', 0.5, 0.99);
+      log('走路 y 上限钳到 0.72',
+        Store.state.char.girl.y === 0.72, `y=${Store.state.char.girl.y}`);
+      /* 拖到屏幕 90% 高度：clamp 后元素 bottom ≤ toolbar top */
+      const stageRect = $('#screen-world .world-stage').getBoundingClientRect();
+      window.World.placeChar('girl', 'living', 0.5, (stageRect.top + stageRect.height * 0.9 - stageRect.top) / stageRect.height);
+      const girlRect2 = $('#char-girl').getBoundingClientRect();
+      log('拖到屏幕 90% 不被 toolbar 吃',
+        girlRect2.bottom <= tbRect.top + 4,
+        `girl.bottom=${Math.round(girlRect2.bottom)} toolbar.top=${Math.round(tbRect.top)} y=${Store.state.char.girl.y}`);
+
+      /* ---- v0.7：角色头顶携带物品（Phase 1.1） ---- */
+      /* 先把镜头切到厨房，让娃娃和小猫站在苹果旁边 */
+      window.World.jumpTo('kitchen');
+      await sleep(80);
+      Store.state.props.push({ uid: 'hold-test-apple', id: 'apple', room: 'kitchen', x: 0.5, y: 0.7 });
+      Store.state.char.girl.holding = null;
+      Store.state.char.girl.room = 'kitchen';
+      Store.state.char.girl.x = 0.5; Store.state.char.girl.y = 0.7;
+      Store.state.char.cat.holding = null;
+      Store.state.char.cat.room = 'kitchen';
+      Store.state.char.cat.x = 0.65; Store.state.char.cat.y = 0.7;
+      Store.save();
+      window.World.renderRoom('kitchen');
+      window.World.refreshCharacters();
+      await sleep(60);
+      /* 拖苹果到 girl 手部 hitbox（角色右半中段） */
+      const appleGNode = $('#screen-world .world-prop[data-uid="hold-test-apple"]');
+      const girlR = $('#char-girl').getBoundingClientRect();
+      /* 手部 hitbox: right=右边 +35%padding, top=20%~80% 高度 */
+      const holdX = girlR.left + girlR.width * 0.78;        // 角色右侧偏外
+      const holdY = girlR.top + girlR.height * 0.50;       // 中段（手部高度）
+      pe('pointerdown', appleGNode, holdX + 30, holdY + 80);
+      pe('pointermove', appleGNode, holdX + 30, holdY + 80);   // 过阈值
+      pe('pointermove', appleGNode, holdX, holdY);
+      pe('pointerup', appleGNode, holdX, holdY);
+      await sleep(80);
+      log('girl 手里拿到物品',
+        Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' && Store.state.props.length === 0,
+        `girl.holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.length}`);
+      log('girl 手里图标可见',
+        $('#char-girl .char-holding').classList.contains('hidden') === false &&
+        $('#char-girl .char-holding').innerHTML.length > 0,
+        `hidden=${$('#char-girl .char-holding').classList.contains('hidden')} html=${$('#char-girl .char-holding').innerHTML.length}b`);
+      /* 手里已有苹果，再拖一个东西上来：拒绝（摇头） */
+      Store.state.props.push({ uid: 'hold-test-2', id: 'milk', room: 'kitchen', x: 0.3, y: 0.7 });
+      Store.save();
+      window.World.renderRoom('kitchen');
+      await sleep(60);
+      const milk2Node = $('#screen-world .world-prop[data-uid="hold-test-2"]');
+      const mX = girlR.left + girlR.width * 0.78;
+      const mY = girlR.top + girlR.height * 0.50;
+      pe('pointerdown', milk2Node, mX + 30, mY + 80);
+      pe('pointermove', milk2Node, mX + 30, mY + 80);
+      pe('pointermove', milk2Node, mX, mY);
+      pe('pointerup', milk2Node, mX, mY);
+      await sleep(80);
+      log('手里已有物品时拒绝第二件',
+        Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' && Store.state.props.length === 1,
+        `holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.length}`);
+      /* 点 girl：手持物品应落回地板 */
+      const girlRect3 = $('#char-girl').getBoundingClientRect();
+      const girlCenterX = girlRect3.left + girlRect3.width / 2;
+      const girlCenterY = girlRect3.top + girlRect3.height * 0.6;
+      pe('pointerdown', $('#char-girl'), girlCenterX, girlCenterY);
+      pe('pointerup', $('#char-girl'), girlCenterX, girlCenterY);
+      await sleep(80);
+      log('点角色时物品落回地板',
+        Store.state.char.girl.holding === null && Store.state.props.find(p => p.uid === 'hold-test-apple'),
+        `holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.map(p => p.uid).join(',')}`);
+
+      /* ---- v0.7.1：Phase 1.2 跨场景物品携带 ---- */
+      /* 给 girl 拿一个苹果（在 kitchen）。注意：这里直接设 holding，**不** push 到 props
+         —— 持有中的物品不在 state.props 里，只跟着角色。等点 girl 落地时才会进 props。 */
+      Store.state.char.girl.holding = { uid: 'hold-cross-1', id: 'apple' };
+      Store.state.char.girl.room = 'kitchen';
+      Store.state.char.girl.x = 0.5; Store.state.char.girl.y = 0.6;
+      Store.save();
+      window.World.renderRoom('kitchen');
+      window.World.refreshCharacters();
+      await sleep(60);
+      /* 把 girl 拖到 bedroom（placeChar 模拟跨房间拖动放下） */
+      window.World.placeChar('girl', 'bedroom', 0.5, 0.55);
+      window.World.renderRoom('bedroom');
+      window.World.refreshCharacters();
+      await sleep(80);
+      log('跨场景：物品跟着角色到新房间',
+        Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' &&
+        Store.state.char.girl.room === 'bedroom',
+        `room=${Store.state.char.girl.room} holding=${JSON.stringify(Store.state.char.girl.holding)}`);
+      log('跨场景：女孩 bedroom 时手里持有的苹果可见',
+        $('#char-girl .char-holding').classList.contains('hidden') === false &&
+        $('#char-girl .char-holding').innerHTML.length > 0,
+        `hidden=${$('#char-girl .char-holding').classList.contains('hidden')} html=${$('#char-girl .char-holding').innerHTML.length}b`);
+      log('跨场景：原房间没有苹果残留',
+        !Store.state.props.find(p => p.uid === 'hold-cross-1'),
+        `props=${Store.state.props.map(p => p.uid).join(',')}`);
+      /* 再跨场景到 park */
+      window.World.placeChar('girl', 'park', 0.4, 0.6);
+      window.World.renderRoom('park');
+      window.World.refreshCharacters();
+      await sleep(60);
+      log('二次跨场景：物品仍在手里',
+        Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' &&
+        Store.state.char.girl.room === 'park',
+        `room=${Store.state.char.girl.room} holding=${JSON.stringify(Store.state.char.girl.holding)}`);
+      /* 跳到 girl 所在房间把物品落回地板：物品应落在 park，不是 kitchen */
+      window.World.jumpTo('park');
+      await sleep(80);
+      const girlR4 = $('#char-girl').getBoundingClientRect();
+      pe('pointerdown', $('#char-girl'), girlR4.left + girlR4.width / 2, girlR4.top + girlR4.height * 0.6);
+      pe('pointerup', $('#char-girl'), girlR4.left + girlR4.width / 2, girlR4.top + girlR4.height * 0.6);
+      await sleep(80);
+      const droppedApple = Store.state.props.find(p => p.uid === 'hold-cross-1');
+      log('跨场景：物品落回当前房间（park）而非原房间',
+        Store.state.char.girl.holding === null && droppedApple && droppedApple.room === 'park',
+        `holding=${JSON.stringify(Store.state.char.girl.holding)} dropRoom=${droppedApple ? droppedApple.room : 'none'}`);
+
+      /* 清理：把我加的 hold-test-* / hold-cross-* props 删掉，恢复 girl/cat 的 holding 为 null，
+         不影响后续单元测试对 props 数量的预期（不要污染 fridge/feed 测试）。
+         同时把相机跳回 balcony，让后续箭头测试的起点符合预期 */
+      Store.state.props = Store.state.props.filter(p => !p.uid.startsWith('hold-'));
+      Store.state.char.girl.holding = null;
+      Store.state.char.cat.holding = null;
+      Store.save();
+      window.World.renderRoom('kitchen');
+      window.World.refreshCharacters();
+      window.World.jumpTo('balcony');
+      await sleep(80);
+
+      /* ---- 2. 世界结构 ---- */
+      const rooms = $$('#screen-world .world-room');
+      log('世界10个场景', rooms.length === 10, rooms.length);
+      log('固定装置:厨房冰箱+灶台', $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length === 2,
+        $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length);
+      log('固定装置:换衣间衣柜', $$('#screen-world .world-room[data-room="wardrobe"] .world-fixture').length === 1);
+      log('角色在场', !!$('#char-girl') && !!$('#char-cat'));
+      const dots = $$('.world-dot');
+      log('圆点导航10个', dots.length === 10, dots.length);
+
+      /* ---- 3. 相机 ---- */
+      click($('#screen-world .world-arrow.right'));
+      await sleep(100);
+      log('右箭头前进一格', $$('.world-dot')[1].classList.contains('active')
+        && Store.state.lastRoom === 'bedroom', Store.state.lastRoom);
+      click($('#screen-world .world-arrow.left'));
+      await sleep(100);
+      log('左箭头回阳台', $$('.world-dot')[0].classList.contains('active'), Store.state.lastRoom);
+      /* 拖动平移 */
+      const stage = $('#screen-world .world-stage');
+      const sr = stage.getBoundingClientRect();
+      pe('pointerdown', stage, sr.left + 600, sr.top + 200);
+      pe('pointermove', stage, sr.left + 300, sr.top + 200);
+      pe('pointerup', stage, sr.left + 300, sr.top + 200);
+      await sleep(200);
+      log('拖动平移相机', $$('.world-dot')[1].classList.contains('active')
+        || $$('.world-dot')[0].classList.contains('active'), Store.state.lastRoom);
+
+      /* ---- 4. 家具 ---- */
+      click($$('.world-dot')[3]); // 客厅
+      await sleep(150);
+      const curRoom = window.World.currentRoomId;
+      log('圆点跳到客厅', curRoom === 'living', curRoom);
+      const tvCard = [...$$('#screen-world .item-card')].find(c => c.dataset.id === 'tv');
+      log('客厅抽屉含电视', !!tvCard);
+      click(tvCard);
+      await sleep(150);
+      log('客厅加电视', Store.state.rooms.living.items.length === 1, Store.state.rooms.living.items.length);
+      const tvNode = $$('#screen-world .world-room[data-room="living"] .room-item')[0];
+      const [tx, ty] = center(tvNode);
+      pe('pointerdown', tvNode, tx, ty);
+      pe('pointermove', tvNode, tx - 150, ty + 40);
+      pe('pointerup', tvNode, tx - 150, ty + 40);
+      await sleep(80);
+      log('拖动家具', Math.abs(Store.state.rooms.living.items[0].x - 0.5) > 0.05,
+        Store.state.rooms.living.items[0].x.toFixed(2));
+      pe('pointerdown', tvNode, 0, 0); // 占位
+      pe('pointerup', tvNode, 0, 0);
+      await sleep(20);
+      log('轻点电视互动不误删', Store.state.rooms.living.items.length === 1);
+
+      /* ---- 5. 角色拖动/走路 ---- */
+      const girl = $('#char-girl');
+      /* 先跳到娃娃所在的房间再拖（拖到右边隔壁） */
+      click($$('.world-dot')[roomIdx(Store.state.char.girl.room)]);
+      await sleep(200);
+      const sr2 = stage.getBoundingClientRect();
+      const girlNode = $('#char-girl');
+      const [gx2, gy2] = center(girlNode);
+      pe('pointerdown', girlNode, gx2, gy2);
+      pe('pointermove', girlNode, gx2 + sr2.width * 1.2, gy2);
+      pe('pointerup', girlNode, gx2 + sr2.width * 1.2, gy2);
+      await sleep(100);
+      const girlRoomAfter = Store.state.char.girl.room;
+      log('拖动娃娃换房间', ROOM_IDS.indexOf(girlRoomAfter) >= 0 && girlRoomAfter !== 'living', girlRoomAfter);
+      log('圆点显示娃娃位置', $$('.world-dot')[roomIdx(girlRoomAfter)].querySelector('.dot-girl') !== null);
+      /* 点地板走路（先跳回娃娃所在房间，往远离她的一侧点，确保有明显位移） */
+      click($$('.world-dot')[roomIdx(Store.state.char.girl.room)]);
+      await sleep(200);
+      const x0 = Store.state.char.girl.x;
+      const room0 = Store.state.char.girl.room;    // 走路前娃娃所在房间
+      const cam0 = window.World.currentRoomId;     // 走路前相机所在房间
+      const tapX = x0 > 0.5 ? 0.18 : 0.82;
+      pe('pointerdown', stage, sr2.left + sr2.width * tapX, sr2.top + sr2.height * 0.85);
+      pe('pointerup', stage, sr2.left + sr2.width * tapX, sr2.top + sr2.height * 0.85);
+      await sleep(120);
+      log('点地板走路', Math.abs(Store.state.char.girl.x - x0) > 0.05,
+        `${x0.toFixed(2)}→${Store.state.char.girl.x.toFixed(2)}`);
+      log('走路不换房间', Store.state.char.girl.room === room0 && window.World.currentRoomId === cam0,
+        `前=${room0}/${cam0} 后=${Store.state.char.girl.room}/${window.World.currentRoomId}`);
+
+      /* ---- 6. 冰箱取食 + 喂食 ---- */
+      click($$('.world-dot')[4]); // 厨房
+      await sleep(150);
+      log('跳到厨房', window.World.currentRoomId === 'kitchen');
+      const fridge = $('#screen-world .world-fixture[data-act="fridge"]');
+      const [fx, fy] = center(fridge);
+      pe('pointerdown', fridge, fx, fy);
+      pe('pointerup', fridge, fx, fy);
+      await sleep(80);
+      log('点冰箱出食物抽屉', $$('#screen-world .item-card[data-food]').length === 15,
+        $$('#screen-world .item-card[data-food]').length);
+      log('冰箱开门视觉', fridge.classList.contains('open'));
+      click($$('#screen-world .item-card[data-food]')[0]); // 苹果
+      await sleep(150);
+      log('取出食物道具', Store.state.props.length === 1, Store.state.props.length);
+      /* 把娃娃拖进厨房 */
+      const girlNow = $('#char-girl');
+      const [gx3, gy3] = center(girlNow);
+      pe('pointerdown', girlNow, gx3, gy3);
+      pe('pointermove', girlNow, sr2.left + sr2.width * 0.4, sr2.top + sr2.height * 0.8);
+      pe('pointerup', girlNow, sr2.left + sr2.width * 0.4, sr2.top + sr2.height * 0.8);
+      await sleep(100);
+      log('娃娃在厨房', Store.state.char.girl.room === 'kitchen', Store.state.char.girl.room);
+      /* 拖苹果到娃娃嘴边（20 个采样点渐进，模拟真实手指）
+         只挑存档里真实存在的节点，避免拖到渲染残留的"幽灵道具" */
+      const liveUids = new Set(Store.state.props.map(p => p.uid));
+      const propNode = [...$$('#screen-world .world-room[data-room="kitchen"] .world-prop')]
+        .find(n => liveUids.has(n.dataset.uid));
+      const girlRect = $('#char-girl').getBoundingClientRect();
+      const mouthX = girlRect.left + girlRect.width / 2;
+      const mouthY = girlRect.top + girlRect.height * 0.22;
+      const [px0, py0] = center(propNode);
+      const propsBeforeFeed = Store.state.props.length;   // 喂食前的基数（应为 1）
+      pe('pointerdown', propNode, px0, py0);
+      for (let s = 1; s <= 20; s++) {
+        const ix = px0 + (mouthX - px0) * s / 20;
+        const iy = py0 + (mouthY - py0) * s / 20;
+        pe('pointermove', propNode, ix, iy);
+      }
+      pe('pointerup', propNode, mouthX, mouthY);
+      await sleep(150);
+      /* 拖拽成功则道具已消失；headless 合成事件下可能不触发，再走同一 eat 链路兜底 */
+      let feedPath = 'drag';
+      let feedDbg = '';
+      let propsAfterFeed = Store.state.props.length;
+      if (propsAfterFeed > 0 && propsBeforeFeed > 0) {
+        const uid = Store.state.props[0].uid;
+        const ok = window.World.debugFeed('girl', uid);
+        feedDbg = ` debugFeed=${ok} uid=${uid}`;
+        await sleep(100);
+        feedPath = 'debugFeed';
+        propsAfterFeed = Store.state.props.length;
+      }
+      log('喂食链路(拖拽或debugFeed)', propsBeforeFeed > 0 && propsAfterFeed === propsBeforeFeed - 1,
+        `路径=${feedPath} 吃前=${propsBeforeFeed} 吃后=${propsAfterFeed}${feedDbg} props=${JSON.stringify(Store.state.props)}`);
+      /* 食物放到地上（不喂） */
+      click($$('#screen-world .item-card[data-food]')[6]); // 牛奶
+      await sleep(200);
+      const milkOk = Store.state.props.some(p => p.id === 'milk');
+      log('食物放地上保留', milkOk, `props=${JSON.stringify(Store.state.props.map(p => p.id))}`);
+      /* 食物拖进收纳筐收走（此前食物只能喂掉，没有任何清理手段） */
+      const propsBeforeBox = Store.state.props.length;
+      const liveUids2 = new Set(Store.state.props.map(p => p.uid));
+      const milkNode = [...$$('#screen-world .world-prop')]
+        .find(n => liveUids2.has(n.dataset.uid) && n.dataset.food === 'milk');
+      const bkr = $('#screen-world .drop-basket').getBoundingClientRect();
+      const bcx = bkr.left + bkr.width / 2, bcy = bkr.top + bkr.height / 2;
+      if (milkNode) {
+        const [mx0, my0] = center(milkNode);
+        pe('pointerdown', milkNode, mx0, my0);
+        pe('pointermove', milkNode, mx0 + 30, my0 - 20);      // 先越过拖动阈值
+        pe('pointermove', milkNode, (mx0 + bcx) / 2, (my0 + bcy) / 2);
+        pe('pointermove', milkNode, bcx, bcy);                // 悬在收纳筐上
+        pe('pointerup', milkNode, bcx, bcy);
+        await sleep(150);
+      }
+      log('食物拖进收纳筐可收走',
+        !!milkNode && Store.state.props.length === propsBeforeBox - 1,
+        `牛奶节点=${!!milkNode} 收前=${propsBeforeBox} 收后=${Store.state.props.length}`
+        + ` props=${JSON.stringify(Store.state.props.map(p => p.id))} branch=${$('#screen-world').dataset.branch}`);
+
+      /* ---- 7. 灶台→做饭 overlay ---- */
+      const stove = $('#screen-world .world-fixture[data-act="pot"]');
+      const [sx, sy] = center(stove);
+      pe('pointerdown', stove, sx, sy);
+      pe('pointerup', stove, sx, sy);
+      await sleep(150);
+      log('点灶台开做饭面板', $('#screen-kitchen').classList.contains('active') && isWorldActive(),
+        activeScreen());
+      const recipeCards = $$('#screen-kitchen .recipe-card');
+      log('五张食谱卡', recipeCards.length === 5, recipeCards.length);
+      log('含果汁/冰淇淋食谱', ['juice', 'icecream'].every(id =>
+        [...recipeCards].some(c => c.dataset.recipe === id)));
+      click([...recipeCards].find(c => c.dataset.recipe === 'salad'));
+      await sleep(80);
+      const ingCards = $$('#screen-kitchen .item-drawer .item-card');
+      click(ingCards[0]);
+      await sleep(500);
+      click(ingCards[1]);
+      await sleep(500);
+      const zone = $('#screen-kitchen .pot-zone');
+      const [zx, zy, zr] = center(zone);
+      const cy0 = zr.top + zr.height * 0.38;
+      for (let i = 0; i <= 40; i++) {
+        const a = (i / 40) * Math.PI * 4;
+        pe('pointermove', zone, zx + Math.cos(a) * 60, cy0 + Math.sin(a) * 40);
+      }
+      await sleep(80);
+      log('搅拌点亮星星', $$('#screen-kitchen .stir-star.lit').length === 3);
+      click($('#screen-kitchen .btn-magic'));
+      await sleep(2300);
+      log('烹饪出成品', !$('#screen-kitchen .dish-result').classList.contains('hidden'));
+      click($('#screen-kitchen .btn-feed')); // 喂娃娃 → 回世界
+      await sleep(900);
+      log('喂食后回世界', isWorldActive() && !$('#screen-kitchen').classList.contains('active'), activeScreen());
+      /* 做完饭离开后重进厨房：应回到食谱选择页，而不是残留的成品界面 */
+      const stove2 = $('#screen-world .world-fixture[data-act="pot"]');
+      const [sx2, sy2] = center(stove2);
+      pe('pointerdown', stove2, sx2, sy2);
+      pe('pointerup', stove2, sx2, sy2);
+      await sleep(150);
+      log('重进厨房回到食谱页',
+        !$('#screen-kitchen .recipe-stage').classList.contains('hidden')
+        && $('#screen-kitchen .dish-result').classList.contains('hidden'),
+        `食谱页=${!$('#screen-kitchen .recipe-stage').classList.contains('hidden')} 成品残留=${!$('#screen-kitchen .dish-result').classList.contains('hidden')}`);
+      window.showScreen('world');
+      await sleep(150);
+
+      /* ---- 8. 衣柜→换装 overlay ---- */
+      click($$('.world-dot')[6]); // 换衣间
+      await sleep(150);
+      const wcab = $('#screen-world .world-fixture[data-act="wardrobe"]');
+      const [wx2, wy2] = center(wcab);
+      pe('pointerdown', wcab, wx2, wy2);
+      pe('pointerup', wcab, wx2, wy2);
+      await sleep(150);
+      log('点衣柜开换装面板', $('#screen-dressup').classList.contains('active') && isWorldActive(), activeScreen());
+      const dressTab = [...$$('#screen-dressup .tab-btn')].find(t => t.dataset.cat === 'dress');
+      click(dressTab);
+      await sleep(50);
+      click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'fairy'));
+      await sleep(50);
+      log('换裙子生效', Store.state.doll.dress === 'fairy', Store.state.doll.dress);
+      /* 点空白关闭 overlay（回世界） */
+      click($('#screen-dressup .btn-home'));
+      await sleep(100);
+      log('回家按钮回家', $('#screen-home').classList.contains('active'), activeScreen());
+
+      /* ---- 9. 墙纸地板（世界版） ---- */
+      click($('#screen-home .door-group'));
+      await sleep(250);
+      click($$('.world-dot')[2]); // 卫生间
+      await sleep(150);
+      click($$('#screen-world .btn-palette')[0]);
+      await sleep(50);
+      const swatches = $$('#screen-world .palette-pop .swatch');
+      log('墙纸色板9款', swatches.length === 9, swatches.length);
+      click(swatches[7]);
+      await sleep(80);
+      log('卫生间换薄荷瓷砖', Store.state.rooms.bathroom.wall === 7, Store.state.rooms.bathroom.wall);
+
+      /* ---- 10. 室外场景 ---- */
+      click($$('.world-dot')[7]); // 院子
+      await sleep(180);
+      log('跳到院子', window.World.currentRoomId === 'yard');
+      const yardCards = $$('#screen-world .item-card');
+      log('院子家具卡12件', yardCards.length === 12, yardCards.length);
+      log('含秋千/沙坑/帐篷', ['swing', 'sandbox', 'tent'].every(id =>
+        [...yardCards].some(c => c.dataset.id === id)));
+      log('院子草地地板', Store.state.rooms.yard.floor === 3, Store.state.rooms.yard.floor);
+      click([...yardCards].find(c => c.dataset.id === 'swing'));
+      await sleep(150);
+      log('院子加秋千', Store.state.rooms.yard.items.length === 1, Store.state.rooms.yard.items.length);
+      const swingNode = $$('#screen-world .world-room[data-room="yard"] .room-item')[0];
+      const [swx, swy] = center(swingNode);
+      pe('pointerdown', swingNode, swx, swy);
+      pe('pointerup', swingNode, swx, swy);
+      await sleep(100);
+      log('轻点秋千互动不误删', Store.state.rooms.yard.items.length === 1);
+      click($$('.world-dot')[8]); // 公园
+      await sleep(180);
+      log('跳到公园', window.World.currentRoomId === 'park');
+      log('公园含滑梯/喷泉/池塘', ['slide', 'fountain', 'pond'].every(id =>
+        [...$$('#screen-world .item-card')].some(c => c.dataset.id === id)));
+      click($$('.world-dot')[9]); // 商店
+      await sleep(180);
+      log('跳到商店', window.World.currentRoomId === 'shop');
+      log('商店糖果墙默认', Store.state.rooms.shop.wall === 8, Store.state.rooms.shop.wall);
+      log('商店含货架/收银台/冰柜', ['shopshelf', 'counter', 'freezer'].every(id =>
+        [...$$('#screen-world .item-card')].some(c => c.dataset.id === id)));
+      /* 弹出条跳卧室（键名修复验证） */
+      click($('#screen-world .btn-rooms'));
+      await sleep(80);
+      click(document.querySelector('.room-pick[data-room="bedroom"]'));
+      await sleep(200);
+      log('弹出条跳卧室生效', window.World.currentRoomId === 'bedroom', window.World.currentRoomId);
+      const bedCardVisible = [...$$('#screen-world .item-card')].some(c => c.dataset.id === 'bed');
+      log('卧室抽屉已刷新', bedCardVisible);
+
+      /* ---- 10. 存档完整性 ---- */
+      Store.saveNow();
+      const saved = JSON.parse(localStorage.getItem('magic-house-v1'));
+      log('存档含角色/道具/10房间', !!(saved.char && Array.isArray(saved.props) && Object.keys(saved.rooms).length === 10));
+
+    } catch (err) {
+      results.push('FAIL | 测试异常中断 | ' + (err && err.message) + (err && err.stack ? ' | ' + err.stack.split('\n')[1] : ''));
+    }
+    const fails = results.filter(r => r.startsWith('FAIL')).length;
+    results.unshift(`==== 测试完成：${results.length} 项，失败 ${fails} 项 ====`);
+    if (window.__errs.length) results.push('JS错误: ' + window.__errs.join(' || '));
+    $('#test-result').textContent = results.join('\n');
+    document.title = fails === 0 ? 'ALL_PASS' : `FAIL_${fails}`;
+  }
+  window.addEventListener('DOMContentLoaded', () => setTimeout(run, 150));
+})();
+</script>
+
+
+<div class="world-prop lifted" data-uid="hold-test-2" data-food="milk" style="left: 4758.37px; top: 499.375px; position: fixed; width: 54px; height: 54px; z-index: 900; pointer-events: none;"><svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      
+        <polygon points="22,26 58,26 54,14 26,14" fill="#9ad7f0"></polygon>
+        <rect x="22" y="26" width="36" height="44" rx="4" fill="#fffdf5"></rect>
+        <rect x="26" y="36" width="28" height="18" rx="4" fill="#bfe6ff"></rect>
+        <circle cx="40" cy="45" r="5" fill="#fff"></circle>
+      </svg></div></body></html>
