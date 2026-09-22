@@ -518,6 +518,8 @@ const MAP_CLOSE_SVG = `
     if (e.target.closest('.btn-rooms')) toggleRoomPicker();
     /* Phase 2 世界地图：主屏右上角"看全景"按钮 */
     if (e.target.closest('.btn-map')) { Sound.door(); showScreen('map'); }
+    /* Phase 2 v8：左上角 🏠 按钮 → 回到地图页（老吴 iPad 实测反馈"点击没反应"，原 showScreen('home') 已无效） */
+    if (e.target.closest('.btn-home')) { Sound.door(); showScreen('map'); }
   });
 
   /* 通用：首次进入某界面时语音引导一次 */
@@ -669,7 +671,7 @@ const MAP_CLOSE_SVG = `
         setTimeout(() => { Sound.door(); showScreen('world'); }, 600);
       });
 
-      /* 大房子轮廓点击 → 进房子内部屏（interior） */
+      /* 大房子轮廓点击 → 直接进世界屏 bedroom（v8 删除 interior 中间层） */
       const houseEl = el.querySelector('.map-house');
       if (houseEl) {
         houseEl.addEventListener('click', () => {
@@ -678,7 +680,9 @@ const MAP_CLOSE_SVG = `
           canvas.classList.add('map-leave');
           setTimeout(() => {
             canvas.classList.remove('map-leave');
-            showScreen('interior');
+            showScreen('world');
+            window.World.jumpTo('bedroom');
+            if (window.World.refreshCharacters) window.World.refreshCharacters();
           }, 220);
         });
       }
@@ -755,204 +759,18 @@ const MAP_CLOSE_SVG = `
     }
   };
 
-  /* ---------- Phase 2 v4：房子内部屏（interior，7 个房间 iso cube 平铺）---------- */
-  const INTERIOR_ROOMS = {
-    balcony:  { cx: 220, cy: 200, w: 70, h: 90, color: '#dff3ff', stroke: '#9ad7f0', label: '阳台', icon: ROOM_ICONS.balcony.svg },
-    bedroom:  { cx: 360, cy: 200, w: 70, h: 90, color: '#ffd9ea', stroke: '#e8a3bd', label: '卧室', icon: ROOM_ICONS.bedroom.svg },
-    bathroom: { cx: 500, cy: 200, w: 70, h: 90, color: '#e8eff4', stroke: '#b8ccd8', label: '浴室', icon: ROOM_ICONS.bathroom.svg },
-    living:   { cx: 640, cy: 200, w: 75, h: 90, color: '#d8f1ff', stroke: '#6bb8d8', label: '客厅', icon: ROOM_ICONS.living.svg },
-    kitchen:  { cx: 250, cy: 420, w: 90, h: 90, color: '#ffe3c7', stroke: '#d98324', label: '厨房', icon: ROOM_ICONS.kitchen.svg },
-    study:    { cx: 420, cy: 420, w: 90, h: 90, color: '#f7e8d2', stroke: '#d98c5a', label: '书房', icon: ROOM_ICONS.study.svg },
-    wardrobe: { cx: 600, cy: 420, w: 90, h: 90, color: '#ffd9ea', stroke: '#e05c86', label: '换衣', icon: ROOM_ICONS.dressup.svg }
-  };
-
-  const INTERIOR_SVG = `
-    <svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-      <!-- 草地底层（与地图屏风格一致） -->
-      <rect x="0" y="520" width="900" height="120" fill="#a8e6a1"/>
-      <rect x="0" y="514" width="900" height="12" fill="#8ed488" rx="6"/>
-      <!-- 太阳 -->
-      <g transform="translate(840,60)">
-        <circle r="22" fill="#ffd34d" stroke="#ffb830" stroke-width="3"/>
-        ${Array.from({length: 8}, (_, i) => {
-          const a = i * 45;
-          return `<line x1="0" y1="-30" x2="0" y2="-38" stroke="#ffcf4d" stroke-width="4" stroke-linecap="round" transform="rotate(${a})"/>`;
-        }).join('')}
-      </g>
-      <!-- 7 个房间 iso cube + 顶面拟物（上排 4 + 下排 3） -->
-      ${Object.entries(INTERIOR_ROOMS).map(([id, p]) => {
-        const c = p;
-        const back = c.cy;
-        const front = c.cy + c.w;
-        return `
-        <g class="interior-room" data-room="${id}">
-          ${_isoCube(c.cx, c.cy, c.w, c.h, c.color, { leftAmt: 0.18, rightAmt: 0.36 })}
-          ${id === 'balcony' ? `
-            <!-- 阳台：花盆 + 小椅子 -->
-            <ellipse cx="${c.cx - 18}" cy="${back + 12}" rx="8" ry="5" fill="#a9784a"/>
-            <ellipse cx="${c.cx - 18}" cy="${back + 8}" rx="6" ry="4" fill="#6cc46a"/>
-            <line x1="${c.cx - 18}" y1="${back + 4}" x2="${c.cx - 18}" y2="${back - 2}" stroke="#4e9e4a" stroke-width="2"/>
-            <ellipse cx="${c.cx - 18}" cy="${back - 4}" rx="4" ry="5" fill="#ff9eb5"/>
-            <rect x="${c.cx + 12}" y="${back + 8}" width="14" height="10" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1.2" rx="1"/>
-            <line x1="${c.cx + 12}" y1="${back + 6}" x2="${c.cx + 26}" y2="${back + 6}" stroke="#4f9cc0" stroke-width="1.2"/>
-          ` : ''}
-          ${id === 'bedroom' ? `
-            <!-- 卧室：床 + 枕头 + 熊玩偶 -->
-            <rect x="${c.cx - 22}" y="${back + 8}" width="44" height="20" rx="3" fill="#fffdf5" stroke="#a9784a" stroke-width="1.5"/>
-            <rect x="${c.cx - 20}" y="${back + 10}" width="12" height="8" fill="#ff9eb5" stroke="#c45875" stroke-width="1" rx="1.5"/>
-            <circle cx="${c.cx + 18}" cy="${back + 18}" r="7" fill="#c99b6a" stroke="#7a4d1d" stroke-width="1.5"/>
-            <circle cx="${c.cx + 16}" cy="${back + 16}" r="1.2" fill="#5b3a29"/>
-            <circle cx="${c.cx + 20}" cy="${back + 16}" r="1.2" fill="#5b3a29"/>
-          ` : ''}
-          ${id === 'bathroom' ? `
-            <!-- 浴室：浴缸 + 龙头 + 小鸭子 -->
-            <ellipse cx="${c.cx - 8}" cy="${back + 20}" rx="20" ry="8" fill="#9ad7f0" stroke="#4f9cc0" stroke-width="1.5"/>
-            <ellipse cx="${c.cx - 8}" cy="${back + 18}" rx="16" ry="5" fill="#cdf0ff"/>
-            <rect x="${c.cx - 10}" y="${back + 8}" width="4" height="8" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="0.8"/>
-            <circle cx="${c.cx - 8}" cy="${back + 9}" r="2" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="0.8"/>
-            <ellipse cx="${c.cx + 18}" cy="${back + 15}" rx="4" ry="3.5" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
-            <circle cx="${c.cx + 19}" cy="${back + 14}" r="0.8" fill="#5a3a00"/>
-          ` : ''}
-          ${id === 'living' ? `
-            <!-- 客厅：沙发 + 电视 + 茶几 -->
-            <rect x="${c.cx - 24}" y="${back + 10}" width="48" height="14" fill="#6cc46a" stroke="#4e9e4a" stroke-width="1.5" rx="3"/>
-            <rect x="${c.cx - 22}" y="${back + 4}" width="44" height="8" fill="#7ed47b" stroke="#4e9e4a" stroke-width="1.2" rx="2"/>
-            <rect x="${c.cx - 8}" y="${back - 4}" width="16" height="10" fill="#2a2a3a" stroke="#5a5a5a" stroke-width="1.5"/>
-            <rect x="${c.cx - 6}" y="${back - 3}" width="12" height="8" fill="#7ec8e3"/>
-            <rect x="${c.cx - 4}" y="${back + 24}" width="20" height="6" fill="#a9784a" stroke="#7a5a3a" stroke-width="1" rx="1"/>
-          ` : ''}
-          ${id === 'kitchen' ? `
-            <!-- 厨房：锅 + 灶台 + 冰箱 -->
-            <circle cx="${c.cx - 22}" cy="${back + 18}" r="11" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5"/>
-            <circle cx="${c.cx - 22}" cy="${back + 18}" r="8" fill="#a83232"/>
-            <rect x="${c.cx - 26}" y="${back + 4}" width="3" height="6" fill="#5a4a3a" stroke="#3a2a1a" stroke-width="0.8"/>
-            <rect x="${c.cx + 5}" y="${back + 14}" width="22" height="10" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="1.2" rx="1.5"/>
-            <circle cx="${c.cx + 11}" cy="${back + 19}" r="2.5" fill="#ff5c5c" opacity=".7"/>
-            <circle cx="${c.cx + 21}" cy="${back + 19}" r="2.5" fill="#ff5c5c" opacity=".7"/>
-            <rect x="${c.cx - 2}" y="${back + 4}" width="10" height="22" fill="#fffdf5" stroke="#9b9b9b" stroke-width="1.2" rx="1.5"/>
-            <line x1="${c.cx - 2}" y1="${back + 14}" x2="${c.cx + 8}" y2="${back + 14}" stroke="#9b9b9b" stroke-width="0.8"/>
-          ` : ''}
-          ${id === 'study' ? `
-            <!-- 书房：书桌 + 书 + 椅 -->
-            <rect x="${c.cx - 30}" y="${back + 14}" width="60" height="12" fill="#a9784a" stroke="#7a5a3a" stroke-width="1.5" rx="1.5"/>
-            <rect x="${c.cx - 25}" y="${back + 26}" width="3" height="14" fill="#7a5a3a"/>
-            <rect x="${c.cx + 22}" y="${back + 26}" width="3" height="14" fill="#7a5a3a"/>
-            <rect x="${c.cx - 22}" y="${back + 6}" width="14" height="9" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>
-            <rect x="${c.cx - 22}" y="${back + 4}" width="14" height="3" fill="#fff"/>
-            <rect x="${c.cx - 6}" y="${back + 8}" width="14" height="7" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1"/>
-            <rect x="${c.cx - 6}" y="${back + 6}" width="14" height="3" fill="#fff"/>
-            <rect x="${c.cx + 12}" y="${back + 8}" width="12" height="8" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
-            <rect x="${c.cx + 12}" y="${back + 6}" width="12" height="3" fill="#fff"/>
-          ` : ''}
-          ${id === 'wardrobe' ? `
-            <!-- 换衣：衣架 + 衣服 + 镜 + 鞋 -->
-            <rect x="${c.cx - 25}" y="${back + 4}" width="50" height="3" fill="#7a5a3a"/>
-            <line x1="${c.cx - 25}" y1="${back + 4}" x2="${c.cx - 25}" y2="${back + 22}" stroke="#7a5a3a" stroke-width="1.5"/>
-            <line x1="${c.cx + 25}" y1="${back + 4}" x2="${c.cx + 25}" y2="${back + 22}" stroke="#7a5a3a" stroke-width="1.5"/>
-            <rect x="${c.cx - 18}" y="${back + 7}" width="8" height="16" fill="#ff5c5c" stroke="#a83232" stroke-width="1" rx="1"/>
-            <rect x="${c.cx - 6}" y="${back + 7}" width="8" height="16" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1" rx="1"/>
-            <rect x="${c.cx + 6}" y="${back + 7}" width="8" height="16" fill="#ffd34d" stroke="#a06820" stroke-width="1" rx="1"/>
-            <rect x="${c.cx + 24}" y="${back + 10}" width="10" height="14" fill="#cdf0ff" stroke="#7a5a3a" stroke-width="1.2" rx="1.5"/>
-            <line x1="${c.cx + 24}" y1="${back + 14}" x2="${c.cx + 34}" y2="${back + 14}" stroke="#7a5a3a" stroke-width="0.8"/>
-            <rect x="${c.cx - 16}" y="${back + 26}" width="8" height="5" fill="#ff5c5c" stroke="#a83232" stroke-width="0.8" rx="1"/>
-            <rect x="${c.cx - 4}" y="${back + 26}" width="8" height="5" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="0.8" rx="1"/>
-          ` : ''}
-          <!-- 顶面房间标签 -->
-          <text x="${c.cx}" y="${front + 32}" text-anchor="middle"
-            font-size="15" font-weight="800" fill="${c.stroke}">${c.label}</text>
-        </g>`;
-      }).join('')}
-    </svg>`;
-const Interior = {
-    init(el) {
-      el.innerHTML = `
-        <div class="interior-screen">
-          <div class="interior-top-bar">
-            <button class="interior-back" aria-label="返回地图">
-              <svg viewBox="0 0 36 36">
-                <path d="M22 6 L10 18 L22 30 M10 18 L32 18" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="interior-title">挑一个房间吧</div>
-          </div>
-          <div class="interior-canvas-wrap">
-            <div class="interior-canvas">${INTERIOR_SVG}</div>
-            <div class="map-marker map-marker-girl" data-for="girl"></div>
-            <div class="map-marker map-marker-cat" data-for="cat"></div>
-          </div>
-          <div class="interior-hint">点房间进世界</div>
-        </div>`;
-
-      /* 返回地图按钮 */
-      el.querySelector('.interior-back').addEventListener('click', () => {
-        Sound.pop();
-        showScreen('map');
-      });
-
-      /* Phase 2 v4：默认屏 = map，Map.init 调一次后 map 屏立即显示 marker */
-      const placeInit = () => {
-        this._placeMarker('girl', Store.state.char.girl.room);
-        this._placeMarker('cat', Store.state.char.cat.room);
-      };
-      /* 强制绑定 this，避免 setTimeout 后 this 变 window */
-      const placeGirl = placeInit.bind(this);
-      setTimeout(placeGirl, 0);
-      setTimeout(placeGirl, 140);
-
-      /* 房间点击 → 跳世界屏 + jumpTo */
-      el.querySelectorAll('.interior-room').forEach(room => {
-        room.addEventListener('click', () => {
-          const roomId = room.dataset.room;
-          if (!roomId || !window.World) return;
-          Sound.door();
-          const canvas = el.querySelector('.interior-canvas');
-          canvas.classList.add('interior-leave');
-          setTimeout(() => {
-            canvas.classList.remove('interior-leave');
-            showScreen('world');
-            window.World.jumpTo(roomId);
-            if (window.World.refreshCharacters) window.World.refreshCharacters();
-          }, 220);
-        });
-      });
-    },
-    onEnter() {
-      const place = () => {
-        this._placeMarker('girl', Store.state.char.girl.room);
-        this._placeMarker('cat', Store.state.char.cat.room);
-      };
-      setTimeout(place, 16);
-      setTimeout(place, 140);
-    },
-    onLeave() {},
-    _placeMarker(who, roomId) {
-      const screen = document.getElementById('screen-interior');
-      if (!screen) return;
-      const marker = screen.querySelector('.map-marker-' + who);
-      if (!marker) return;
-      marker.dataset.targetRoom = roomId;
-      const canvas = screen.querySelector('.interior-canvas');
-      const roomEl = screen.querySelector(`.interior-room[data-room="${roomId}"]`);
-      if (!canvas || !roomEl) return;
-      const cRect = canvas.getBoundingClientRect();
-      const rRect = roomEl.getBoundingClientRect();
-      const left = rRect.left - cRect.left + rRect.width / 2;
-      const top  = rRect.top  - cRect.top  + rRect.height * 0.4;
-      marker.style.left = left + 'px';
-      marker.style.top  = top + 'px';
-      marker.classList.remove('pulse');
-      void marker.offsetWidth;
-      marker.classList.add('pulse');
-    }
-  };
+  /* ---------- Phase 2 v8：interior 屏已删除（老吴 iPad 实测反馈"图1界面不要了"）---------- */
+  /* 之前 v4-v7 有房子内部屏（interior，7 个房间 iso cube 平铺），现在点大房子直接进世界屏 bedroom */
+  /* INTERIOR_ROOMS / INTERIOR_SVG / Interior 模块已全部删除 */
+  const _INTERIOR_REMOVED = true;
+  ;
 
   /* ---------- 启动 ---------- */
   window.addEventListener('DOMContentLoaded', () => {
     Store.load();
-    /* Phase 2 v4：默认屏 = map（不再 home）；interior 是新增屏 */
+    /* Phase 2 v8：默认屏 = map（不再 home）；interior 已删除 */
     register('map', Map);
     register('world', window.World);
-    register('interior', Interior);
     register('dressup', window.DressUp);
     register('kitchen', window.Kitchen);
     currentId = 'map';
