@@ -716,6 +716,7 @@ html, body {
 .btn-corner.btn-help { background: #7ec8e3; box-shadow: 0 4px 0 #4f9cc0, 0 8px 16px rgba(60, 130, 170, .25); }
 .btn-corner.btn-reset { background: #ffb38a; box-shadow: 0 4px 0 #d97a52, 0 8px 16px rgba(180, 100, 60, .25); }
 .btn-corner.btn-relayout { background: #b79ced; box-shadow: 0 4px 0 #8a6fc6, 0 8px 16px rgba(120, 90, 200, .25); }
+.btn-corner.btn-map      { background: #9ad7f0; box-shadow: 0 4px 0 #4f9cc0, 0 8px 16px rgba(80, 150, 200, .25); }
 
 /* ---------- 全部还原（家长救命按钮） ---------- */
 .reset-confirm {
@@ -1024,42 +1025,6 @@ html, body {
 .world-prop.lifted { cursor: grabbing; }
 .world-prop.pop-in { animation: popIn .45s cubic-bezier(.34,1.56,.64,1); }
 
-/* 房间圆点导航 */
-.world-dots {
-  position: absolute;
-  top: calc(84px + env(safe-area-inset-top));
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  padding: 8px 14px;
-  background: rgba(255, 255, 255, .82);
-  border-radius: 22px;
-  box-shadow: 0 4px 14px rgba(120, 90, 60, .18);
-  z-index: 50;
-}
-.world-dot {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 3px solid #fff;
-  background: #e8d9c8;
-  cursor: pointer;
-  transition: transform .15s cubic-bezier(.34,1.56,.64,1), background .2s;
-}
-.world-dot.active { background: #ff9eb5; transform: scale(1.25); }
-.world-dot .dot-girl, .world-dot .dot-cat {
-  position: absolute;
-  top: -7px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-}
-.world-dot .dot-girl { left: -2px; background: #ffd0dd; }
-.world-dot .dot-cat { right: -2px; background: #f7b967; }
-
 /* 左右箭头 */
 .world-arrow {
   position: absolute;
@@ -1096,4 +1061,126 @@ html, body {
     transform: translateY(-50%);
     position: relative;
   }
+}
+
+/* ===========================================================
+   Phase 2 · 世界地图（screen-map）
+   =========================================================== */
+#screen-map {
+  /* 与主屏一致的天空+草地渐变（保持视觉风格统一） */
+  background: linear-gradient(#8fd3ff 0%, #c9ecff 55%, #d8f5d0 55.5%, #a8e6a1 100%);
+  display: none;             /* 默认隐藏（screen 类已设 display:none，.active 才显示） */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow: hidden;
+}
+#screen-map.active { display: flex; flex-direction: column; }
+
+.map-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-top {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 16px;
+  flex: 0 0 auto;
+}
+.map-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(80, 60, 130, .35);
+  letter-spacing: .05em;
+}
+.map-close {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: #ff7fa9;
+  box-shadow: 0 3px 0 #d96a8e, 0 6px 12px rgba(220, 100, 150, .25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform .12s;
+}
+.map-close:active { transform: translateY(calc(-50% + 3px)); box-shadow: 0 0 0 #d96a8e; }
+.map-close svg { width: 22px; height: 22px; }
+
+.map-canvas-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 4px 12px 4px;
+}
+.map-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 980px;
+  transition: transform .22s ease, opacity .22s ease;
+}
+.map-canvas.map-leave { transform: scale(0.92); opacity: 0; pointer-events: none; }
+.map-canvas svg { width: 100%; height: 100%; display: block; }
+
+.map-room {
+  cursor: pointer;
+  transition: transform .15s cubic-bezier(.34,1.56,.64,1);
+}
+.map-room:hover { transform-box: fill-box; transform-origin: center; }
+.map-room:active { transform-box: fill-box; transform-origin: center; transform: scale(1.05); }
+
+/* 室外区点击也响应（和室内一样的 hover/active） */
+.map-outdoor { cursor: pointer; }
+
+.map-marker {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  opacity: 0;          /* 默认隐藏，等 _placeMarker 定位完再显 */
+}
+.map-marker-girl { background: #ffd0dd; }
+.map-marker-cat  { background: #f7b967; }
+.map-marker[data-target-room] { opacity: 1; }
+.map-marker.pulse { animation: marker-pulse 1.5s ease-in-out 1; }
+@keyframes marker-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.35); }
+}
+
+.map-hint {
+  flex: 0 0 auto;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #5a4a8a;
+  background: rgba(255, 255, 255, .78);
+  padding: 8px 16px;
+  margin: 4px auto 8px;
+  border-radius: 18px;
+  width: max-content;
+  max-width: 90%;
+  box-shadow: 0 2px 8px rgba(120, 100, 160, .15);
 }
