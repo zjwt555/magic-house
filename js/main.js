@@ -53,7 +53,9 @@
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('dragstart', e => e.preventDefault());
 
-  /* ---------- 通用：左上角回家按钮 + 换房间按钮 ---------- */
+  /* ---------- 通用：换房间按钮（世界屏顶部左侧） + 回家按钮（保留兼容旧测试/dressup 等） ---------- */
+  /* Phase 2 v4：homeButtonHTML 保留但功能 no-op（主屏已删）。showScreen('home') 早返回不报错。
+     保留是为避免 world.js/dressup.js 的 .btn-home DOM 渲染 undefined 文本 + 旧测试 click(null) 报错 */
   window.homeButtonHTML = `
     <button class="btn-home" aria-label="回家">
       <svg viewBox="0 0 48 48">
@@ -71,10 +73,6 @@
         <path d="M24 6l1.4 3.4 3.6.3-2.7 2.3.8 3.5-3.1-1.9-3.1 1.9.8-3.5-2.7-2.3 3.6-.3z" fill="#ffd34d"/>
       </svg>
     </button>`;
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.btn-home');
-    if (btn) { Sound.door(); showScreen('home'); }
-  });
 
   /* ---------- 房间跳转弹出条（7 间房，点选后相机直达） ---------- */
   const ROOM_ICONS = {
@@ -164,38 +162,58 @@
   const PICK_ORDER = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'dressup', 'yard', 'park', 'shop'];
 
   /* ---------- Phase 2 世界地图：拟物俯视图 ---------- */
+  /* Phase 2 v4：地图屏 1 大房子 + 室外 3 区（删 7 间室内）
+     MAP_HOUSE：1 个大房子整体 iso cube；MAP_ROOM_POSITIONS 仅保留室外 3 区 */
+  const MAP_HOUSE = { cx: 480, cy: 300, w: 180, h: 140, color: '#fff3f7', stroke: '#f0c4d4' };
   const MAP_ROOM_POSITIONS = {
-    /* 大房子内 7 间：上排 4 + 下排 3 */
-    balcony:  { x: 150, y: 120, w: 145, h: 165, label: '阳台', color: '#dff3ff', stroke: '#9ad7f0', icon: ROOM_ICONS.balcony.svg,  indoor: true },
-    bedroom:  { x: 295, y: 120, w: 145, h: 165, label: '卧室', color: '#ffd9ea', stroke: '#e8a3bd', icon: ROOM_ICONS.bedroom.svg,  indoor: true },
-    bathroom: { x: 440, y: 120, w: 145, h: 165, label: '浴室', color: '#e8eff4', stroke: '#b8ccd8', icon: ROOM_ICONS.bathroom.svg, indoor: true },
-    living:   { x: 585, y: 120, w: 165, h: 165, label: '客厅', color: '#d8f1ff', stroke: '#6bb8d8', icon: ROOM_ICONS.living.svg,   indoor: true },
-    kitchen:  { x: 150, y: 285, w: 200, h: 195, label: '厨房', color: '#ffe3c7', stroke: '#d98324', icon: ROOM_ICONS.kitchen.svg,  indoor: true },
-    study:    { x: 350, y: 285, w: 200, h: 195, label: '书房', color: '#f7e8d2', stroke: '#d98c5a', icon: ROOM_ICONS.study.svg,    indoor: true },
-    wardrobe: { x: 550, y: 285, w: 200, h: 195, label: '换衣', color: '#ffd9ea', stroke: '#e05c86', icon: ROOM_ICONS.dressup.svg,  indoor: true },
-    /* 室外 3 区：散落在大房子周围 */
-    yard:     { x: 30,  y: 150, w: 100, h: 80,  label: '院子', color: '#a8e6a1', stroke: '#6cc46a', icon: ROOM_ICONS.yard.svg,     outdoor: true },
-    park:     { x: 30,  y: 400, w: 100, h: 80,  label: '公园', color: '#9ad7f0', stroke: '#7ec8e3', icon: ROOM_ICONS.park.svg,     outdoor: true },
-    shop:     { x: 770, y: 400, w: 100, h: 80,  label: '商店', color: '#fff6e8', stroke: '#ff9eb5', icon: ROOM_ICONS.shop.svg,     outdoor: true }
+    yard: { cx: 140, cy: 290, w: 60, h: 60,  color: '#a8e6a1', stroke: '#6cc46a', label: '院子', icon: ROOM_ICONS.yard.svg, outdoor: true },
+    park: { cx: 140, cy: 470, w: 60, h: 60,  color: '#9ad7f0', stroke: '#7ec8e3', label: '公园', icon: ROOM_ICONS.park.svg, outdoor: true },
+    shop: { cx: 820, cy: 470, w: 60, h: 60,  color: '#fff6e8', stroke: '#ff9eb5', label: '商店', icon: ROOM_ICONS.shop.svg, outdoor: true }
   };
 
   function _iconInner(svg) {
     return svg.replace(/<svg[^>]*>|<\/svg>/g, '');
   }
 
+  /* 辅助：颜色加深（用于等距 3D 的侧面/描边） */
+  function _darken(hex, amt) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const f = 1 - amt;
+    return '#' + [r, g, b].map(v => Math.max(0, Math.round(v * f)).toString(16).padStart(2, '0')).join('');
+  }
+
+  /* 辅助：等距 3D cube（2:1 simplified isometric）的 3 个可见面 polygon */
+  function _isoCube(cx, cy, w, h, baseColor, opts = {}) {
+    const top    = baseColor;
+    const left   = _darken(baseColor, opts.leftAmt   ?? 0.15);
+    const right  = _darken(baseColor, opts.rightAmt  ?? 0.30);
+    const stroke = _darken(baseColor, opts.strokeAmt ?? 0.40);
+    const back   = `${cx},${cy}`;
+    const rightV = `${cx + w},${cy + w * 0.5}`;
+    const front  = `${cx},${cy + w}`;
+    const leftV  = `${cx - w},${cy + w * 0.5}`;
+    const backD  = `${cx},${cy + h}`;
+    const rightD = `${cx + w},${cy + w * 0.5 + h}`;
+    const leftD  = `${cx - w},${cy + w * 0.5 + h}`;
+    return `
+      <polygon points="${back} ${rightV} ${front} ${leftV}" fill="${top}"   stroke="${stroke}" stroke-width="2"/>
+      <polygon points="${back} ${leftV} ${leftD} ${backD}"   fill="${left}"  stroke="${stroke}" stroke-width="2"/>
+      <polygon points="${back} ${rightV} ${rightD} ${backD}" fill="${right}" stroke="${stroke}" stroke-width="2"/>`;
+  }
+
   const MAP_SVG = `
     <svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-      <!-- 地面草地 -->
-      <rect x="0" y="500" width="900" height="140" fill="#a8e6a1"/>
-      <rect x="0" y="495" width="900" height="12" fill="#8ed488" rx="6"/>
+      <!-- 草地底层 -->
+      <rect x="0" y="520" width="900" height="120" fill="#a8e6a1"/>
+      <rect x="0" y="514" width="900" height="12" fill="#8ed488" rx="6"/>
       <!-- 装饰小树 / 花 -->
       <g opacity=".9">
-        <ellipse cx="240" cy="530" rx="22" ry="14" fill="#6cc46a"/>
-        <rect x="234" y="528" width="12" height="14" fill="#a9784a"/>
-        <ellipse cx="660" cy="540" rx="26" ry="16" fill="#7ed47b"/>
-        <rect x="654" y="538" width="12" height="18" fill="#a9784a"/>
-        <ellipse cx="820" cy="320" rx="18" ry="11" fill="#6cc46a"/>
-        <rect x="816" y="320" width="8" height="10" fill="#a9784a"/>
+        <ellipse cx="240" cy="560" rx="22" ry="14" fill="#6cc46a"/>
+        <rect x="234" y="558" width="12" height="14" fill="#a9784a"/>
+        <ellipse cx="700" cy="560" rx="26" ry="16" fill="#7ed47b"/>
+        <rect x="694" y="558" width="12" height="18" fill="#a9784a"/>
       </g>
       <!-- 太阳 -->
       <g transform="translate(60,60)">
@@ -206,35 +224,34 @@
         }).join('')}
       </g>
       <!-- 一条小路（门口） -->
-      <polygon points="430,500 470,500 510,640 390,640" fill="#f2d9a0"/>
-      <!-- 大房子外框（描边 + 屋顶紫三角） -->
-      <polygon points="138,124 762,124 750,90 150,90" fill="#b98cd9" stroke="#a06fc6" stroke-width="3" stroke-linejoin="round"/>
-      <rect x="150" y="120" width="600" height="360" fill="#fff3f7" stroke="#f0c4d4" stroke-width="3" rx="6"/>
-      <!-- 大房子内部 7 间 -->
-      ${Object.entries(MAP_ROOM_POSITIONS).filter(([, p]) => p.indoor).map(([id, p]) => `
-        <g class="map-room" data-room="${id}">
-          <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}"
-            fill="${p.color}" stroke="${p.stroke}" stroke-width="2.5" rx="6"/>
-          <text x="${p.x + p.w / 2}" y="${p.y + 22}" text-anchor="middle"
-            font-size="15" font-weight="800" fill="${p.stroke}">${p.label}</text>
-          <g transform="translate(${p.x + p.w / 2 - 22},${p.y + p.h / 2 - 6}) scale(0.92)">
-            ${_iconInner(p.icon)}
-          </g>
-        </g>`).join('')}
-      <!-- 室外 3 区 -->
-      ${Object.entries(MAP_ROOM_POSITIONS).filter(([, p]) => p.outdoor).map(([id, p]) => `
+      <polygon points="450,520 510,520 540,640 420,640" fill="#f2d9a0"/>
+      <!-- 大房子整体（等距 3D iso cube） -->
+      <g class="map-house" data-room="house">
+        ${(() => {
+          const h = MAP_HOUSE;
+          return _isoCube(h.cx, h.cy, h.w, h.h, h.color, { strokeAmt: 0.35 });
+        })()}
+        <!-- 顶面装饰：紫色小屋顶尖（菱形叠）+ 烟囱 -->
+        <polygon points="${MAP_HOUSE.cx},${MAP_HOUSE.cy - 30}
+          ${MAP_HOUSE.cx + 60},${MAP_HOUSE.cy - 12}
+          ${MAP_HOUSE.cx},${MAP_HOUSE.cy + 6}
+          ${MAP_HOUSE.cx - 60},${MAP_HOUSE.cy - 12}"
+          fill="#b98cd9" stroke="#a06fc6" stroke-width="2" opacity=".95"/>
+        <rect x="${MAP_HOUSE.cx + 30}" y="${MAP_HOUSE.cy - 38}" width="14" height="20" fill="#a06fc6" stroke="#7a4ec9" stroke-width="1.5"/>
+        <!-- 顶面一扇门（房子正面朝前） -->
+        <rect x="${MAP_HOUSE.cx - 14}" y="${MAP_HOUSE.cy + 80}" width="28" height="50" rx="3"
+          fill="${_darken(MAP_HOUSE.color, 0.05)}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="2"/>
+        <circle cx="${MAP_HOUSE.cx + 8}" cy="${MAP_HOUSE.cy + 105}" r="2.5" fill="${_darken(MAP_HOUSE.color, 0.55)}"/>
+      </g>
+      <!-- 室外 3 区（iso cube） -->
+      ${Object.entries(MAP_ROOM_POSITIONS).map(([id, p]) => `
         <g class="map-room map-outdoor" data-room="${id}">
-          <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}"
-            fill="${p.color}" stroke="${p.stroke}" stroke-width="2.5" rx="10"/>
-          <g transform="translate(${p.x + p.w / 2 - 18},${p.y + p.h / 2 - 14}) scale(0.78)">
-            ${_iconInner(p.icon)}
-          </g>
-          <text x="${p.x + p.w / 2}" y="${p.y + p.h + 18}" text-anchor="middle"
+          ${_isoCube(p.cx, p.cy, p.w, p.h, p.color, { leftAmt: 0.18, rightAmt: 0.36 })}
+          <text x="${p.cx}" y="${p.cy + p.h + 24}" text-anchor="middle"
             font-size="14" font-weight="800" fill="${p.stroke}">${p.label}</text>
         </g>`).join('')}
     </svg>`;
-
-  const MAP_CLOSE_SVG = `
+const MAP_CLOSE_SVG = `
     <svg viewBox="0 0 36 36">
       <line x1="10" y1="10" x2="26" y2="26" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
       <line x1="26" y1="10" x2="10" y2="26" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
@@ -302,25 +319,7 @@
   };
 
   /* ---------- 主界面：房子场景 ---------- */
-  const HELP_HTML = `
-    <div class="help-overlay hidden">
-      <div class="help-card">
-        <h3>📖 给家长的小指南</h3>
-        <ul>
-          <li>🏠 <b>大世界</b>：进门后是 10 个场景的横向大世界（房子 7 间房 + <b>院子、公园、商店</b>三个室外），<b>手指左右拖动</b>看世界；点左上角小门按钮可直达任意场景</li>
-          <li>🚶 <b>娃娃会走路</b>：点一下地板娃娃就走过去；<b>按住娃娃/小猫</b>可以拎到任何房间</li>
-          <li>👗 <b>换装</b>：去换衣间点<b>大衣柜</b>，点分类标签再点衣服即可穿上</li>
-          <li>🛏️ <b>布置房间</b>：点下方家具放进房间，按住拖动换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
-          <li>🍎 <b>喂食</b>：去厨房点<b>冰箱</b>拿水果牛奶，拖到娃娃或小猫嘴边就吃掉；点<b>灶台</b>还能做饭</li>
-          <li>🗑 <b>收走家具</b>：① 把家具<b>拖到屏幕下方的收纳筐</b>；② 或点左下角垃圾桶按钮，再点要收走的家具</li>
-          <li>🍳 <b>做饭</b>：选菜谱 → 点食材放进锅 → 手指在锅里<b>画圈搅拌</b> → 点魔法按钮 → 喂给娃娃或小猫</li>
-          <li>💾 装扮和房间<b>自动保存</b>，下次打开还是原样</li>
-          <li>📱 <b>iPad/iPhone</b>：用 Safari 打开网址 → 分享 → <b>添加到主屏幕</b>，即可全屏离线玩</li>
-        </ul>
-        <button class="help-close">知道了</button>
-      </div>
-    </div>`;
-
+  /* Phase 2 v4：声音开关图标（被 Map 屏 .btn-sound 复用） */
   const SOUND_ON_SVG = `
     <svg viewBox="0 0 36 36">
       <path d="M6,14 L12,14 L20,7 L20,29 L12,22 L6,22 Z" fill="#fff"/>
@@ -332,127 +331,38 @@
       <line x1="24" y1="13" x2="33" y2="23" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
       <line x1="33" y1="13" x2="24" y2="23" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
     </svg>`;
-  const HOME_SVG = `
-  <svg class="home-scene" viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg">
-    <!-- 太阳 -->
-    <g transform="translate(96,96)">
-      <g class="sun-rays">
-        ${Array.from({ length: 8 }, (_, i) => {
-          const a = i * 45;
-          return `<line x1="0" y1="-52" x2="0" y2="-66" stroke="#ffcf4d" stroke-width="7" stroke-linecap="round" transform="rotate(${a})"/>`;
-        }).join('')}
-      </g>
-      <circle r="40" fill="#ffd34d" stroke="#ffb830" stroke-width="5"/>
-      <circle cx="-12" cy="-4" r="4" fill="#8a5a12"/>
-      <circle cx="12" cy="-4" r="4" fill="#8a5a12"/>
-      <path d="M-12 8 Q0 18 12 8" stroke="#8a5a12" stroke-width="4" fill="none" stroke-linecap="round"/>
-    </g>
-    <!-- 云朵（飘动） -->
-    <g class="home-cloud" transform="translate(60,70)">
-      <ellipse cx="0" cy="16" rx="52" ry="20" fill="#fff"/>
-      <ellipse cx="-26" cy="8" rx="26" ry="16" fill="#fff"/>
-      <ellipse cx="24" cy="6" rx="30" ry="18" fill="#fff"/>
-    </g>
-    <g class="home-cloud c2" transform="translate(-80,150)" opacity=".85">
-      <ellipse cx="0" cy="12" rx="42" ry="16" fill="#fff"/>
-      <ellipse cx="28" cy="4" rx="24" ry="14" fill="#fff"/>
-    </g>
-    <!-- 草地 -->
-    <rect x="0" y="520" width="900" height="120" fill="#a8e6a1"/>
-    <rect x="0" y="516" width="900" height="12" fill="#8ed488" rx="6"/>
-    <!-- 小路 -->
-    <polygon points="408,528 492,528 560,640 340,640" fill="#f2d9a0"/>
-    <line x1="400" y1="560" x2="500" y2="560" stroke="#dcbf85" stroke-width="4"/>
-    <line x1="385" y1="596" x2="515" y2="596" stroke="#dcbf85" stroke-width="4"/>
-    <!-- 灌木 -->
-    <g>
-      <ellipse cx="90" cy="528" rx="46" ry="26" fill="#6cc46a"/>
-      <ellipse cx="62" cy="536" rx="30" ry="20" fill="#7ed47b"/>
-      <ellipse cx="812" cy="530" rx="42" ry="24" fill="#6cc46a"/>
-      <ellipse cx="842" cy="538" rx="28" ry="18" fill="#7ed47b"/>
-    </g>
-    <!-- 花 -->
-    ${[[170, 556, '#ff9eb5'], [250, 580, '#ffd34d'], [700, 566, '#b79ced'], [770, 590, '#ff9eb5'], [620, 596, '#ff8f7a']].map(([x, y, c]) => `
-      <g transform="translate(${x},${y})">
-        <line x1="0" y1="0" x2="0" y2="16" stroke="#4e9e4a" stroke-width="3.5" stroke-linecap="round"/>
-        ${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-8" rx="4.5" ry="7" fill="${c}" transform="rotate(${a})"/>`).join('')}
-        <circle r="4" fill="#fff3c9"/>
-      </g>`).join('')}
-    <!-- 小猫 -->
-    <g transform="translate(772,468)">
-      <path d="M-24 18 Q-52 12 -48 -14" stroke="#f2a65a" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <ellipse cx="0" cy="8" rx="26" ry="30" fill="#f7b967"/>
-      <circle cx="0" cy="-32" r="21" fill="#f7b967"/>
-      <polygon points="-19,-44 -15,-62 -4,-48" fill="#f7b967"/>
-      <polygon points="19,-44 15,-62 4,-48" fill="#f7b967"/>
-      <polygon points="-16.5,-47 -14,-57 -8,-49" fill="#ffb3c1"/>
-      <polygon points="16.5,-47 14,-57 8,-49" fill="#ffb3c1"/>
-      <path d="M-8 -34 Q-5 -31 -2 -34" stroke="#7a4d1d" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-      <path d="M2 -34 Q5 -31 8 -34" stroke="#7a4d1d" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-      <path d="M-5 -25 Q0 -21 5 -25" stroke="#7a4d1d" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-      <circle cx="-13" cy="-27" r="3.4" fill="#ff9eb5" opacity=".7"/>
-      <circle cx="13" cy="-27" r="3.4" fill="#ff9eb5" opacity=".7"/>
-      <line x1="-18" y1="-24" x2="-34" y2="-27" stroke="#d98c4a" stroke-width="2"/>
-      <line x1="-18" y1="-21" x2="-33" y2="-18" stroke="#d98c4a" stroke-width="2"/>
-      <line x1="18" y1="-24" x2="34" y2="-27" stroke="#d98c4a" stroke-width="2"/>
-      <line x1="18" y1="-21" x2="33" y2="-18" stroke="#d98c4a" stroke-width="2"/>
-    </g>
-    <!-- 蝴蝶 -->
-    <g class="door-hint" transform="translate(300,590)">
-      <ellipse cx="-9" cy="-4" rx="9" ry="12" fill="#7ecbff" transform="rotate(-24 -9 -4)"/>
-      <ellipse cx="9" cy="-4" rx="9" ry="12" fill="#7ecbff" transform="rotate(24 9 -4)"/>
-      <ellipse cx="0" cy="2" rx="3.4" ry="9" fill="#5a6b7a"/>
-    </g>
-    <!-- 房子 -->
-    <g>
-      <rect x="585" y="118" width="46" height="96" rx="6" fill="#e8a0bf"/>
-      <rect x="576" y="104" width="64" height="20" rx="10" fill="#fff"/>
-      <circle class="door-hint" cx="608" cy="86" r="8" fill="#e9e4ef"/>
-      <circle class="door-hint" cx="622" cy="70" r="6" fill="#e9e4ef"/>
-      <polygon points="135,240 450,72 765,240" fill="#b98cd9" stroke="#a06fc6" stroke-width="3" stroke-linejoin="round"/>
-      <rect x="126" y="228" width="648" height="20" rx="10" fill="#fff" stroke="#ecd9ee" stroke-width="2"/>
-      <circle cx="450" cy="170" r="26" fill="#cdf0ff" stroke="#fff" stroke-width="5"/>
-      <line x1="424" y1="170" x2="476" y2="170" stroke="#fff" stroke-width="4"/>
-      <line x1="450" y1="144" x2="450" y2="196" stroke="#fff" stroke-width="4"/>
-      <rect x="170" y="240" width="560" height="290" rx="12" fill="#fff3f7" stroke="#f0c4d4" stroke-width="3"/>
-      <rect x="170" y="514" width="560" height="16" rx="8" fill="#f5dbe7"/>
-      <!-- 两扇圆窗 -->
-      ${[[230, 310], [670, 310]].map(([x, y]) => `
-        <g>
-          <circle cx="${x}" cy="${y}" r="32" fill="#cdf0ff" stroke="#fff" stroke-width="6"/>
-          <line x1="${x - 32}" y1="${y}" x2="${x + 32}" y2="${y}" stroke="#fff" stroke-width="4.5"/>
-          <line x1="${x}" y1="${y - 32}" x2="${x}" y2="${y + 32}" stroke="#fff" stroke-width="4.5"/>
-          <rect x="${x - 27}" y="${y + 30}" width="54" height="11" rx="5" fill="#b97f4e"/>
-          <circle cx="${x - 14}" cy="${y + 30}" r="4.5" fill="#ff9eb5"/>
-          <circle cx="${x}" cy="${y + 29}" r="4.5" fill="#ffd34d"/>
-          <circle cx="${x + 14}" cy="${y + 30}" r="4.5" fill="#ff9eb5"/>
-        </g>`).join('')}
-      <!-- 一扇大门 -->
-      <g class="door-group door-big" data-target="lastRoom">
-        <path d="M338,530 V372 Q338,336 450,336 Q562,336 562,372 V530 Z" fill="#fff"/>
-        <path d="M348,530 V376 Q348,344 450,344 Q552,344 552,376 V530 Z" fill="#ff9eb5"/>
-        <path d="M348,530 V376 Q348,344 450,344 Q552,344 552,376 V530" fill="none" stroke="#e05c86" stroke-width="0"/>
-        <rect x="348" y="380" width="204" height="8" fill="rgba(255,255,255,.35)"/>
-        <!-- 门上的小窗户 -->
-        <circle cx="450" cy="396" r="24" fill="#cdf0ff" stroke="#fff" stroke-width="6"/>
-        <path d="M432,404 C438,396 444,400 450,404 C456,400 462,396 468,404" stroke="#ff8faa" stroke-width="6" fill="none" stroke-linecap="round" transform="translate(0,-2)"/>
-        <path d="M438,392 C444,384 456,384 462,392 C456,394 444,394 438,392 Z" fill="#ff8faa"/>
-        <!-- 星星牌匾 -->
-        <circle cx="450" cy="462" r="34" fill="#ffffff" opacity=".96"/>
-        <g transform="translate(450,462)">
-          <path d="M0,-18 L5,-6 L18,-5 L8,4 L11,17 L0,10 L-11,17 L-8,4 L-18,-5 L-5,-6 Z" fill="#ffd34d" stroke="#f2a94f" stroke-width="2"/>
-        </g>
-        <circle cx="416" cy="472" r="7" fill="#fff" opacity=".9"/>
-        <circle cx="484" cy="472" r="7" fill="#fff" opacity=".9"/>
-      </g>
-    </g>
-  </svg>`;
-
+  const HELP_ICON_SVG = `
+    <svg viewBox="0 0 36 36">
+      <text x="18" y="26" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">?</text>
+    </svg>`;
   const RESET_ICON_SVG = `
     <svg viewBox="0 0 36 36">
       <path d="M29 18 a11 11 0 1 1 -3.3 -7.8" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
       <polygon points="21,5 32,9 25,17" fill="#fff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
     </svg>`;
+  const RELAYOUT_ICON_SVG = `
+    <svg viewBox="0 0 36 36">
+      <text x="18" y="27" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">✨</text>
+    </svg>`;
+  const HELP_HTML = `
+    <div class="help-overlay hidden">
+      <div class="help-card">
+        <h3>📖 给家长的小指南</h3>
+        <ul>
+          <li>🏠 <b>大世界</b>：默认是地图屏。点大房子轮廓进 7 间房列表，再选一个进世界；点室外 3 区直接跳</li>
+          <li>🚶 <b>娃娃会走路</b>：在世界里点一下地板娃娃就走过去；<b>按住娃娃/小猫</b>可以拎到任何房间</li>
+          <li>👗 <b>换装</b>：去换衣间点<b>大衣柜</b>，点分类标签再点衣服即可穿上</li>
+          <li>🛏️ <b>布置房间</b>：在世界屏点下方家具放进房间，按住拖动换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
+          <li>🍎 <b>喂食</b>：去厨房点<b>冰箱</b>拿水果牛奶，拖到娃娃或小猫嘴边就吃掉；点<b>灶台</b>还能做饭</li>
+          <li>🗑 <b>收走家具</b>：① 把家具<b>拖到屏幕下方的收纳筐</b>；② 或点左下角垃圾桶按钮，再点要收走的家具</li>
+          <li>🍳 <b>做饭</b>：选菜谱 → 点食材放进锅 → 手指在锅里<b>画圈搅拌</b> → 点魔法按钮 → 喂给娃娃或小猫</li>
+          <li>💾 装扮和房间<b>自动保存</b>，下次打开还是原样</li>
+          <li>📱 <b>iPad/iPhone</b>：用 Safari 打开网址 → 分享 → <b>添加到主屏幕</b>，即可全屏离线玩</li>
+        </ul>
+        <button class="help-close">知道了</button>
+      </div>
+    </div>`;
+
   const RESET_CONFIRM_HTML = `
     <div class="reset-confirm hidden">
       <div class="reset-card">
@@ -465,29 +375,33 @@
       </div>
     </div>`;
 
-  const Home = {
+  /* ---------- Phase 2 世界地图（拟物俯视图）---------- */
+  const Map = {
     init(el) {
+      /* Phase 2 v4：默认屏 = 地图屏，4 按钮（声音/帮助/还原/重新布置）+ 标题"魔法小屋"
+         + 地图屏 SVG（1 大房子 + 室外 3 区 + 角色 marker） */
       el.innerHTML = `
-        <div class="home-title">魔法小屋</div>
-        <div class="home-corner">
-          <button class="btn-corner btn-sound" aria-label="声音开关"></button>
-          <button class="btn-corner btn-help" aria-label="玩法说明">
-            <svg viewBox="0 0 36 36">
-              <text x="18" y="26" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">?</text>
-            </svg>
-          </button>
-          <button class="btn-corner btn-reset" aria-label="重置样板间">
-            ${RESET_ICON_SVG}
-          </button>
-          <button class="btn-corner btn-relayout" aria-label="重新布置所有房间">
-            <svg viewBox="0 0 36 36">
-              <text x="18" y="27" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">✨</text>
-            </svg>
-          </button>
-          <button class="btn-corner btn-map" aria-label="看全景地图">${MAP_BTN_SVG}</button>
-        </div>` + HOME_SVG + HELP_HTML + RESET_CONFIRM_HTML;
+        <div class="map-screen">
+          <div class="map-top-bar">
+            <div class="map-buttons">
+              <button class="map-btn btn-sound" aria-label="声音开关"></button>
+              <button class="map-btn btn-help" aria-label="玩法说明">${HELP_ICON_SVG}</button>
+              <button class="map-btn btn-reset" aria-label="重置样板间">${RESET_ICON_SVG}</button>
+              <button class="map-btn btn-relayout" aria-label="重新布置所有房间">${RELAYOUT_ICON_SVG}</button>
+            </div>
+            <div class="map-title">🏠魔法小屋</div>
+          </div>
+          <div class="map-canvas-wrap">
+            <div class="map-canvas">${MAP_SVG}</div>
+            <div class="map-marker map-marker-girl" data-for="girl"></div>
+            <div class="map-marker map-marker-cat" data-for="cat"></div>
+          </div>
+          <div class="map-hint">点大房子进房间 · 点院子去室外</div>
+          ${HELP_HTML}
+          ${RESET_CONFIRM_HTML}
+        </div>`;
 
-      /* 声音开关 */
+      /* 4 按钮：从原 Home 模块迁移到 Map 屏 */
       const soundBtn = el.querySelector('.btn-sound');
       const syncSoundIcon = () => {
         soundBtn.innerHTML = Store.state.sound ? SOUND_ON_SVG : SOUND_OFF_SVG;
@@ -501,21 +415,19 @@
         if (Store.state.sound) { Sound.chime(); Sound.praise('声音开啦'); }
       });
 
-      /* 家长指南 */
-      const overlay = el.querySelector('.help-overlay');
-      el.querySelector('.btn-help').addEventListener('click', () => { Sound.pop(); overlay.classList.remove('hidden'); });
-      overlay.querySelector('.help-close').addEventListener('click', () => { Sound.pop(); overlay.classList.add('hidden'); });
-      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.add('hidden'); });
-
-      el.querySelectorAll('.door-group').forEach(door => {
-        door.addEventListener('click', e => {
-          Sound.door();
-          FX.sparkles(el, e.clientX, e.clientY, 10);
-          setTimeout(() => showScreen('world'), 260);
-        });
+      el.querySelector('.btn-help').addEventListener('click', () => {
+        Sound.pop();
+        el.querySelector('.help-overlay').classList.remove('hidden');
+      });
+      const helpOverlay = el.querySelector('.help-overlay');
+      helpOverlay.querySelector('.help-close').addEventListener('click', () => {
+        Sound.pop();
+        helpOverlay.classList.add('hidden');
+      });
+      helpOverlay.addEventListener('click', e => {
+        if (e.target === helpOverlay) helpOverlay.classList.add('hidden');
       });
 
-      /* 全部还原（带二次确认，避免娃误点） */
       const confirmEl = el.querySelector('.reset-confirm');
       el.querySelector('.btn-reset').addEventListener('click', () => {
         Sound.pop();
@@ -526,12 +438,11 @@
       el.querySelector('.reset-confirm').addEventListener('click', e => {
         if (e.target === e.currentTarget) closeReset();
       });
+      el.querySelector('.btn-reset').addEventListener('click', () => {}, { once: false }); /* 占位 */
       el.querySelector('.reset-yes').addEventListener('click', () => {
         Store.reset();
-        /* 娃娃要"拎回"原位，否则重置后 state 在 living 但 DOM 节点还在原房间 */
         if (window.World && window.World.refreshCharacters) {
           window.World.refreshCharacters();
-          /* 重置后 lastRoom 回到 living，但相机此刻在 home 上 — 不必切；下次进世界才生效 */
         }
         Sound.fanfare();
         Sound.praise('房间已经全部还原啦');
@@ -539,48 +450,30 @@
         closeReset();
       });
 
-      /* v0.7：✨ 重新布置 —— 只重摆所有房间 items（不动娃娃/食物/换装）。
-         适合"女儿自己摆的有点乱，想一键按新样板间摆好"。 */
       el.querySelector('.btn-relayout').addEventListener('click', () => {
         Sound.pop();
         Store.relayout();
-        /* 主屏上看不到效果（要进世界才看得到）—— 但 reload 后就生效 */
         Sound.praise('全部房间已重新摆好');
         FX.sparkles(el, window.innerWidth / 2, window.innerHeight / 2, 14);
-        /* 自动跳到世界让娃立刻看到新布置 */
-        setTimeout(() => { Sound.door(); window.showScreen('world'); }, 600);
-      });
-    },
-    onEnter() {
-      window.hintOnce('home', '欢迎来到魔法小屋！推开大门进去玩吧');
-    }
-  };
-
-  /* ---------- Phase 2 世界地图（拟物俯视图）---------- */
-  const Map = {
-    init(el) {
-      el.innerHTML = `
-        <div class="map-screen">
-          <div class="map-top">
-            <div class="map-title">魔法小屋全景图</div>
-            <button class="map-close" aria-label="关闭">${MAP_CLOSE_SVG}</button>
-          </div>
-          <div class="map-canvas-wrap">
-            <div class="map-canvas">${MAP_SVG}</div>
-            <div class="map-marker map-marker-girl" data-for="girl"></div>
-            <div class="map-marker map-marker-cat" data-for="cat"></div>
-          </div>
-          <div class="map-hint">点房间带你直接过去</div>
-        </div>`;
-
-      /* 关闭按钮：回主屏 */
-      el.querySelector('.map-close').addEventListener('click', () => {
-        Sound.pop();
-        showScreen('home');
+        setTimeout(() => { Sound.door(); showScreen('world'); }, 600);
       });
 
-      /* 房间块点击：200ms 缩放淡出 + 跳世界 */
-      el.querySelectorAll('.map-room').forEach(room => {
+      /* 大房子轮廓点击 → 进房子内部屏（interior） */
+      const houseEl = el.querySelector('.map-house');
+      if (houseEl) {
+        houseEl.addEventListener('click', () => {
+          Sound.door();
+          const canvas = el.querySelector('.map-canvas');
+          canvas.classList.add('map-leave');
+          setTimeout(() => {
+            canvas.classList.remove('map-leave');
+            showScreen('interior');
+          }, 220);
+        });
+      }
+
+      /* 室外 3 区点击 → 直接跳世界屏（地图 → 世界，跳过 interior） */
+      el.querySelectorAll('.map-room.map-outdoor').forEach(room => {
         room.addEventListener('click', () => {
           const roomId = room.dataset.room;
           if (!roomId || !window.World) return;
@@ -595,11 +488,19 @@
           }, 220);
         });
       });
+
+      /* Phase 2 v4：默认屏=map，Map.init 也跑一次 marker 定位（onEnter 在 showScreen 才调，
+         但 register 时 init 已跑，默认屏情况下 onEnter 不会自动触发） */
+      const placeInitMap = () => {
+        this._placeMarker('girl', Store.state.char.girl.room);
+        this._placeMarker('cat', Store.state.char.cat.room);
+      };
+      const placeMap = placeInitMap.bind(this);
+      setTimeout(placeMap, 16);
+      setTimeout(placeMap, 140);
     },
     onEnter() {
-      /* iPad 兼容性：用 setTimeout 双轨（不用 requestAnimationFrame，
-         headless Chrome 虚拟时间下 rAF 可能不被触发）。
-         第一次立即定位（数据先到位），第二次覆盖布局稳定后的位置。 */
+      /* iPad 兼容性：setTimeout 双轨（不用 requestAnimationFrame） */
       const place = () => {
         this._placeMarker('girl', Store.state.char.girl.room);
         this._placeMarker('cat', Store.state.char.cat.room);
@@ -609,21 +510,143 @@
     },
     onLeave() {},
     _placeMarker(who, roomId) {
+      /* Phase 2 v4：地图屏 marker 叠在大房子整体轮廓中心（不区分具体房间） */
       const screen = document.getElementById('screen-map');
       if (!screen) return;
       const marker = screen.querySelector('.map-marker-' + who);
       if (!marker) return;
       marker.dataset.targetRoom = roomId;
       const canvas = screen.querySelector('.map-canvas');
-      const roomEl = screen.querySelector(`.map-room[data-room="${roomId}"]`);
+      const houseEl = screen.querySelector('.map-house');
+      if (!canvas || !houseEl) return;
+      const cRect = canvas.getBoundingClientRect();
+      const hRect = houseEl.getBoundingClientRect();
+      const left = hRect.left - cRect.left + hRect.width / 2;
+      const top  = hRect.top  - cRect.top  + hRect.height * 0.35;
+      marker.style.left = left + 'px';
+      marker.style.top  = top + 'px';
+      /* 触发 1.5s 脉动 */
+      marker.classList.remove('pulse');
+      void marker.offsetWidth;
+      marker.classList.add('pulse');
+    }
+  };
+
+  /* ---------- Phase 2 v4：房子内部屏（interior，7 个房间 iso cube 平铺）---------- */
+  const INTERIOR_ROOMS = {
+    balcony:  { cx: 220, cy: 200, w: 70, h: 90, color: '#dff3ff', stroke: '#9ad7f0', label: '阳台', icon: ROOM_ICONS.balcony.svg },
+    bedroom:  { cx: 360, cy: 200, w: 70, h: 90, color: '#ffd9ea', stroke: '#e8a3bd', label: '卧室', icon: ROOM_ICONS.bedroom.svg },
+    bathroom: { cx: 500, cy: 200, w: 70, h: 90, color: '#e8eff4', stroke: '#b8ccd8', label: '浴室', icon: ROOM_ICONS.bathroom.svg },
+    living:   { cx: 640, cy: 200, w: 75, h: 90, color: '#d8f1ff', stroke: '#6bb8d8', label: '客厅', icon: ROOM_ICONS.living.svg },
+    kitchen:  { cx: 250, cy: 420, w: 90, h: 90, color: '#ffe3c7', stroke: '#d98324', label: '厨房', icon: ROOM_ICONS.kitchen.svg },
+    study:    { cx: 420, cy: 420, w: 90, h: 90, color: '#f7e8d2', stroke: '#d98c5a', label: '书房', icon: ROOM_ICONS.study.svg },
+    wardrobe: { cx: 600, cy: 420, w: 90, h: 90, color: '#ffd9ea', stroke: '#e05c86', label: '换衣', icon: ROOM_ICONS.dressup.svg }
+  };
+
+  const INTERIOR_SVG = `
+    <svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <!-- 草地底层（与地图屏风格一致） -->
+      <rect x="0" y="520" width="900" height="120" fill="#a8e6a1"/>
+      <rect x="0" y="514" width="900" height="12" fill="#8ed488" rx="6"/>
+      <!-- 太阳 -->
+      <g transform="translate(840,60)">
+        <circle r="22" fill="#ffd34d" stroke="#ffb830" stroke-width="3"/>
+        ${Array.from({length: 8}, (_, i) => {
+          const a = i * 45;
+          return `<line x1="0" y1="-30" x2="0" y2="-38" stroke="#ffcf4d" stroke-width="4" stroke-linecap="round" transform="rotate(${a})"/>`;
+        }).join('')}
+      </g>
+      <!-- 7 个房间 iso cube（上排 4 + 下排 3） -->
+      ${Object.entries(INTERIOR_ROOMS).map(([id, p]) => `
+        <g class="interior-room" data-room="${id}">
+          ${_isoCube(p.cx, p.cy, p.w, p.h, p.color, { leftAmt: 0.18, rightAmt: 0.36 })}
+          <!-- 顶面房间图标（小图） -->
+          <g transform="translate(${p.cx - 16},${p.cy + p.w * 0.5 - 22}) scale(0.65)">
+            ${_iconInner(p.icon)}
+          </g>
+          <!-- 顶面房间标签 -->
+          <text x="${p.cx}" y="${p.cy + p.w + 32}" text-anchor="middle"
+            font-size="15" font-weight="800" fill="${p.stroke}">${p.label}</text>
+        </g>`).join('')}
+    </svg>`;
+
+  const Interior = {
+    init(el) {
+      el.innerHTML = `
+        <div class="interior-screen">
+          <div class="interior-top-bar">
+            <button class="interior-back" aria-label="返回地图">
+              <svg viewBox="0 0 36 36">
+                <path d="M22 6 L10 18 L22 30 M10 18 L32 18" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="interior-title">挑一个房间吧</div>
+          </div>
+          <div class="interior-canvas-wrap">
+            <div class="interior-canvas">${INTERIOR_SVG}</div>
+            <div class="map-marker map-marker-girl" data-for="girl"></div>
+            <div class="map-marker map-marker-cat" data-for="cat"></div>
+          </div>
+          <div class="interior-hint">点房间进世界</div>
+        </div>`;
+
+      /* 返回地图按钮 */
+      el.querySelector('.interior-back').addEventListener('click', () => {
+        Sound.pop();
+        showScreen('map');
+      });
+
+      /* Phase 2 v4：默认屏 = map，Map.init 调一次后 map 屏立即显示 marker */
+      const placeInit = () => {
+        this._placeMarker('girl', Store.state.char.girl.room);
+        this._placeMarker('cat', Store.state.char.cat.room);
+      };
+      /* 强制绑定 this，避免 setTimeout 后 this 变 window */
+      const placeGirl = placeInit.bind(this);
+      setTimeout(placeGirl, 0);
+      setTimeout(placeGirl, 140);
+
+      /* 房间点击 → 跳世界屏 + jumpTo */
+      el.querySelectorAll('.interior-room').forEach(room => {
+        room.addEventListener('click', () => {
+          const roomId = room.dataset.room;
+          if (!roomId || !window.World) return;
+          Sound.door();
+          const canvas = el.querySelector('.interior-canvas');
+          canvas.classList.add('interior-leave');
+          setTimeout(() => {
+            canvas.classList.remove('interior-leave');
+            showScreen('world');
+            window.World.jumpTo(roomId);
+            if (window.World.refreshCharacters) window.World.refreshCharacters();
+          }, 220);
+        });
+      });
+    },
+    onEnter() {
+      const place = () => {
+        this._placeMarker('girl', Store.state.char.girl.room);
+        this._placeMarker('cat', Store.state.char.cat.room);
+      };
+      setTimeout(place, 16);
+      setTimeout(place, 140);
+    },
+    onLeave() {},
+    _placeMarker(who, roomId) {
+      const screen = document.getElementById('screen-interior');
+      if (!screen) return;
+      const marker = screen.querySelector('.map-marker-' + who);
+      if (!marker) return;
+      marker.dataset.targetRoom = roomId;
+      const canvas = screen.querySelector('.interior-canvas');
+      const roomEl = screen.querySelector(`.interior-room[data-room="${roomId}"]`);
       if (!canvas || !roomEl) return;
       const cRect = canvas.getBoundingClientRect();
       const rRect = roomEl.getBoundingClientRect();
       const left = rRect.left - cRect.left + rRect.width / 2;
-      const top = rRect.top - cRect.top + rRect.height / 2;
+      const top  = rRect.top  - cRect.top  + rRect.height * 0.4;
       marker.style.left = left + 'px';
-      marker.style.top = top + 'px';
-      /* 触发 1.5s 脉动（重置再启动） */
+      marker.style.top  = top + 'px';
       marker.classList.remove('pulse');
       void marker.offsetWidth;
       marker.classList.add('pulse');
@@ -633,13 +656,14 @@
   /* ---------- 启动 ---------- */
   window.addEventListener('DOMContentLoaded', () => {
     Store.load();
-    register('home', Home);
-    register('world', window.World);
+    /* Phase 2 v4：默认屏 = map（不再 home）；interior 是新增屏 */
     register('map', Map);
+    register('world', window.World);
+    register('interior', Interior);
     register('dressup', window.DressUp);
     register('kitchen', window.Kitchen);
-    currentId = 'home';
-    // 调试/测试直达：?screen=world|dressup|kitchen，?room=yard|park|shop|...
+    currentId = 'map';
+    // 调试/测试直达：?screen=map|world|interior|dressup|kitchen，?room=yard|park|shop|...
     const m = location.search.match(/[?&]screen=(\w+)/);
     if (m && screens[m[1]]) showScreen(m[1]);
     const rm = location.search.match(/[?&]room=(\w+)/);
@@ -647,5 +671,7 @@
       if (currentId !== 'world') showScreen('world');
       window.World.jumpTo(rm[1]);
     }
+    /* 首次进游戏提示（家长指南） */
+    window.hintOnce('map', '欢迎来到魔法小屋！点大房子进房间，点院子去外面玩');
   });
 })();
