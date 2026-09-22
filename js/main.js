@@ -163,6 +163,95 @@
   };
   const PICK_ORDER = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'dressup', 'yard', 'park', 'shop'];
 
+  /* ---------- Phase 2 世界地图：拟物俯视图 ---------- */
+  const MAP_ROOM_POSITIONS = {
+    /* 大房子内 7 间：上排 4 + 下排 3 */
+    balcony:  { x: 150, y: 120, w: 145, h: 165, label: '阳台', color: '#dff3ff', stroke: '#9ad7f0', icon: ROOM_ICONS.balcony.svg,  indoor: true },
+    bedroom:  { x: 295, y: 120, w: 145, h: 165, label: '卧室', color: '#ffd9ea', stroke: '#e8a3bd', icon: ROOM_ICONS.bedroom.svg,  indoor: true },
+    bathroom: { x: 440, y: 120, w: 145, h: 165, label: '浴室', color: '#e8eff4', stroke: '#b8ccd8', icon: ROOM_ICONS.bathroom.svg, indoor: true },
+    living:   { x: 585, y: 120, w: 165, h: 165, label: '客厅', color: '#d8f1ff', stroke: '#6bb8d8', icon: ROOM_ICONS.living.svg,   indoor: true },
+    kitchen:  { x: 150, y: 285, w: 200, h: 195, label: '厨房', color: '#ffe3c7', stroke: '#d98324', icon: ROOM_ICONS.kitchen.svg,  indoor: true },
+    study:    { x: 350, y: 285, w: 200, h: 195, label: '书房', color: '#f7e8d2', stroke: '#d98c5a', icon: ROOM_ICONS.study.svg,    indoor: true },
+    wardrobe: { x: 550, y: 285, w: 200, h: 195, label: '换衣', color: '#ffd9ea', stroke: '#e05c86', icon: ROOM_ICONS.dressup.svg,  indoor: true },
+    /* 室外 3 区：散落在大房子周围 */
+    yard:     { x: 30,  y: 150, w: 100, h: 80,  label: '院子', color: '#a8e6a1', stroke: '#6cc46a', icon: ROOM_ICONS.yard.svg,     outdoor: true },
+    park:     { x: 30,  y: 400, w: 100, h: 80,  label: '公园', color: '#9ad7f0', stroke: '#7ec8e3', icon: ROOM_ICONS.park.svg,     outdoor: true },
+    shop:     { x: 770, y: 400, w: 100, h: 80,  label: '商店', color: '#fff6e8', stroke: '#ff9eb5', icon: ROOM_ICONS.shop.svg,     outdoor: true }
+  };
+
+  function _iconInner(svg) {
+    return svg.replace(/<svg[^>]*>|<\/svg>/g, '');
+  }
+
+  const MAP_SVG = `
+    <svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <!-- 地面草地 -->
+      <rect x="0" y="500" width="900" height="140" fill="#a8e6a1"/>
+      <rect x="0" y="495" width="900" height="12" fill="#8ed488" rx="6"/>
+      <!-- 装饰小树 / 花 -->
+      <g opacity=".9">
+        <ellipse cx="240" cy="530" rx="22" ry="14" fill="#6cc46a"/>
+        <rect x="234" y="528" width="12" height="14" fill="#a9784a"/>
+        <ellipse cx="660" cy="540" rx="26" ry="16" fill="#7ed47b"/>
+        <rect x="654" y="538" width="12" height="18" fill="#a9784a"/>
+        <ellipse cx="820" cy="320" rx="18" ry="11" fill="#6cc46a"/>
+        <rect x="816" y="320" width="8" height="10" fill="#a9784a"/>
+      </g>
+      <!-- 太阳 -->
+      <g transform="translate(60,60)">
+        <circle r="22" fill="#ffd34d" stroke="#ffb830" stroke-width="3"/>
+        ${Array.from({length: 8}, (_, i) => {
+          const a = i * 45;
+          return `<line x1="0" y1="-30" x2="0" y2="-38" stroke="#ffcf4d" stroke-width="4" stroke-linecap="round" transform="rotate(${a})"/>`;
+        }).join('')}
+      </g>
+      <!-- 一条小路（门口） -->
+      <polygon points="430,500 470,500 510,640 390,640" fill="#f2d9a0"/>
+      <!-- 大房子外框（描边 + 屋顶紫三角） -->
+      <polygon points="138,124 762,124 750,90 150,90" fill="#b98cd9" stroke="#a06fc6" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="150" y="120" width="600" height="360" fill="#fff3f7" stroke="#f0c4d4" stroke-width="3" rx="6"/>
+      <!-- 大房子内部 7 间 -->
+      ${Object.entries(MAP_ROOM_POSITIONS).filter(([, p]) => p.indoor).map(([id, p]) => `
+        <g class="map-room" data-room="${id}">
+          <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}"
+            fill="${p.color}" stroke="${p.stroke}" stroke-width="2.5" rx="6"/>
+          <text x="${p.x + p.w / 2}" y="${p.y + 22}" text-anchor="middle"
+            font-size="15" font-weight="800" fill="${p.stroke}">${p.label}</text>
+          <g transform="translate(${p.x + p.w / 2 - 22},${p.y + p.h / 2 - 6}) scale(0.92)">
+            ${_iconInner(p.icon)}
+          </g>
+        </g>`).join('')}
+      <!-- 室外 3 区 -->
+      ${Object.entries(MAP_ROOM_POSITIONS).filter(([, p]) => p.outdoor).map(([id, p]) => `
+        <g class="map-room map-outdoor" data-room="${id}">
+          <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}"
+            fill="${p.color}" stroke="${p.stroke}" stroke-width="2.5" rx="10"/>
+          <g transform="translate(${p.x + p.w / 2 - 18},${p.y + p.h / 2 - 14}) scale(0.78)">
+            ${_iconInner(p.icon)}
+          </g>
+          <text x="${p.x + p.w / 2}" y="${p.y + p.h + 18}" text-anchor="middle"
+            font-size="14" font-weight="800" fill="${p.stroke}">${p.label}</text>
+        </g>`).join('')}
+    </svg>`;
+
+  const MAP_CLOSE_SVG = `
+    <svg viewBox="0 0 36 36">
+      <line x1="10" y1="10" x2="26" y2="26" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="26" y1="10" x2="10" y2="26" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+    </svg>`;
+
+  const MAP_BTN_SVG = `
+    <svg viewBox="0 0 36 36">
+      <!-- 地图图标（卷起的地图） -->
+      <path d="M5,10 Q18,4 32,10 L32,26 Q18,32 5,26 Z" fill="#fff" stroke="#7a4ec9" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M5,10 Q12,8 18,11 Q24,14 32,10" fill="none" stroke="#7a4ec9" stroke-width="1.4" opacity=".55"/>
+      <path d="M5,26 Q12,28 18,25 Q24,22 32,26" fill="none" stroke="#7a4ec9" stroke-width="1.4" opacity=".55"/>
+      <line x1="18" y1="11" x2="18" y2="25" stroke="#7a4ec9" stroke-width="1.4" opacity=".55"/>
+      <!-- 定位点（小红点） -->
+      <circle cx="14" cy="17" r="2.4" fill="#ff5c8a"/>
+      <circle cx="22" cy="20" r="2.4" fill="#f7b967"/>
+    </svg>`;
+
   let roomPickerEl = null;
 
   function toggleRoomPicker(forceClose) {
@@ -199,6 +288,8 @@
   }
   document.addEventListener('click', e => {
     if (e.target.closest('.btn-rooms')) toggleRoomPicker();
+    /* Phase 2 世界地图：主屏右上角"看全景"按钮 */
+    if (e.target.closest('.btn-map')) { Sound.door(); showScreen('map'); }
   });
 
   /* 通用：首次进入某界面时语音引导一次 */
@@ -393,6 +484,7 @@
               <text x="18" y="27" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">✨</text>
             </svg>
           </button>
+          <button class="btn-corner btn-map" aria-label="看全景地图">${MAP_BTN_SVG}</button>
         </div>` + HOME_SVG + HELP_HTML + RESET_CONFIRM_HTML;
 
       /* 声音开关 */
@@ -464,11 +556,86 @@
     }
   };
 
+  /* ---------- Phase 2 世界地图（拟物俯视图）---------- */
+  const Map = {
+    init(el) {
+      el.innerHTML = `
+        <div class="map-screen">
+          <div class="map-top">
+            <div class="map-title">魔法小屋全景图</div>
+            <button class="map-close" aria-label="关闭">${MAP_CLOSE_SVG}</button>
+          </div>
+          <div class="map-canvas-wrap">
+            <div class="map-canvas">${MAP_SVG}</div>
+            <div class="map-marker map-marker-girl" data-for="girl"></div>
+            <div class="map-marker map-marker-cat" data-for="cat"></div>
+          </div>
+          <div class="map-hint">点房间带你直接过去</div>
+        </div>`;
+
+      /* 关闭按钮：回主屏 */
+      el.querySelector('.map-close').addEventListener('click', () => {
+        Sound.pop();
+        showScreen('home');
+      });
+
+      /* 房间块点击：200ms 缩放淡出 + 跳世界 */
+      el.querySelectorAll('.map-room').forEach(room => {
+        room.addEventListener('click', () => {
+          const roomId = room.dataset.room;
+          if (!roomId || !window.World) return;
+          Sound.door();
+          const canvas = el.querySelector('.map-canvas');
+          canvas.classList.add('map-leave');
+          setTimeout(() => {
+            canvas.classList.remove('map-leave');
+            showScreen('world');
+            window.World.jumpTo(roomId);
+            if (window.World.refreshCharacters) window.World.refreshCharacters();
+          }, 220);
+        });
+      });
+    },
+    onEnter() {
+      /* iPad 兼容性：用 setTimeout 双轨（不用 requestAnimationFrame，
+         headless Chrome 虚拟时间下 rAF 可能不被触发）。
+         第一次立即定位（数据先到位），第二次覆盖布局稳定后的位置。 */
+      const place = () => {
+        this._placeMarker('girl', Store.state.char.girl.room);
+        this._placeMarker('cat', Store.state.char.cat.room);
+      };
+      setTimeout(place, 16);
+      setTimeout(place, 140);
+    },
+    onLeave() {},
+    _placeMarker(who, roomId) {
+      const screen = document.getElementById('screen-map');
+      if (!screen) return;
+      const marker = screen.querySelector('.map-marker-' + who);
+      if (!marker) return;
+      marker.dataset.targetRoom = roomId;
+      const canvas = screen.querySelector('.map-canvas');
+      const roomEl = screen.querySelector(`.map-room[data-room="${roomId}"]`);
+      if (!canvas || !roomEl) return;
+      const cRect = canvas.getBoundingClientRect();
+      const rRect = roomEl.getBoundingClientRect();
+      const left = rRect.left - cRect.left + rRect.width / 2;
+      const top = rRect.top - cRect.top + rRect.height / 2;
+      marker.style.left = left + 'px';
+      marker.style.top = top + 'px';
+      /* 触发 1.5s 脉动（重置再启动） */
+      marker.classList.remove('pulse');
+      void marker.offsetWidth;
+      marker.classList.add('pulse');
+    }
+  };
+
   /* ---------- 启动 ---------- */
   window.addEventListener('DOMContentLoaded', () => {
     Store.load();
     register('home', Home);
     register('world', window.World);
+    register('map', Map);
     register('dressup', window.DressUp);
     register('kitchen', window.Kitchen);
     currentId = 'home';
