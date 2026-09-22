@@ -156,6 +156,77 @@
         girlRect2.bottom <= tbRect.top + 4,
         `girl.bottom=${Math.round(girlRect2.bottom)} toolbar.top=${Math.round(tbRect.top)} y=${Store.state.char.girl.y}`);
 
+      /* ---- v0.7：角色头顶携带物品（Phase 1.1） ---- */
+      /* 先把镜头切到厨房，让娃娃和小猫站在苹果旁边 */
+      window.World.jumpTo('kitchen');
+      await sleep(80);
+      Store.state.props.push({ uid: 'hold-test-apple', id: 'apple', room: 'kitchen', x: 0.5, y: 0.7 });
+      Store.state.char.girl.holding = null;
+      Store.state.char.girl.room = 'kitchen';
+      Store.state.char.girl.x = 0.5; Store.state.char.girl.y = 0.7;
+      Store.state.char.cat.holding = null;
+      Store.state.char.cat.room = 'kitchen';
+      Store.state.char.cat.x = 0.65; Store.state.char.cat.y = 0.7;
+      Store.save();
+      window.World.renderRoom('kitchen');
+      window.World.refreshCharacters();
+      await sleep(60);
+      /* 拖苹果到 girl 头顶 hitbox：模拟拖拽抬起到角色正上方 30px */
+      const appleGNode = $('#screen-world .world-prop[data-uid="hold-test-apple"]');
+      const girlHead = $('#char-girl').getBoundingClientRect();
+      const appleX = girlHead.left + girlHead.width / 2;
+      const appleY = girlHead.top + 20;
+      pe('pointerdown', appleGNode, appleX + 30, appleY + 80);
+      pe('pointermove', appleGNode, appleX + 30, appleY + 80);     // 过阈值
+      pe('pointermove', appleGNode, appleX, appleY);
+      pe('pointerup', appleGNode, appleX, appleY);
+      await sleep(80);
+      log('girl 头顶拿到物品',
+        Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' && Store.state.props.length === 0,
+        `girl.holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.length}`);
+      log('girl 头顶图标可见',
+        $('#char-girl .char-holding').classList.contains('hidden') === false &&
+        $('#char-girl .char-holding').innerHTML.length > 0,
+        `hidden=${$('#char-girl .char-holding').classList.contains('hidden')} html=${$('#char-girl .char-holding').innerHTML.length}b`);
+      /* 已经有苹果时，再拖一个东西上来：拒绝（摇头） */
+      Store.state.props.push({ uid: 'hold-test-2', id: 'milk', room: 'kitchen', x: 0.3, y: 0.7 });
+      Store.save();
+      window.World.renderRoom('kitchen');
+      await sleep(60);
+      const milk2Node = $('#screen-world .world-prop[data-uid="hold-test-2"]');
+      const mX = girlHead.left + girlHead.width / 2;
+      const mY = girlHead.top + 20;
+      pe('pointerdown', milk2Node, mX + 30, mY + 80);
+      pe('pointermove', milk2Node, mX + 30, mY + 80);
+      pe('pointermove', milk2Node, mX, mY);
+      pe('pointerup', milk2Node, mX, mY);
+      await sleep(80);
+      log('头顶已有物品时拒绝第二件',
+        Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' && Store.state.props.length === 1,
+        `holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.length}`);
+      /* 点 girl：手持物品应落回地板 */
+      const girlRect3 = $('#char-girl').getBoundingClientRect();
+      const girlCenterX = girlRect3.left + girlRect3.width / 2;
+      const girlCenterY = girlRect3.top + girlRect3.height * 0.6;
+      pe('pointerdown', $('#char-girl'), girlCenterX, girlCenterY);
+      pe('pointerup', $('#char-girl'), girlCenterX, girlCenterY);
+      await sleep(80);
+      log('点角色时物品落回地板',
+        Store.state.char.girl.holding === null && Store.state.props.find(p => p.uid === 'hold-test-apple'),
+        `holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.map(p => p.uid).join(',')}`);
+
+      /* 清理：把我加的 hold-test-* props 删掉，恢复 girl/cat 的 holding 为 null，
+         不影响后续单元测试对 props 数量的预期（不要污染 fridge/feed 测试）。
+         同时把相机跳回 balcony，让后续箭头测试的起点符合预期 */
+      Store.state.props = Store.state.props.filter(p => !p.uid.startsWith('hold-test-'));
+      Store.state.char.girl.holding = null;
+      Store.state.char.cat.holding = null;
+      Store.save();
+      window.World.renderRoom('kitchen');
+      window.World.refreshCharacters();
+      window.World.jumpTo('balcony');
+      await sleep(80);
+
       /* ---- 2. 世界结构 ---- */
       const rooms = $$('#screen-world .world-room');
       log('世界10个场景', rooms.length === 10, rooms.length);
