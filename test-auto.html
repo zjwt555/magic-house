@@ -171,37 +171,38 @@
       window.World.renderRoom('kitchen');
       window.World.refreshCharacters();
       await sleep(60);
-      /* 拖苹果到 girl 头顶 hitbox：模拟拖拽抬起到角色正上方 30px */
+      /* 拖苹果到 girl 手部 hitbox（角色右半中段） */
       const appleGNode = $('#screen-world .world-prop[data-uid="hold-test-apple"]');
-      const girlHead = $('#char-girl').getBoundingClientRect();
-      const appleX = girlHead.left + girlHead.width / 2;
-      const appleY = girlHead.top + 20;
-      pe('pointerdown', appleGNode, appleX + 30, appleY + 80);
-      pe('pointermove', appleGNode, appleX + 30, appleY + 80);     // 过阈值
-      pe('pointermove', appleGNode, appleX, appleY);
-      pe('pointerup', appleGNode, appleX, appleY);
+      const girlR = $('#char-girl').getBoundingClientRect();
+      /* 手部 hitbox: right=右边 +35%padding, top=20%~80% 高度 */
+      const holdX = girlR.left + girlR.width * 0.78;        // 角色右侧偏外
+      const holdY = girlR.top + girlR.height * 0.50;       // 中段（手部高度）
+      pe('pointerdown', appleGNode, holdX + 30, holdY + 80);
+      pe('pointermove', appleGNode, holdX + 30, holdY + 80);   // 过阈值
+      pe('pointermove', appleGNode, holdX, holdY);
+      pe('pointerup', appleGNode, holdX, holdY);
       await sleep(80);
-      log('girl 头顶拿到物品',
+      log('girl 手里拿到物品',
         Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' && Store.state.props.length === 0,
         `girl.holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.length}`);
-      log('girl 头顶图标可见',
+      log('girl 手里图标可见',
         $('#char-girl .char-holding').classList.contains('hidden') === false &&
         $('#char-girl .char-holding').innerHTML.length > 0,
         `hidden=${$('#char-girl .char-holding').classList.contains('hidden')} html=${$('#char-girl .char-holding').innerHTML.length}b`);
-      /* 已经有苹果时，再拖一个东西上来：拒绝（摇头） */
+      /* 手里已有苹果，再拖一个东西上来：拒绝（摇头） */
       Store.state.props.push({ uid: 'hold-test-2', id: 'milk', room: 'kitchen', x: 0.3, y: 0.7 });
       Store.save();
       window.World.renderRoom('kitchen');
       await sleep(60);
       const milk2Node = $('#screen-world .world-prop[data-uid="hold-test-2"]');
-      const mX = girlHead.left + girlHead.width / 2;
-      const mY = girlHead.top + 20;
+      const mX = girlR.left + girlR.width * 0.78;
+      const mY = girlR.top + girlR.height * 0.50;
       pe('pointerdown', milk2Node, mX + 30, mY + 80);
       pe('pointermove', milk2Node, mX + 30, mY + 80);
       pe('pointermove', milk2Node, mX, mY);
       pe('pointerup', milk2Node, mX, mY);
       await sleep(80);
-      log('头顶已有物品时拒绝第二件',
+      log('手里已有物品时拒绝第二件',
         Store.state.char.girl.holding && Store.state.char.girl.holding.id === 'apple' && Store.state.props.length === 1,
         `holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.length}`);
       /* 点 girl：手持物品应落回地板 */
