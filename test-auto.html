@@ -128,6 +128,27 @@
       await sleep(300);
       log('点大门进世界', isWorldActive(), activeScreen());
 
+      /* ---- v0.7：消除露蓝 + 人物不被 toolbar 遮 ---- */
+      const swBg = getComputedStyle($('#screen-world')).backgroundColor;
+      log('世界屏背景肉色无露蓝', swBg === 'rgb(244, 231, 215)', `bg=${swBg}`);
+      /* 娃娃默认 bottom 不被 toolbar 遮：girl 元素 bottom ≤ toolbar top - 4 */
+      const defaultGirlRect = $('#char-girl').getBoundingClientRect();
+      const tbRect = $('#screen-world .game-toolbar').getBoundingClientRect();
+      log('默认娃娃位置不被 toolbar 遮',
+        defaultGirlRect.bottom <= tbRect.top + 4,
+        `girl.bottom=${Math.round(defaultGirlRect.bottom)} toolbar.top=${Math.round(tbRect.top)}`);
+      /* walkTo 上限 clamp：传 0.99 应被钳到 0.72 */
+      window.World.walkTo('girl', 0.5, 0.99);
+      log('走路 y 上限钳到 0.72',
+        Store.state.char.girl.y === 0.72, `y=${Store.state.char.girl.y}`);
+      /* 拖到屏幕 90% 高度：clamp 后元素 bottom ≤ toolbar top */
+      const stageRect = $('#screen-world .world-stage').getBoundingClientRect();
+      window.World.placeChar('girl', 'living', 0.5, (stageRect.top + stageRect.height * 0.9 - stageRect.top) / stageRect.height);
+      const girlRect2 = $('#char-girl').getBoundingClientRect();
+      log('拖到屏幕 90% 不被 toolbar 吃',
+        girlRect2.bottom <= tbRect.top + 4,
+        `girl.bottom=${Math.round(girlRect2.bottom)} toolbar.top=${Math.round(tbRect.top)} y=${Store.state.char.girl.y}`);
+
       /* ---- 2. 世界结构 ---- */
       const rooms = $$('#screen-world .world-room');
       log('世界10个场景', rooms.length === 10, rooms.length);
