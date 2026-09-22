@@ -295,14 +295,67 @@
         Store.state.char.girl.holding === null && droppedApple && droppedApple.room === 'park',
         `holding=${JSON.stringify(Store.state.char.girl.holding)} dropRoom=${droppedApple ? droppedApple.room : 'none'}`);
 
+      /* ---- v0.7.2：Phase 1.3 拖角色喂给对方 ---- */
+      /* 准备：女娃手里有苹果，女娃和小猫都在 kitchen 但隔得远。
+         用 placeChar（内部把 transitionDuration 设 0s），否则 getBoundingClientRect
+         会取到 CSS 过渡中的中间位置，导致距离判定不稳。 */
+      Store.state.char.girl.holding = { uid: 'give-test-1', id: 'apple' };
+      Store.state.char.cat.holding = null;
+      Store.save();
+      window.World.jumpTo('kitchen');
+      window.World.placeChar('girl', 'kitchen', 0.18, 0.60);
+      window.World.placeChar('cat', 'kitchen', 0.82, 0.60);
+      await sleep(100);
+      const girlG = $('#char-girl').getBoundingClientRect();
+      const catG0 = $('#char-cat').getBoundingClientRect();
+      /* 先测"空手靠近不高亮"：临时清空 holding，拖一下看 feed-target */
+      const savedHolding = Store.state.char.girl.holding;
+      Store.state.char.girl.holding = null;
+      window.World.refreshCharacters();
+      pe('pointerdown', $('#char-girl'), girlG.left + girlG.width / 2, girlG.top + girlG.height * 0.5);
+      pe('pointermove', $('#char-girl'), catG0.left + catG0.width / 2, catG0.top + catG0.height * 0.5);
+      pe('pointermove', $('#char-girl'), catG0.left + catG0.width / 2, catG0.top + catG0.height * 0.5);
+      await sleep(40);
+      const litWhenEmpty = $('#char-cat').classList.contains('feed-target');
+      pe('pointerup', $('#char-girl'), catG0.left + catG0.width / 2, catG0.top + catG0.height * 0.5);
+      await sleep(60);
+      log('空手靠近不高亮（避免误触发）', litWhenEmpty === false, `cat.feed-target=${litWhenEmpty}`);
+      /* 恢复 holding + 位置，正式测拖角色喂食 */
+      Store.state.char.girl.holding = savedHolding;
+      Store.save();
+      window.World.placeChar('girl', 'kitchen', 0.18, 0.60);
+      window.World.placeChar('cat', 'kitchen', 0.82, 0.60);
+      await sleep(100);
+      const girlG2 = $('#char-girl').getBoundingClientRect();
+      const catG1 = $('#char-cat').getBoundingClientRect();
+      pe('pointerdown', $('#char-girl'), girlG2.left + girlG2.width / 2, girlG2.top + girlG2.height * 0.5);
+      pe('pointermove', $('#char-girl'), catG1.left + catG1.width / 2, catG1.top + catG1.height * 0.5);
+      pe('pointermove', $('#char-girl'), catG1.left + catG1.width / 2, catG1.top + catG1.height * 0.5);
+      await sleep(40);
+      const litWhenHolding = $('#char-cat').classList.contains('feed-target');
+      pe('pointerup', $('#char-girl'), catG1.left + catG1.width / 2, catG1.top + catG1.height * 0.5);
+      await sleep(150);
+      log('拖角色靠近时对方高亮（可喂提示）', litWhenHolding === true, `cat.feed-target=${litWhenHolding}`);
+      log('拖角色喂食：手里苹果给小猫吃掉',
+        Store.state.char.girl.holding === null
+        && !Store.state.props.some(p => p.uid === 'give-test-1'),
+        `girl.holding=${JSON.stringify(Store.state.char.girl.holding)} props=${Store.state.props.map(p => p.uid).join(',')}`);
+      log('喂食后高亮清除',
+        !$('#char-cat').classList.contains('feed-target'));
+
       /* 清理：把我加的 hold-test-* / hold-cross-* props 删掉，恢复 girl/cat 的 holding 为 null，
          不影响后续单元测试对 props 数量的预期（不要污染 fridge/feed 测试）。
          同时把相机跳回 balcony，让后续箭头测试的起点符合预期 */
       Store.state.props = Store.state.props.filter(p => !p.uid.startsWith('hold-'));
       Store.state.char.girl.holding = null;
       Store.state.char.cat.holding = null;
+      /* 把 girl 放回 park（跨场景测试结束时的位置），cat 回 balcony 默认 */
+      Store.state.char.girl.room = 'park'; Store.state.char.girl.x = 0.40; Store.state.char.girl.y = 0.60;
+      Store.state.char.cat.room = 'balcony'; Store.state.char.cat.x = 0.55; Store.state.char.cat.y = 0.62;
       Store.save();
       window.World.renderRoom('kitchen');
+      window.World.renderRoom('living');
+      window.World.renderRoom('balcony');
       window.World.refreshCharacters();
       window.World.jumpTo('balcony');
       await sleep(80);
