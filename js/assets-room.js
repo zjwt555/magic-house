@@ -707,20 +707,32 @@
   /* 各房间的家具清单顺序 */
   const ROOM_SETS = {
     balcony: ['clothline', 'deckchair', 'flowerstand', 'plant', 'catbed', 'st_flower', 'st_butterfly', 'st_bubble'],
-    bedroom: ['bed', 'sofa', 'rug', 'table', 'bookshelf', 'piano', 'lamp', 'plant', 'catbed', 'teddy', 'frame', 'clock',
+    /* v0.7：卧室精简 —— 去掉 sofa/piano/table/bookshelf（太挤，piano 不属卧室）。
+       留 bed + 7 件卧室主题：地毯/灯/绿植/猫床/熊玩偶/相框/钟 + 3 贴纸。 */
+    bedroom: ['bed', 'rug', 'lamp', 'plant', 'catbed', 'teddy', 'frame', 'clock',
       'st_star', 'st_flower', 'st_butterfly'],
+    /* v0.7：浴室不动 —— 主题本就很完整（卫浴 4 件 + 镜 + 架 + 垫 + 绿植 + 3 贴纸） */
     bathroom: ['bathtub', 'sink', 'toilet', 'bmirror', 'towelrack', 'bathmat', 'plant',
       'st_duck', 'st_bubble', 'st_star', 'st_flower'],
-    living: ['tv', 'sofa', 'coffee', 'armchair', 'fishtank', 'cushion', 'rug', 'bookshelf', 'piano', 'lamp', 'plant', 'frame', 'clock',
+    /* v0.7：客厅精简 —— 去掉 bookshelf/piano（避免和 bedroom 重复）。 */
+    living: ['tv', 'sofa', 'coffee', 'armchair', 'fishtank', 'cushion', 'rug', 'plant', 'frame', 'clock',
       'st_star', 'st_flower', 'st_butterfly'],
-    kitchen: ['dining', 'table', 'plant', 'clock', 'st_flower', 'st_star'],
-    study: ['desk', 'globe', 'bookshelf', 'armchair', 'lamp', 'plant', 'frame', 'clock', 'st_star', 'st_flower'],
-    wardrobe: ['rug', 'piano', 'lamp', 'plant', 'teddy', 'frame', 'clock', 'st_star', 'st_flower', 'st_butterfly'],
+    /* v0.7：厨房扩展 —— 6 → 8 件。加 cushion（餐椅坐垫）、frame（墙上菜谱）、rug（地垫） */
+    kitchen: ['dining', 'table', 'plant', 'clock', 'cushion', 'frame', 'rug',
+      'st_flower', 'st_star'],
+    /* v0.7：书房不动 —— 主题本就很合理 */
+    study: ['desk', 'globe', 'bookshelf', 'armchair', 'lamp', 'plant', 'frame', 'clock',
+      'rug', 'st_star', 'st_flower'],
+    /* v0.7：换衣间改造 —— 删 piano（错位），加 bmirror（试衣镜）、towelrack（挂衣杆） */
+    wardrobe: ['rug', 'lamp', 'plant', 'frame', 'clock', 'bmirror', 'towelrack', 'teddy',
+      'st_star', 'st_flower', 'st_butterfly'],
     yard: ['swing', 'sandbox', 'tent', 'fence', 'mailbox', 'bigtree', 'plant', 'catbed',
       'st_flower', 'st_butterfly', 'st_duck', 'st_star'],
     park: ['slide', 'fountain', 'pond', 'bench', 'bigtree', 'tent', 'picnicmat', 'swing', 'mailbox',
       'st_butterfly', 'st_flower', 'st_star'],
-    shop: ['shopshelf', 'counter', 'freezer', 'toypile', 'rug', 'fence', 'st_star', 'st_flower']
+    /* v0.7：商店扩展 —— 8 → 10 件。加 cushion（购物篮）、frame（海报） */
+    shop: ['shopshelf', 'counter', 'freezer', 'toypile', 'rug', 'cushion', 'frame',
+      'st_star', 'st_flower']
   };
 
   /* 固定装置归属（渲染在房间背景层，不可拖不可收） */
