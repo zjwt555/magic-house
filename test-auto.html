@@ -761,8 +761,24 @@
 
       /* Phase 2 v5：Toca 风格丰富化 —— 拟物数量检查 */
       const mapAllShapes = $$('#screen-map svg *');
-      log('地图屏 SVG 子元素 ≥ 50（v5 拟物丰富）', mapAllShapes.length >= 50, `n=${mapAllShapes.length}`);
+      log('地图屏 SVG 子元素 ≥ 90（v7 街道+4 块+拟物丰富）', mapAllShapes.length >= 90, `n=${mapAllShapes.length}`);
       log('地图屏大房子含屋顶瓦片', $$('#screen-map .map-house polygon').length >= 1);
+
+      /* Phase 2 v7: 3x3 网格 + 街道 */
+      const mapBlocks = $$('#screen-map .map-room, #screen-map .map-house');
+      log('地图屏 4 块（1 大房子 + 3 室外）', mapBlocks.length === 4, `n=${mapBlocks.length}`);
+
+      /* 街道（深灰柏油） */
+      const streetSegs = $$('#screen-map svg rect[fill="#5a5a5a"]');
+      log('地图屏有 ≥ 4 段街道', streetSegs.length >= 4, `n=${streetSegs.length}`);
+
+      /* 红绿灯（红圆） */
+      const lights = $$('#screen-map circle[fill="#ff5c5c"]').length;
+      log('地图屏有 ≥ 4 个红绿灯', lights >= 4, `n=${lights}`);
+
+      /* 路灯（黄灯头） */
+      const lamps = $$('#screen-map rect[fill="#ffd34d"][stroke="#a06820"]').length;
+      log('地图屏有 ≥ 4 个路灯', lamps >= 4, `n=${lamps}`);
 
       /* 点大房子 → 进 interior 屏 */
       click(houseEl);
