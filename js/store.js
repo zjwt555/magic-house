@@ -32,8 +32,8 @@
     },
     rooms: DEFAULT_ROOMS(),
     char: {                        // 角色：room=房间id，x/y=房间内相对坐标，face=朝向1/-1
-      girl: { room: 'living', x: 0.45, y: 0.78, face: 1 },
-      cat: { room: 'balcony', x: 0.55, y: 0.82, face: 1 }
+      girl: { room: 'living', x: 0.45, y: 0.55, face: 1 },
+      cat: { room: 'balcony', x: 0.55, y: 0.62, face: 1 }
     },
     props: [],                     // 场景里的食物道具 [{uid, id, room, x, y}]
     lastRoom: 'living',            // 相机所在的房间
@@ -79,6 +79,15 @@
       for (const f of ['room', 'x', 'y', 'face']) {
         if (state.char[who][f] === undefined) state.char[who][f] = DEFAULT_STATE.char[who][f];
       }
+    }
+    /* c.y 上限改小后的视觉无感迁移（v0.6 → v0.7）
+       旧存档里 c.y 可能到 0.9，会被新 clamp [0.42, 0.72] 直接夹到 0.72，让娃娃瞬间
+       跳到画面中段。按"超出部分以 0.5 倍回压"的方式保留相对位置，避免视觉跳变。
+       多次执行幂等（第二次进入时 c.y ≤ 0.72，公式不动）。 */
+    const Y_MAX_NEW = 0.72;
+    for (const who of ['girl', 'cat']) {
+      const y = state.char[who].y;
+      if (y > Y_MAX_NEW) state.char[who].y = Y_MAX_NEW - (y - Y_MAX_NEW) * 0.5;
     }
     if (!Array.isArray(state.props)) state.props = [];
     /* 角色别丢在世界外 */
