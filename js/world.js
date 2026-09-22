@@ -196,7 +196,6 @@
     const node = charEl(who);
     node.style.transitionDuration = '0s';
     renderChar(who);
-    renderDots();
     FX.sparkles(el, node.getBoundingClientRect().left + node.offsetWidth / 2, node.getBoundingClientRect().top + node.offsetHeight * 0.4, 7);
     Sound.thud();
   }
@@ -276,16 +275,6 @@
       FX.confetti(el.closest('.screen'), 18);
       FX.sparkles(el, nr.left + nr.width / 2, nr.top + nr.height * 0.3, 12);
     }, 500);
-  }
-
-  /* ---------- 圆点导航 ---------- */
-  function renderDots() {
-    const dots = el.querySelector('.world-dots');
-    dots.innerHTML = R().WORLD_ROOMS.map((id, i) => `
-      <button class="world-dot${i === cam ? ' active' : ''}" data-room="${id}" aria-label="${id}">
-        ${Store.state.char.girl.room === id ? '<span class="dot-girl"></span>' : ''}
-        ${Store.state.char.cat.room === id ? '<span class="dot-cat"></span>' : ''}
-      </button>`).join('');
   }
 
   /* ---------- 抽屉 ---------- */
@@ -645,7 +634,7 @@
           const roomX = (e.clientX - sr.left + cam * roomW - idx * roomW) / roomW;
           const g = Store.state.char.girl;
           if (g.room === roomId) walkTo('girl', roomX, y);
-          else { g.room = roomId; walkTo('girl', roomX, y); renderDots(); }
+          else { g.room = roomId; walkTo('girl', roomX, y); }
         }
         applyCam(false);
       }
@@ -834,7 +823,6 @@
             <div class="world-char" id="char-girl" style="width:11%"><div class="char-inner"><div class="char-body"></div></div><div class="char-holding hidden"></div></div>
             <div class="world-char" id="char-cat" style="width:8.2%"><div class="char-inner"><div class="char-body"></div></div><div class="char-holding hidden"></div></div>
           </div>
-          <div class="world-dots"></div>
           <button class="world-arrow left">←</button>
           <button class="world-arrow right">→</button>
         </div>
@@ -892,14 +880,6 @@
         if (cam < N - 1) { cam++; applyCam(); renderToolbar(); Sound.door(); }
       });
 
-      /* 圆点 */
-      el.querySelector('.world-dots').addEventListener('click', e => {
-        const d = e.target.closest('.world-dot');
-        if (!d) return;
-        const i = R().WORLD_ROOMS.indexOf(d.dataset.room);
-        if (i >= 0) { cam = i; applyCam(); renderToolbar(); Sound.door(); }
-      });
-
       /* 指针：down 在舞台，move/up 挂 window（手指滑出舞台也能跟踪） */
       stage.addEventListener('pointerdown', onDown);
       window.addEventListener('pointermove', onMove);
@@ -939,7 +919,6 @@
       cam = Math.max(0, roomIdx(Store.state.lastRoom));
       R().WORLD_ROOMS.forEach(id => { applyDecor(id); renderRoom(id); });
       refreshCharacters();
-      renderDots();
       renderToolbar();
       applyCam(false);
     },
