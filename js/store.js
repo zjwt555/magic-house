@@ -4,19 +4,25 @@
 
   const KEY = 'magic-house-v1';
 
-  /* 世界房间默认装饰（wall=墙纸索引 floor=地板索引，见 assets-room.js） */
-  const DEFAULT_ROOMS = () => ({
-    balcony:  { wall: 1, floor: 3, items: [] },   // 阳台：蓝天云朵墙+草地
-    bedroom:  { wall: 0, floor: 0, items: [] },   // 卧室：粉条纹+木地板
-    bathroom: { wall: 6, floor: 6, items: [] },   // 卫生间：白瓷砖
-    living:   { wall: 4, floor: 5, items: [] },   // 客厅：蜜桃墙+蜂蜜黄
-    kitchen:  { wall: 7, floor: 6, items: [] },   // 厨房：薄荷瓷砖+灰瓷砖
-    study:    { wall: 4, floor: 0, items: [] },   // 书房：蜜桃墙+木地板
-    wardrobe: { wall: 5, floor: 1, items: [] },   // 换衣间：粉格棋盘+粉地毯
-    yard:     { wall: 1, floor: 3, items: [] },   // 院子：蓝天云朵+草地
-    park:     { wall: 1, floor: 7, items: [] },   // 公园：蓝天+石板路
-    shop:     { wall: 8, floor: 5, items: [] }    // 商店：糖果条纹+格子地板
-  });
+  /* 世界房间默认装饰（wall=墙纸索引 floor=地板索引，见 assets-room.js）。
+   items 用 DEFAULT_LAYOUT（每房间 4-7 件样板家具），load() 第一次进游戏时
+   自动按 DEFAULT_LAYOUT 摆好。 */
+  const DEFAULT_ROOMS = () => {
+    const layout = (window.RoomAssets && window.RoomAssets.DEFAULT_LAYOUT) || {};
+    const clone = arr => JSON.parse(JSON.stringify(arr || []));
+    return {
+      balcony:  { wall: 1, floor: 3, items: clone(layout.balcony)  },   // 阳台：蓝天云朵墙+草地
+      bedroom:  { wall: 0, floor: 0, items: clone(layout.bedroom)  },   // 卧室：粉条纹+木地板
+      bathroom: { wall: 6, floor: 6, items: clone(layout.bathroom) },   // 卫生间：白瓷砖
+      living:   { wall: 4, floor: 5, items: clone(layout.living)   },   // 客厅：蜜桃墙+蜂蜜黄
+      kitchen:  { wall: 7, floor: 6, items: clone(layout.kitchen)  },   // 厨房：薄荷瓷砖+灰瓷砖
+      study:    { wall: 4, floor: 0, items: clone(layout.study)    },   // 书房：蜜桃墙+木地板
+      wardrobe: { wall: 5, floor: 1, items: clone(layout.wardrobe) },   // 换衣间：粉格棋盘+粉地毯
+      yard:     { wall: 1, floor: 3, items: clone(layout.yard)     },   // 院子：蓝天云朵+草地
+      park:     { wall: 1, floor: 7, items: clone(layout.park)     },   // 公园：蓝天+石板路
+      shop:     { wall: 8, floor: 5, items: clone(layout.shop)     }    // 商店：糖果条纹+格子地板
+    };
+  };
 
   /* 旧版屏幕 id → 世界房间 id（lastRoom 迁移用） */
   const OLD_ROOM_MAP = { room: 'bedroom', bedroom: 'bedroom', living: 'living', bathroom: 'bathroom', kitchen: 'kitchen', dressup: 'wardrobe' };
@@ -30,7 +36,7 @@
       acc: 'crown',
       catAcc: 'bow'
     },
-    rooms: DEFAULT_ROOMS(),
+    rooms: {},     // 占位：load() 里首次调时，window.RoomAssets.DEFAULT_LAYOUT 才会被引用
     char: {                        // 角色：room=房间id，x/y=房间内相对坐标，face=朝向1/-1，holding=头顶携带物
       girl: { room: 'living', x: 0.45, y: 0.55, face: 1, holding: null },
       cat:  { room: 'balcony', x: 0.55, y: 0.62, face: 1, holding: null }
@@ -47,9 +53,18 @@
   function load() {
     try {
       const raw = localStorage.getItem(KEY);
-      state = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_STATE));
+      if (!raw) {
+        /* v0.7 起：新游戏（localStorage 无数据）→ 用 DEFAULT_STATE（rooms 填 DEFAULT_LAYOUT） */
+        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        state.rooms = DEFAULT_ROOMS();
+        saveNow();
+      } else {
+        /* 老存档：保留 items（女儿已经摆好的小家不丢） */
+        state = JSON.parse(raw);
+      }
     } catch (e) {
       state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      state.rooms = DEFAULT_ROOMS();
     }
     /* ---- 老存档迁移 ---- */
     if (state.room && !state.rooms) {          // v0.2 单房间
@@ -118,6 +133,7 @@
     saveNow,
     reset() {
       state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      state.rooms = DEFAULT_ROOMS();   // 用当前 DEFAULT_LAYOUT（不是空数组）
       saveNow();
     },
     /* v0.7 起：ROOM_SETS 在 assets-room.js 加载之后才可用，由 world.js init() 调一次。
@@ -140,6 +156,17 @@
       }
       if (migrated > 0) saveNow();
       return { migrated, dropped };
+    },
+    /* v0.7 起：主屏"✨ 重新布置"按钮用 —— 清空所有房间 items + 按 DEFAULT_LAYOUT 重摆。
+       幂等：用户多次按效果一致。 */
+    relayout() {
+      const layout = (window.RoomAssets && window.RoomAssets.DEFAULT_LAYOUT) || {};
+      const clone = arr => JSON.parse(JSON.stringify(arr || []));
+      for (const roomId in state.rooms) {
+        state.rooms[roomId].items = clone(layout[roomId]);
+      }
+      saveNow();
+      return true;
     }
   };
 
