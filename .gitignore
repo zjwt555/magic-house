@@ -2,6 +2,9 @@
 .chrome-test*/
 shot-*.png
 test-dom.txt
+_dom.txt
+_chrome-err.txt
+_*.txt
 node_modules/
 *.log
 .zcode/
