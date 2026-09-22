@@ -43,6 +43,9 @@ html, body {
   align-items: center;
   justify-content: center;
 }
+/* 世界屏：统一暖肉色外框，配合 .world-stage 遮挡所有浅蓝透出
+   （iPad 横屏 PWA 下 .game-top 透明 padding 区、.game-toolbar 圆角视觉间隙都会透出 #app 蓝） */
+#screen-world { background: #f4e7d7; }
 .home-title {
   position: absolute;
   top: calc(14px + env(safe-area-inset-top));
@@ -225,8 +228,10 @@ html, body {
   background: rgba(255, 255, 255, .78);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  border-radius: 26px 26px 0 0;
-  box-shadow: 0 -4px 18px rgba(120, 90, 60, .12);
+  /* 取消浮岛卡片圆角 —— 让 toolbar 视觉上与 #screen-world 肉色背景融为一体，
+     配合下方淡分割线，避免 iPad 上圆角+半透明白色造成的"两边露蓝"错觉 */
+  border-radius: 0;
+  border-top: 1px solid rgba(180, 140, 100, .18);
   min-height: 118px;
   z-index: 30;
 }
@@ -936,9 +941,9 @@ html, body {
 /* 角色 */
 .world-char {
   position: absolute;
-  bottom: 8%;
+  bottom: 0;
   top: auto;
-  aspect-ratio: 300 / 460;
+  aspect-ratio: 300 / 440;
   pointer-events: auto;
   cursor: grab;
   z-index: 300;
