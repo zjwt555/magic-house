@@ -563,6 +563,8 @@
          松手时把物品放到手里而非喂掉。onUp 的优先级：筐 > 手部 > 嘴边 > 地板 */
       drag.feedWho = null;
       drag.feedTarget = null;
+      const ohGirl = overHold('girl', e.clientX, e.clientY);
+      const ohCat = overHold('cat', e.clientX, e.clientY);
       for (const who of ['girl', 'cat']) {
         if (overHold(who, e.clientX, e.clientY)) {
           drag.feedWho = who;
@@ -710,12 +712,13 @@
         /* 落到角色手里：从 props 删，加入该角色的 holding */
         const who = d.feedWho;
         if (Store.state.char[who].holding) {
-          /* 头顶已有东西，摇头拒绝 */
+          /* 头顶已有东西，摇头拒绝（不再 fallthrough 到下方喂食路径） */
           const node = charEl(who);
           node.classList.remove('shake');
           void node.offsetWidth;
           node.classList.add('shake');
           Sound.blub();
+          return;
         } else if (d.p) {
           const i = Store.state.props.indexOf(d.p);
           if (i >= 0) Store.state.props.splice(i, 1);
@@ -726,6 +729,7 @@
           FX.sparkles(el, hr.left + hr.width / 2, hr.top, 6);
           Sound.praise('拿上啦');
           renderChar(who);
+          return;
         }
       } else if (d.moved && d.feedWho) {
         /* 松手即喂：move 过程中已确认悬在嘴边 */
