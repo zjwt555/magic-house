@@ -976,14 +976,14 @@ html, body {
   50% { filter: drop-shadow(0 0 12px rgba(255, 143, 170, .95)); }
 }
 
-/* 头顶携带物：相对角色 DOM 定位，正上方 12px，宽 50px 高 50px */
+/* 手里携带物：相对角色 DOM 定位，右手位置（胸前略偏外）。用百分比让女娃/小猫
+   都能自适应（女娃右手和小猫嘴部都在右上方）。物品的尺寸是角色宽度的 36%。 */
 .world-char .char-holding {
   position: absolute;
-  left: 50%;
-  top: -56px;
-  width: 50px;
-  height: 50px;
-  transform: translateX(-50%);
+  right: -8%;
+  top: 26%;
+  width: 36%;
+  height: 36%;
   pointer-events: none;
   z-index: 1;
 }
@@ -997,7 +997,7 @@ html, body {
   50% { transform: translateX(6%) rotate(3deg); }
   80% { transform: translateX(-3%); }
 }
-/* "可拿"提示：头顶 hitbox 命中时给角色一个吸气动画 */
+/* "可拿"提示：手部 hitbox 命中时给角色一个吸气动画 */
 .world-char.hold-hint .char-inner { animation: holdPulse .8s ease-in-out infinite; }
 @keyframes holdPulse {
   0%, 100% { filter: drop-shadow(0 0 0 rgba(255, 209, 102, 0)); transform: translateY(0); }
