@@ -7,9 +7,9 @@
 </head>
 <body>
 <div id="app">
-  <div class="screen active" id="screen-home"></div>
+  <div class="screen active" id="screen-map"></div>
   <div class="screen" id="screen-world"></div>
-  <div class="screen" id="screen-map"></div>
+  <div class="screen" id="screen-interior"></div>
   <div class="screen overlay-screen" id="screen-dressup"></div>
   <div class="screen overlay-screen" id="screen-kitchen"></div>
 </div>
@@ -105,27 +105,36 @@
       localStorage.removeItem('magic-house-v1');
       Store.state;
 
-      /* ---- 1. 主界面 ---- */
-      const doors = $$('#screen-home .door-group');
-      log('主界面一扇大门', doors.length === 1, `doors=${doors.length}`);
-      click($('#screen-home .btn-help'));
+      /* ---- 1. Phase 2 v4：默认屏 = 地图屏（不再 home） ---- */
+      log('默认屏是地图屏', activeScreen() === 'screen-map', activeScreen());
+      log('主屏已删除（#screen-home 不存在）', !$('#screen-home'));
+
+      /* 地图屏 4 按钮 */
+      log('地图屏有声音按钮', !!$('#screen-map .btn-sound'));
+      log('地图屏有帮助按钮', !!$('#screen-map .btn-help'));
+      log('地图屏有还原按钮', !!$('#screen-map .btn-reset'));
+      log('地图屏有重新布置按钮', !!$('#screen-map .btn-relayout'));
+
+      /* 地图屏大房子轮廓存在 */
+      log('地图屏有大房子轮廓（.map-house）', !!$('#screen-map .map-house'));
+
+      /* 家长指南弹窗 + 关闭 */
+      click($('#screen-map .btn-help'));
       await sleep(40);
-      log('家长指南打开', !$('#screen-home .help-overlay').classList.contains('hidden'));
-      click($('#screen-home .help-close'));
+      log('家长指南打开', !$('#screen-map .help-overlay').classList.contains('hidden'));
+      click($('#screen-map .help-close'));
       await sleep(40);
 
       /* 全部还原按钮 + 二次确认 */
-      const resetBtn = $('#screen-home .btn-reset');
-      log('主屏有还原按钮', !!resetBtn);
-      click(resetBtn);
+      click($('#screen-map .btn-reset'));
       await sleep(40);
-      log('还原二次确认弹出', !$('#screen-home .reset-confirm').classList.contains('hidden'));
+      log('还原二次确认弹出', !$('#screen-map .reset-confirm').classList.contains('hidden'));
       /* 先准备一些"被还原会清掉"的状态：造一件家具 + 一个食物 + 改个娃娃 */
       Store.state.rooms.living.items.push({ id: 'tv', x: 0.5, y: 0.7 });
       Store.state.props.push({ uid: 'test-pre-reset', id: 'apple', room: 'living', x: 0.3, y: 0.8 });
       Store.state.doll.dress = 'fairy';
       Store.save();
-      click($('#screen-home .reset-yes'));
+      click($('#screen-map .reset-yes'));
       await sleep(80);
       log('点确定后还原（按样板间摆好）',
         Store.state.rooms.living.items.length === 7 &&
@@ -133,13 +142,13 @@
         Store.state.props.length === 0 &&
         Store.state.doll.dress !== 'fairy',
         `living-items=${Store.state.rooms.living.items.length} props=${Store.state.props.length} dress=${Store.state.doll.dress}`);
-      log('还原弹窗自动关闭', $('#screen-home .reset-confirm').classList.contains('hidden'));
+      log('还原弹窗自动关闭', $('#screen-map .reset-confirm').classList.contains('hidden'));
       /* 再试"再想想"路径 */
-      click($('#screen-home .btn-reset'));
+      click($('#screen-map .btn-reset'));
       await sleep(40);
-      click($('#screen-home .reset-no'));
+      click($('#screen-map .reset-no'));
       await sleep(40);
-      log('再想想关闭弹窗', $('#screen-home .reset-confirm').classList.contains('hidden'));
+      log('再想想关闭弹窗', $('#screen-map .reset-confirm').classList.contains('hidden'));
 
       /* TTS 防抖：连续两次同句 praise 只触发 1 次 speak */
       const origSpeak = window.speechSynthesis && window.speechSynthesis.speak;
@@ -157,9 +166,11 @@
       log('TTS 同句 1.5s 内只播 1 次', sameTextCalls === 1, `同句=${sameTextCalls}次 不同句=${newTextCalls}次`);
       if (origSpeak) window.speechSynthesis.speak = origSpeak;
 
-      click(doors[0]);
+      /* 从地图屏进世界（点 yard 室外区直接跳） */
+      click($('#screen-map .map-outdoor[data-room="yard"]'));
       await sleep(300);
-      log('点大门进世界', isWorldActive(), activeScreen());
+      log('点地图 yard 直接跳世界', isWorldActive() && window.World.currentRoomId === 'yard',
+        `screen=${activeScreen()} room=${window.World.currentRoomId}`);
 
       /* ---- v0.7：消除露蓝 + 人物不被 toolbar 遮 ---- */
       const swBg = getComputedStyle($('#screen-world')).backgroundColor;
@@ -228,8 +239,9 @@
       window.World.renderRoom('kitchen');
       await sleep(60);
       const milk2Node = $('#screen-world .world-prop[data-uid="hold-test-2"]');
-      const mX = girlR.left + girlR.width * 0.78;
-      const mY = girlR.top + girlR.height * 0.50;
+      const girlR2 = $('#char-girl').getBoundingClientRect();
+      const mX = girlR2.left + girlR2.width * 0.78;
+      const mY = girlR2.top + girlR2.height * 0.50;
       pe('pointerdown', milk2Node, mX + 30, mY + 80);
       pe('pointermove', milk2Node, mX + 30, mY + 80);
       pe('pointermove', milk2Node, mX, mY);
@@ -590,14 +602,15 @@
       click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'fairy'));
       await sleep(50);
       log('换裙子生效', Store.state.doll.dress === 'fairy', Store.state.doll.dress);
-      /* 点空白关闭 overlay（回世界） */
-      click($('#screen-dressup .btn-home'));
+      /* Phase 2 v4：dressup 关闭 = 直接切回世界屏（主屏已删） */
+      showScreen('world');
       await sleep(100);
-      log('回家按钮回家', $('#screen-home').classList.contains('active'), activeScreen());
+      log('dressup 关闭回世界', isWorldActive(), activeScreen());
 
       /* ---- 9. 墙纸地板（世界版） ---- */
-      click($('#screen-home .door-group'));
-      await sleep(250);
+      /* Phase 2 v4：原"点大门"流程已无意义（主屏删），直接确认在世界中，跳 bathroom */
+      window.World.jumpTo('bathroom'); // 卫生间
+      await sleep(150);
       window.World.jumpTo('bathroom'); // 卫生间
       await sleep(150);
       click($$('#screen-world .btn-palette')[0]);
@@ -716,71 +729,61 @@
         window.RoomAssets.WORLD_ROOMS.length === 10,
         `WORLD_ROOMS.length=${window.RoomAssets.WORLD_ROOMS.length}`);
 
-      /* ---- 13. Phase 2 世界地图（拟物俯视图）---- */
-      /* 先回主屏 */
-      showScreen('home');
-      await sleep(80);
-      const mapBtn = $('#screen-home .btn-map');
-      log('主屏有 .btn-map 按钮', !!mapBtn);
+      /* ---- 13. Phase 2 v4：世界地图 + 房子内部屏（默认屏=地图，主屏删除）---- */
+      /* Phase 2 v4：默认屏是地图屏（不再有主屏）。当前应在地图屏或世界屏。
+         强制 showScreen('map') 让 Map.onEnter 重新跑一次，刷新角色 marker 位置 */
+      showScreen('map');
+      await sleep(200);
 
-      click(mapBtn);
-      await sleep(80);
-      log('点击 .btn-map 进入地图屏', activeScreen() === 'screen-map', `screen=${activeScreen()}`);
-
-      const mapRooms = $$('#screen-map .map-room');
-      log('地图渲染 10 个房间块', mapRooms.length === 10, `n=${mapRooms.length}`);
-
-      const outdoors = $$('#screen-map .map-outdoor');
-      log('地图含 3 个室外区', outdoors.length === 3, `n=${outdoors.length}`);
-
-      /* 大房子内 7 间 + 室外 3 区 = 10 */
-      const indoorRooms = mapRooms.length - outdoors.length;
-      log('地图含 7 间室内 + 3 间室外',
-        indoorRooms === 7 && outdoors.length === 3,
-        `indoor=${indoorRooms} outdoor=${outdoors.length}`);
-
+      /* 地图屏内容 */
       const girlMarker = $('#screen-map .map-marker-girl');
       const catMarker = $('#screen-map .map-marker-cat');
-      log('女娃位置标记存在', !!girlMarker);
-      log('小猫位置标记存在', !!catMarker);
+      log('地图屏女娃位置标记存在', !!girlMarker);
+      log('地图屏小猫位置标记存在', !!catMarker);
 
-      /* marker dataset.targetRoom 应等于当前角色 room（不写死） */
       const girlRoomExpected = Store.state.char.girl.room;
       const catRoomExpected = Store.state.char.cat.room;
-      log('女娃 marker.targetRoom === girl.room',
+      log('地图屏女娃 marker.targetRoom === girl.room',
         girlMarker && girlMarker.dataset.targetRoom === girlRoomExpected,
         `marker=${girlMarker && girlMarker.dataset.targetRoom} store=${girlRoomExpected}`);
-      log('小猫 marker.targetRoom === cat.room',
+      log('地图屏小猫 marker.targetRoom === cat.room',
         catMarker && catMarker.dataset.targetRoom === catRoomExpected,
         `marker=${catMarker && catMarker.dataset.targetRoom} store=${catRoomExpected}`);
 
-      /* marker 脉动动画在 1.5s 内 */
-      log('女娃 marker.pulse class 已加', girlMarker && girlMarker.classList.contains('pulse'));
-      log('小猫 marker.pulse class 已加', catMarker && catMarker.classList.contains('pulse'));
+      log('地图屏女娃 marker.pulse class 已加', girlMarker && girlMarker.classList.contains('pulse'));
+      log('地图屏小猫 marker.pulse class 已加', catMarker && catMarker.classList.contains('pulse'));
 
-      /* 关闭按钮 */
-      const closeBtn = $('#screen-map .map-close');
-      log('地图有 .map-close 按钮', !!closeBtn);
+      /* 地图屏 1 大房子 + 3 室外（v4 重写后） */
+      const houseEl = $('#screen-map .map-house');
+      log('地图屏 1 大房子轮廓', !!houseEl);
+      const outdoors = $$('#screen-map .map-outdoor');
+      log('地图屏 3 室外区', outdoors.length === 3, `n=${outdoors.length}`);
 
-      /* 关闭地图 → 回主屏（不跳世界，避免误触） */
-      click(closeBtn);
-      await sleep(80);
-      log('点 .map-close 回主屏', activeScreen() === 'screen-home', `screen=${activeScreen()}`);
-
-      /* 再点进地图 → 点 yard 块 → 跳世界 + camera 到 yard */
-      click($('#screen-home .btn-map'));
-      await sleep(80);
-      click($('#screen-map .map-room[data-room="yard"]'));
+      /* 点大房子 → 进 interior 屏 */
+      click(houseEl);
       await sleep(300);
-      log('点 yard 块跳世界 + camera 到 yard',
-        activeScreen() === 'screen-world' && window.World.currentRoomId === 'yard',
+      log('点大房子进 interior 屏', activeScreen() === 'screen-interior', `screen=${activeScreen()}`);
+
+      /* interior 屏 7 个房间块 */
+      const intRooms = $$('#screen-interior .interior-room');
+      log('interior 屏 7 个房间块', intRooms.length === 7, `n=${intRooms.length}`);
+
+      /* interior 屏返回按钮回地图 */
+      click($('#screen-interior .interior-back'));
+      await sleep(120);
+      log('interior 返回按钮回地图', activeScreen() === 'screen-map', `screen=${activeScreen()}`);
+
+      /* 室外 3 区直接跳世界屏 */
+      click($('#screen-map .map-outdoor[data-room="park"]'));
+      await sleep(300);
+      log('地图点公园直接跳世界屏 park',
+        activeScreen() === 'screen-world' && window.World.currentRoomId === 'park',
         `screen=${activeScreen()} room=${window.World.currentRoomId}`);
 
       /* dots 导航已删除 */
       const dotCount = $$('#screen-world .world-dot').length;
       log('世界屏 dots 导航已删除', dotCount === 0, `n=${dotCount}`);
 
-      /* world-dots DOM 也已删 */
       const dotsBox = $('#screen-world .world-dots');
       log('世界屏 .world-dots DOM 已删', !dotsBox);
 
