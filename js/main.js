@@ -208,12 +208,14 @@
       <!-- 草地底层 -->
       <rect x="0" y="520" width="900" height="120" fill="#a8e6a1"/>
       <rect x="0" y="514" width="900" height="12" fill="#8ed488" rx="6"/>
-      <!-- 装饰小树 / 花 -->
+      <!-- 天空云朵 × 2 -->
       <g opacity=".9">
-        <ellipse cx="240" cy="560" rx="22" ry="14" fill="#6cc46a"/>
-        <rect x="234" y="558" width="12" height="14" fill="#a9784a"/>
-        <ellipse cx="700" cy="560" rx="26" ry="16" fill="#7ed47b"/>
-        <rect x="694" y="558" width="12" height="18" fill="#a9784a"/>
+        <ellipse cx="780" cy="100" rx="48" ry="18" fill="#fff"/>
+        <ellipse cx="755" cy="92" rx="26" ry="14" fill="#fff"/>
+        <ellipse cx="800" cy="88" rx="22" ry="12" fill="#fff"/>
+        <ellipse cx="200" cy="180" rx="40" ry="14" fill="#fff" opacity=".75"/>
+        <ellipse cx="180" cy="174" rx="22" ry="11" fill="#fff" opacity=".75"/>
+        <ellipse cx="220" cy="170" rx="18" ry="10" fill="#fff" opacity=".75"/>
       </g>
       <!-- 太阳 -->
       <g transform="translate(60,60)">
@@ -223,33 +225,179 @@
           return `<line x1="0" y1="-30" x2="0" y2="-38" stroke="#ffcf4d" stroke-width="4" stroke-linecap="round" transform="rotate(${a})"/>`;
         }).join('')}
       </g>
-      <!-- 一条小路（门口） -->
+      <!-- 草地装饰：花 + 灌木 + 路灯 + 邮箱 + 路径石 -->
+      <!-- 花 (4 朵) -->
+      <g>
+        <g transform="translate(180,572)">
+          <line x1="0" y1="0" x2="0" y2="12" stroke="#4e9e4a" stroke-width="3"/>
+          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="#ff9eb5"/>
+          <ellipse cx="-5" cy="-2" rx="4.5" ry="6" fill="#ff9eb5" transform="rotate(-60)"/>
+          <ellipse cx="5" cy="-2" rx="4.5" ry="6" fill="#ff9eb5" transform="rotate(60)"/>
+          <circle r="3" fill="#fff3c9"/>
+        </g>
+        <g transform="translate(280,590)">
+          <line x1="0" y1="0" x2="0" y2="12" stroke="#4e9e4a" stroke-width="3"/>
+          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="#ffd34d"/>
+          <ellipse cx="-5" cy="-2" rx="4.5" ry="6" fill="#ffd34d" transform="rotate(-60)"/>
+          <ellipse cx="5" cy="-2" rx="4.5" ry="6" fill="#ffd34d" transform="rotate(60)"/>
+          <circle r="3" fill="#fff3c9"/>
+        </g>
+        <g transform="translate(740,575)">
+          <line x1="0" y1="0" x2="0" y2="12" stroke="#4e9e4a" stroke-width="3"/>
+          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="#b79ced"/>
+          <ellipse cx="-5" cy="-2" rx="4.5" ry="6" fill="#b79ced" transform="rotate(-60)"/>
+          <ellipse cx="5" cy="-2" rx="4.5" ry="6" fill="#b79ced" transform="rotate(60)"/>
+          <circle r="3" fill="#fff3c9"/>
+        </g>
+        <g transform="translate(620,605)">
+          <line x1="0" y1="0" x2="0" y2="12" stroke="#4e9e4a" stroke-width="3"/>
+          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="#ff8f7a"/>
+          <ellipse cx="-5" cy="-2" rx="4.5" ry="6" fill="#ff8f7a" transform="rotate(-60)"/>
+          <ellipse cx="5" cy="-2" rx="4.5" ry="6" fill="#ff8f7a" transform="rotate(60)"/>
+          <circle r="3" fill="#fff3c9"/>
+        </g>
+      </g>
+      <!-- 灌木 (3 丛) -->
+      <g opacity=".9">
+        <ellipse cx="350" cy="600" rx="24" ry="14" fill="#6cc46a"/>
+        <ellipse cx="338" cy="595" rx="14" ry="10" fill="#7ed47b"/>
+        <ellipse cx="850" cy="555" rx="22" ry="12" fill="#6cc46a"/>
+        <ellipse cx="80" cy="555" rx="20" ry="11" fill="#6cc46a"/>
+      </g>
+      <!-- 一条小路（门口）+ 路径石 -->
       <polygon points="450,520 510,520 540,640 420,640" fill="#f2d9a0"/>
-      <!-- 大房子整体（等距 3D iso cube） -->
+      <ellipse cx="475" cy="555" rx="6" ry="3" fill="#dcbf85"/>
+      <ellipse cx="480" cy="585" rx="7" ry="3.5" fill="#dcbf85"/>
+      <ellipse cx="487" cy="615" rx="8" ry="4" fill="#dcbf85"/>
+      <!-- 路灯（小路左侧） -->
+      <g>
+        <rect x="395" y="500" width="4" height="36" fill="#7a5a3a"/>
+        <rect x="389" y="490" width="16" height="12" fill="#ffd34d" stroke="#a06820" stroke-width="1.5" rx="2"/>
+        <circle cx="397" cy="496" r="3" fill="#fff8c9"/>
+      </g>
+      <!-- 邮箱（小路右侧） -->
+      <g>
+        <rect x="550" y="510" width="3" height="30" fill="#7a5a3a"/>
+        <rect x="544" y="490" width="15" height="22" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5" rx="2"/>
+        <rect x="549" y="498" width="5" height="2" fill="#fff"/>
+      </g>
+      <!-- 大房子整体（等距 3D iso cube） + 拟物 -->
       <g class="map-house" data-room="house">
         ${(() => {
           const h = MAP_HOUSE;
           return _isoCube(h.cx, h.cy, h.w, h.h, h.color, { strokeAmt: 0.35 });
         })()}
-        <!-- 顶面装饰：紫色小屋顶尖（菱形叠）+ 烟囱 -->
-        <polygon points="${MAP_HOUSE.cx},${MAP_HOUSE.cy - 30}
-          ${MAP_HOUSE.cx + 60},${MAP_HOUSE.cy - 12}
-          ${MAP_HOUSE.cx},${MAP_HOUSE.cy + 6}
-          ${MAP_HOUSE.cx - 60},${MAP_HOUSE.cy - 12}"
-          fill="#b98cd9" stroke="#a06fc6" stroke-width="2" opacity=".95"/>
-        <rect x="${MAP_HOUSE.cx + 30}" y="${MAP_HOUSE.cy - 38}" width="14" height="20" fill="#a06fc6" stroke="#7a4ec9" stroke-width="1.5"/>
+        <!-- 顶面屋顶瓦片菱形（更明显） -->
+        <polygon points="${MAP_HOUSE.cx},${MAP_HOUSE.cy - 32}
+          ${MAP_HOUSE.cx + 68},${MAP_HOUSE.cy - 10}
+          ${MAP_HOUSE.cx},${MAP_HOUSE.cy + 12}
+          ${MAP_HOUSE.cx - 68},${MAP_HOUSE.cy - 10}"
+          fill="#b98cd9" stroke="#7a4ec9" stroke-width="2.5" opacity=".95"/>
+        <!-- 屋顶瓦片细线（菱形内部多道平行线） -->
+        <line x1="${MAP_HOUSE.cx - 34}" y1="${MAP_HOUSE.cy - 10}" x2="${MAP_HOUSE.cx + 34}" y2="${MAP_HOUSE.cy - 10}" stroke="#a06fc6" stroke-width="1" opacity=".6"/>
+        <line x1="${MAP_HOUSE.cx - 50}" y1="${MAP_HOUSE.cy + 1}" x2="${MAP_HOUSE.cx + 50}" y2="${MAP_HOUSE.cy + 1}" stroke="#a06fc6" stroke-width="1" opacity=".6"/>
+        <!-- 烟囱 + 3 个飘动烟雾 -->
+        <rect x="${MAP_HOUSE.cx + 50}" y="${MAP_HOUSE.cy - 50}" width="16" height="22" fill="#a06fc6" stroke="#7a4ec9" stroke-width="1.5"/>
+        <rect x="${MAP_HOUSE.cx + 52}" y="${MAP_HOUSE.cy - 48}" width="12" height="4" fill="#7a4ec9"/>
+        <circle cx="${MAP_HOUSE.cx + 58}" cy="${MAP_HOUSE.cy - 58}" r="5" fill="#fff" opacity=".75"/>
+        <circle cx="${MAP_HOUSE.cx + 65}" cy="${MAP_HOUSE.cy - 70}" r="7" fill="#fff" opacity=".55"/>
+        <circle cx="${MAP_HOUSE.cx + 72}" cy="${MAP_HOUSE.cy - 84}" r="9" fill="#fff" opacity=".35"/>
+        <!-- 顶面 1 个天窗（左侧） -->
+        <rect x="${MAP_HOUSE.cx - 50}" y="${MAP_HOUSE.cy + 0}" width="22" height="14" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="1.5" rx="2"/>
+        <line x1="${MAP_HOUSE.cx - 50}" y1="${MAP_HOUSE.cy + 7}" x2="${MAP_HOUSE.cx - 28}" y2="${MAP_HOUSE.cy + 7}" stroke="#7a4ec9" stroke-width="1"/>
+        <!-- 顶面 1 个天窗（右侧） -->
+        <rect x="${MAP_HOUSE.cx + 28}" y="${MAP_HOUSE.cy + 0}" width="22" height="14" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="1.5" rx="2"/>
+        <line x1="${MAP_HOUSE.cx + 28}" y1="${MAP_HOUSE.cy + 7}" x2="${MAP_HOUSE.cx + 50}" y2="${MAP_HOUSE.cy + 7}" stroke="#7a4ec9" stroke-width="1"/>
+        <!-- 左面窗户（菱形梯形） -->
+        <polygon points="${MAP_HOUSE.cx - 80},${MAP_HOUSE.cy + 60}
+          ${MAP_HOUSE.cx - 100},${MAP_HOUSE.cy + 70}
+          ${MAP_HOUSE.cx - 100},${MAP_HOUSE.cy + 100}
+          ${MAP_HOUSE.cx - 80},${MAP_HOUSE.cy + 90}"
+          fill="#cdf0ff" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="2"/>
+        <line x1="${MAP_HOUSE.cx - 90}" y1="${MAP_HOUSE.cy + 70}" x2="${MAP_HOUSE.cx - 90}" y2="${MAP_HOUSE.cy + 100}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1"/>
+        <line x1="${MAP_HOUSE.cx - 100}" y1="${MAP_HOUSE.cy + 80}" x2="${MAP_HOUSE.cx - 80}" y2="${MAP_HOUSE.cy + 80}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1"/>
+        <!-- 右面窗户 -->
+        <polygon points="${MAP_HOUSE.cx + 80},${MAP_HOUSE.cy + 60}
+          ${MAP_HOUSE.cx + 100},${MAP_HOUSE.cy + 70}
+          ${MAP_HOUSE.cx + 100},${MAP_HOUSE.cy + 100}
+          ${MAP_HOUSE.cx + 80},${MAP_HOUSE.cy + 90}"
+          fill="#cdf0ff" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="2"/>
+        <line x1="${MAP_HOUSE.cx + 90}" y1="${MAP_HOUSE.cy + 70}" x2="${MAP_HOUSE.cx + 90}" y2="${MAP_HOUSE.cy + 100}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1"/>
+        <line x1="${MAP_HOUSE.cx + 100}" y1="${MAP_HOUSE.cy + 80}" x2="${MAP_HOUSE.cx + 80}" y2="${MAP_HOUSE.cy + 80}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1"/>
         <!-- 顶面一扇门（房子正面朝前） -->
-        <rect x="${MAP_HOUSE.cx - 14}" y="${MAP_HOUSE.cy + 80}" width="28" height="50" rx="3"
+        <rect x="${MAP_HOUSE.cx - 16}" y="${MAP_HOUSE.cy + 76}" width="32" height="56" rx="3"
           fill="${_darken(MAP_HOUSE.color, 0.05)}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="2"/>
-        <circle cx="${MAP_HOUSE.cx + 8}" cy="${MAP_HOUSE.cy + 105}" r="2.5" fill="${_darken(MAP_HOUSE.color, 0.55)}"/>
+        <circle cx="${MAP_HOUSE.cx + 9}" cy="${MAP_HOUSE.cy + 104}" r="2.5" fill="${_darken(MAP_HOUSE.color, 0.55)}"/>
+        <!-- 门上方小窗 -->
+        <rect x="${MAP_HOUSE.cx - 8}" y="${MAP_HOUSE.cy + 82}" width="16" height="10" fill="#cdf0ff" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1.2"/>
       </g>
-      <!-- 室外 3 区（iso cube） -->
-      ${Object.entries(MAP_ROOM_POSITIONS).map(([id, p]) => `
-        <g class="map-room map-outdoor" data-room="${id}">
-          ${_isoCube(p.cx, p.cy, p.w, p.h, p.color, { leftAmt: 0.18, rightAmt: 0.36 })}
-          <text x="${p.cx}" y="${p.cy + p.h + 24}" text-anchor="middle"
-            font-size="14" font-weight="800" fill="${p.stroke}">${p.label}</text>
-        </g>`).join('')}
+      <!-- 室外 3 区（iso cube + 拟物） -->
+      <!-- 院子：秋千 + 沙坑 + 信箱 + 花圃 -->
+      <g class="map-room map-outdoor" data-room="yard">
+        ${_isoCube(MAP_ROOM_POSITIONS.yard.cx, MAP_ROOM_POSITIONS.yard.cy, MAP_ROOM_POSITIONS.yard.w, MAP_ROOM_POSITIONS.yard.h, MAP_ROOM_POSITIONS.yard.color, { leftAmt: 0.18, rightAmt: 0.36 })}
+        <!-- 秋千架 -->
+        <rect x="120" y="290" width="3" height="40" fill="#7a5a3a"/>
+        <rect x="160" y="290" width="3" height="40" fill="#7a5a3a"/>
+        <line x1="120" y1="290" x2="163" y2="290" stroke="#7a5a3a" stroke-width="2.5"/>
+        <line x1="140" y1="293" x2="140" y2="320" stroke="#5a4a2a" stroke-width="1.2"/>
+        <line x1="146" y1="293" x2="146" y2="318" stroke="#5a4a2a" stroke-width="1.2"/>
+        <rect x="135" y="316" width="18" height="6" rx="2" fill="#ff9eb5" stroke="#c45875" stroke-width="1"/>
+        <!-- 沙坑（黄椭圆） -->
+        <ellipse cx="130" cy="338" rx="20" ry="7" fill="#f7d488" stroke="#c4944f" stroke-width="1.5"/>
+        <!-- 信箱（小红柱） -->
+        <rect x="173" y="318" width="10" height="14" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2" rx="1.5"/>
+        <rect x="170" y="315" width="16" height="3" fill="#7a5a3a"/>
+        <!-- 顶面 1 朵小花 -->
+        <g transform="translate(150, 304)">
+          <ellipse cx="0" cy="-2" rx="3" ry="4" fill="#ff9eb5"/>
+          <circle r="1.5" fill="#fff3c9"/>
+        </g>
+      </g>
+      <!-- 公园：喷泉 + 池塘 + 大树 + 野餐桌 -->
+      <g class="map-room map-outdoor" data-room="park">
+        ${_isoCube(MAP_ROOM_POSITIONS.park.cx, MAP_ROOM_POSITIONS.park.cy, MAP_ROOM_POSITIONS.park.w, MAP_ROOM_POSITIONS.park.h, MAP_ROOM_POSITIONS.park.color, { leftAmt: 0.18, rightAmt: 0.36 })}
+        <!-- 喷泉（中心白圆 + 水花） -->
+        <circle cx="140" cy="490" r="9" fill="#fff" stroke="#7ec8e3" stroke-width="1.5"/>
+        <circle cx="140" cy="486" r="2" fill="#9ad7f0"/>
+        <!-- 喷泉水花 -->
+        <line x1="140" y1="478" x2="140" y2="472" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
+        <line x1="132" y1="482" x2="128" y2="478" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
+        <line x1="148" y1="482" x2="152" y2="478" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
+        <!-- 池塘（深蓝椭圆） -->
+        <ellipse cx="120" cy="525" rx="14" ry="5" fill="#4a90c4" stroke="#2c5a87" stroke-width="1.5"/>
+        <ellipse cx="120" cy="523" rx="11" ry="3" fill="#7eb0d6"/>
+        <!-- 大树（绿椭圆 + 棕干） -->
+        <rect x="156" y="500" width="5" height="20" fill="#7a5a3a"/>
+        <ellipse cx="158" cy="495" rx="12" ry="9" fill="#6cc46a"/>
+        <ellipse cx="153" cy="492" rx="7" ry="6" fill="#7ed47b"/>
+        <!-- 野餐桌（小红方 + 小蓝方） -->
+        <rect x="170" y="510" width="14" height="8" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2"/>
+        <rect x="171" y="518" width="2" height="6" fill="#7a5a3a"/>
+        <rect x="181" y="518" width="2" height="6" fill="#7a5a3a"/>
+      </g>
+      <!-- 商店：糖果墙 + 招牌 + 灯笼 + 收银台 -->
+      <g class="map-room map-outdoor" data-room="shop">
+        ${_isoCube(MAP_ROOM_POSITIONS.shop.cx, MAP_ROOM_POSITIONS.shop.cy, MAP_ROOM_POSITIONS.shop.w, MAP_ROOM_POSITIONS.shop.h, MAP_ROOM_POSITIONS.shop.color, { leftAmt: 0.18, rightAmt: 0.36 })}
+        <!-- 招牌（红色顶 + 米黄底） -->
+        <rect x="800" y="468" width="40" height="12" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5" rx="2"/>
+        <text x="820" y="478" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">商店</text>
+        <!-- 招牌柱 -->
+        <line x1="806" y1="480" x2="806" y2="500" stroke="#7a5a3a" stroke-width="2"/>
+        <line x1="834" y1="480" x2="834" y2="500" stroke="#7a5a3a" stroke-width="2"/>
+        <!-- 糖果墙（彩色横条） -->
+        <rect x="810" y="492" width="20" height="2.5" fill="#ff5c5c"/>
+        <rect x="810" y="495.5" width="20" height="2.5" fill="#ffd34d"/>
+        <rect x="810" y="499" width="20" height="2.5" fill="#7ec8e3"/>
+        <rect x="810" y="502.5" width="20" height="2.5" fill="#98d8a0"/>
+        <rect x="810" y="506" width="20" height="2.5" fill="#b79ced"/>
+        <!-- 灯笼（左右各 1） -->
+        <ellipse cx="800" cy="500" rx="4" ry="5" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>
+        <line x1="800" y1="494" x2="800" y2="496" stroke="#7a5a3a" stroke-width="1"/>
+        <ellipse cx="840" cy="500" rx="4" ry="5" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>
+        <line x1="840" y1="494" x2="840" y2="496" stroke="#7a5a3a" stroke-width="1"/>
+        <!-- 收银台（小灰方） -->
+        <rect x="850" y="510" width="14" height="10" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="1.2"/>
+      </g>
     </svg>`;
 const MAP_CLOSE_SVG = `
     <svg viewBox="0 0 36 36">
@@ -556,21 +704,91 @@ const MAP_CLOSE_SVG = `
           return `<line x1="0" y1="-30" x2="0" y2="-38" stroke="#ffcf4d" stroke-width="4" stroke-linecap="round" transform="rotate(${a})"/>`;
         }).join('')}
       </g>
-      <!-- 7 个房间 iso cube（上排 4 + 下排 3） -->
-      ${Object.entries(INTERIOR_ROOMS).map(([id, p]) => `
+      <!-- 7 个房间 iso cube + 顶面拟物（上排 4 + 下排 3） -->
+      ${Object.entries(INTERIOR_ROOMS).map(([id, p]) => {
+        const c = p;
+        const back = c.cy;
+        const front = c.cy + c.w;
+        return `
         <g class="interior-room" data-room="${id}">
-          ${_isoCube(p.cx, p.cy, p.w, p.h, p.color, { leftAmt: 0.18, rightAmt: 0.36 })}
-          <!-- 顶面房间图标（小图） -->
-          <g transform="translate(${p.cx - 16},${p.cy + p.w * 0.5 - 22}) scale(0.65)">
-            ${_iconInner(p.icon)}
-          </g>
+          ${_isoCube(c.cx, c.cy, c.w, c.h, c.color, { leftAmt: 0.18, rightAmt: 0.36 })}
+          ${id === 'balcony' ? `
+            <!-- 阳台：花盆 + 小椅子 -->
+            <ellipse cx="${c.cx - 18}" cy="${back + 12}" rx="8" ry="5" fill="#a9784a"/>
+            <ellipse cx="${c.cx - 18}" cy="${back + 8}" rx="6" ry="4" fill="#6cc46a"/>
+            <line x1="${c.cx - 18}" y1="${back + 4}" x2="${c.cx - 18}" y2="${back - 2}" stroke="#4e9e4a" stroke-width="2"/>
+            <ellipse cx="${c.cx - 18}" cy="${back - 4}" rx="4" ry="5" fill="#ff9eb5"/>
+            <rect x="${c.cx + 12}" y="${back + 8}" width="14" height="10" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1.2" rx="1"/>
+            <line x1="${c.cx + 12}" y1="${back + 6}" x2="${c.cx + 26}" y2="${back + 6}" stroke="#4f9cc0" stroke-width="1.2"/>
+          ` : ''}
+          ${id === 'bedroom' ? `
+            <!-- 卧室：床 + 枕头 + 熊玩偶 -->
+            <rect x="${c.cx - 22}" y="${back + 8}" width="44" height="20" rx="3" fill="#fffdf5" stroke="#a9784a" stroke-width="1.5"/>
+            <rect x="${c.cx - 20}" y="${back + 10}" width="12" height="8" fill="#ff9eb5" stroke="#c45875" stroke-width="1" rx="1.5"/>
+            <circle cx="${c.cx + 18}" cy="${back + 18}" r="7" fill="#c99b6a" stroke="#7a4d1d" stroke-width="1.5"/>
+            <circle cx="${c.cx + 16}" cy="${back + 16}" r="1.2" fill="#5b3a29"/>
+            <circle cx="${c.cx + 20}" cy="${back + 16}" r="1.2" fill="#5b3a29"/>
+          ` : ''}
+          ${id === 'bathroom' ? `
+            <!-- 浴室：浴缸 + 龙头 + 小鸭子 -->
+            <ellipse cx="${c.cx - 8}" cy="${back + 20}" rx="20" ry="8" fill="#9ad7f0" stroke="#4f9cc0" stroke-width="1.5"/>
+            <ellipse cx="${c.cx - 8}" cy="${back + 18}" rx="16" ry="5" fill="#cdf0ff"/>
+            <rect x="${c.cx - 10}" y="${back + 8}" width="4" height="8" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="0.8"/>
+            <circle cx="${c.cx - 8}" cy="${back + 9}" r="2" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="0.8"/>
+            <ellipse cx="${c.cx + 18}" cy="${back + 15}" rx="4" ry="3.5" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
+            <circle cx="${c.cx + 19}" cy="${back + 14}" r="0.8" fill="#5a3a00"/>
+          ` : ''}
+          ${id === 'living' ? `
+            <!-- 客厅：沙发 + 电视 + 茶几 -->
+            <rect x="${c.cx - 24}" y="${back + 10}" width="48" height="14" fill="#6cc46a" stroke="#4e9e4a" stroke-width="1.5" rx="3"/>
+            <rect x="${c.cx - 22}" y="${back + 4}" width="44" height="8" fill="#7ed47b" stroke="#4e9e4a" stroke-width="1.2" rx="2"/>
+            <rect x="${c.cx - 8}" y="${back - 4}" width="16" height="10" fill="#2a2a3a" stroke="#5a5a5a" stroke-width="1.5"/>
+            <rect x="${c.cx - 6}" y="${back - 3}" width="12" height="8" fill="#7ec8e3"/>
+            <rect x="${c.cx - 4}" y="${back + 24}" width="20" height="6" fill="#a9784a" stroke="#7a5a3a" stroke-width="1" rx="1"/>
+          ` : ''}
+          ${id === 'kitchen' ? `
+            <!-- 厨房：锅 + 灶台 + 冰箱 -->
+            <circle cx="${c.cx - 22}" cy="${back + 18}" r="11" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5"/>
+            <circle cx="${c.cx - 22}" cy="${back + 18}" r="8" fill="#a83232"/>
+            <rect x="${c.cx - 26}" y="${back + 4}" width="3" height="6" fill="#5a4a3a" stroke="#3a2a1a" stroke-width="0.8"/>
+            <rect x="${c.cx + 5}" y="${back + 14}" width="22" height="10" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="1.2" rx="1.5"/>
+            <circle cx="${c.cx + 11}" cy="${back + 19}" r="2.5" fill="#ff5c5c" opacity=".7"/>
+            <circle cx="${c.cx + 21}" cy="${back + 19}" r="2.5" fill="#ff5c5c" opacity=".7"/>
+            <rect x="${c.cx - 2}" y="${back + 4}" width="10" height="22" fill="#fffdf5" stroke="#9b9b9b" stroke-width="1.2" rx="1.5"/>
+            <line x1="${c.cx - 2}" y1="${back + 14}" x2="${c.cx + 8}" y2="${back + 14}" stroke="#9b9b9b" stroke-width="0.8"/>
+          ` : ''}
+          ${id === 'study' ? `
+            <!-- 书房：书桌 + 书 + 椅 -->
+            <rect x="${c.cx - 30}" y="${back + 14}" width="60" height="12" fill="#a9784a" stroke="#7a5a3a" stroke-width="1.5" rx="1.5"/>
+            <rect x="${c.cx - 25}" y="${back + 26}" width="3" height="14" fill="#7a5a3a"/>
+            <rect x="${c.cx + 22}" y="${back + 26}" width="3" height="14" fill="#7a5a3a"/>
+            <rect x="${c.cx - 22}" y="${back + 6}" width="14" height="9" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>
+            <rect x="${c.cx - 22}" y="${back + 4}" width="14" height="3" fill="#fff"/>
+            <rect x="${c.cx - 6}" y="${back + 8}" width="14" height="7" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1"/>
+            <rect x="${c.cx - 6}" y="${back + 6}" width="14" height="3" fill="#fff"/>
+            <rect x="${c.cx + 12}" y="${back + 8}" width="12" height="8" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
+            <rect x="${c.cx + 12}" y="${back + 6}" width="12" height="3" fill="#fff"/>
+          ` : ''}
+          ${id === 'wardrobe' ? `
+            <!-- 换衣：衣架 + 衣服 + 镜 + 鞋 -->
+            <rect x="${c.cx - 25}" y="${back + 4}" width="50" height="3" fill="#7a5a3a"/>
+            <line x1="${c.cx - 25}" y1="${back + 4}" x2="${c.cx - 25}" y2="${back + 22}" stroke="#7a5a3a" stroke-width="1.5"/>
+            <line x1="${c.cx + 25}" y1="${back + 4}" x2="${c.cx + 25}" y2="${back + 22}" stroke="#7a5a3a" stroke-width="1.5"/>
+            <rect x="${c.cx - 18}" y="${back + 7}" width="8" height="16" fill="#ff5c5c" stroke="#a83232" stroke-width="1" rx="1"/>
+            <rect x="${c.cx - 6}" y="${back + 7}" width="8" height="16" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1" rx="1"/>
+            <rect x="${c.cx + 6}" y="${back + 7}" width="8" height="16" fill="#ffd34d" stroke="#a06820" stroke-width="1" rx="1"/>
+            <rect x="${c.cx + 24}" y="${back + 10}" width="10" height="14" fill="#cdf0ff" stroke="#7a5a3a" stroke-width="1.2" rx="1.5"/>
+            <line x1="${c.cx + 24}" y1="${back + 14}" x2="${c.cx + 34}" y2="${back + 14}" stroke="#7a5a3a" stroke-width="0.8"/>
+            <rect x="${c.cx - 16}" y="${back + 26}" width="8" height="5" fill="#ff5c5c" stroke="#a83232" stroke-width="0.8" rx="1"/>
+            <rect x="${c.cx - 4}" y="${back + 26}" width="8" height="5" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="0.8" rx="1"/>
+          ` : ''}
           <!-- 顶面房间标签 -->
-          <text x="${p.cx}" y="${p.cy + p.w + 32}" text-anchor="middle"
-            font-size="15" font-weight="800" fill="${p.stroke}">${p.label}</text>
-        </g>`).join('')}
+          <text x="${c.cx}" y="${front + 32}" text-anchor="middle"
+            font-size="15" font-weight="800" fill="${c.stroke}">${c.label}</text>
+        </g>`;
+      }).join('')}
     </svg>`;
-
-  const Interior = {
+const Interior = {
     init(el) {
       el.innerHTML = `
         <div class="interior-screen">
