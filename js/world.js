@@ -456,7 +456,7 @@
 
     if (charNode) {
       const who = charNode.id === 'char-girl' ? 'girl' : 'cat';
-      drag = { kind: 'char', who, node: charNode, startX: e.clientX, startY: e.clientY, moved: false, lastX: e.clientX, lastY: e.clientY };
+      drag = { kind: 'char', who, node: charNode, nearWho: null, startX: e.clientX, startY: e.clientY, moved: false, lastX: e.clientX, lastY: e.clientY };
       charNode.classList.add('lifted');
     } else if (propNode) {
       const uid = propNode.dataset.uid;
@@ -534,6 +534,24 @@
       node.style.top = (c.y * 100) + '%';
       /* 角色不能被收纳筐收走，拖角色时别亮筐（免得小朋友以为能丢进去） */
       if (basket) basket.classList.remove('show', 'hover');
+
+      /* Phase 1.3：拖着自己靠近另一个角色 → 高亮对方（松手把手里的食物喂过去）。
+         只在"自己手里有东西"时才高亮，免得空手靠近也闪。 */
+      const otherWho = drag.who === 'girl' ? 'cat' : 'girl';
+      const otherNode = charEl(otherWho);
+      drag.nearWho = null;
+      if (otherNode && c.holding && c.holding.id) {
+        const selfRect = node.getBoundingClientRect();
+        const otherRect = otherNode.getBoundingClientRect();
+        const dist = Math.hypot(
+          (selfRect.left + selfRect.width / 2) - (otherRect.left + otherRect.width / 2),
+          (selfRect.top + selfRect.height / 2) - (otherRect.top + otherRect.height / 2)
+        );
+        if (dist < Math.max(140, selfRect.width * 1.5)) drag.nearWho = otherWho;
+      }
+      for (const w of ['girl', 'cat']) {
+        charEl(w).classList.toggle('feed-target', w === drag.nearWho);
+      }
       return;
     }
 
@@ -638,8 +656,20 @@
       d.node.classList.remove('lifted');
       el.querySelectorAll('.feed-hint').forEach(n => n.classList.remove('feed-hint'));
       el.querySelectorAll('.hold-hint').forEach(n => n.classList.remove('hold-hint'));
+      el.querySelectorAll('.feed-target').forEach(n => n.classList.remove('feed-target'));
       if (d.moved) {
-        placeChar(d.who, Store.state.char[d.who].room, Store.state.char[d.who].x, Store.state.char[d.who].y);
+        /* Phase 1.3：松手时若靠近另一个角色、且手里有食物 → 喂给对方 */
+        const self = Store.state.char[d.who];
+        const otherWho = d.who === 'girl' ? 'cat' : 'girl';
+        const giveFood = d.nearWho === otherWho && self.holding && self.holding.id;
+        const foodId = giveFood ? self.holding.id : null;
+        if (giveFood) self.holding = null;
+        placeChar(d.who, self.room, self.x, self.y);
+        if (giveFood) {
+          Store.save();
+          eat(otherWho, foodId);        // 对方吃 + happy-jump + 火花 + 语音
+          Sound.praise('给' + (otherWho === 'cat' ? '小猫' : '娃娃') + '吃啦');
+        }
       } else {
         /* 轻点角色：手持物品 → 落回地板；空着手 → 开心跳 */
         const c = Store.state.char[d.who];
