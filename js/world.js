@@ -124,7 +124,7 @@
     const dx = x - c.x;
     if (Math.abs(dx) > 0.02) c.face = dx > 0 ? 1 : -1;
     c.x = Math.min(0.94, Math.max(0.06, x));
-    c.y = Math.min(0.92, Math.max(0.6, y));
+    c.y = Math.min(0.72, Math.max(0.42, y));
     Store.save();
     const dist = Math.abs(dx);
     node.style.transitionDuration = Math.min(1.1, 0.35 + dist * 1.4) + 's';
@@ -140,7 +140,7 @@
     const c = Store.state.char[who];
     c.room = roomId;
     c.x = Math.min(0.94, Math.max(0.06, x));
-    c.y = Math.min(0.92, Math.max(0.55, y));
+    c.y = Math.min(0.72, Math.max(0.42, y));
     Store.save();
     const node = charEl(who);
     node.style.transitionDuration = '0s';
@@ -476,7 +476,7 @@
       const y = (e.clientY - sr.top) / sr.height;
       c.room = roomAt(idx);
       c.x = Math.min(0.94, Math.max(0.06, roomX));
-      c.y = Math.min(0.92, Math.max(0.55, y));
+      c.y = Math.min(0.72, Math.max(0.42, y));
       const node = drag.node;
       node.style.transitionDuration = '0s';
       node.style.left = (idx * roomW + c.x * roomW) + 'px';
@@ -686,7 +686,7 @@
                 <div class="room-floor"></div>
                 <div class="room-layer"></div>
               </section>`).join('')}
-            <div class="world-char" id="char-girl" style="width:13.8%"><div class="char-inner"><div class="char-body"></div></div></div>
+            <div class="world-char" id="char-girl" style="width:11%"><div class="char-inner"><div class="char-body"></div></div></div>
             <div class="world-char" id="char-cat" style="width:8.2%"><div class="char-inner"><div class="char-body"></div></div></div>
           </div>
           <div class="world-dots"></div>
@@ -816,6 +816,8 @@
     jumpTo,
     refreshCharacters,
     feedCharacter,
+    walkTo,
+    placeChar,
     get currentRoomId() { return roomAt(cam); },
     /* 测试后门：模拟把某个食物喂给角色（与拖拽 up 走同一套 eat 链路） */
     debugFeed(who, uid) {
