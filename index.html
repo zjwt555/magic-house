@@ -16,12 +16,12 @@
 </head>
 <body>
 <div id="app">
-  <!-- 主界面：一栋大房子，一扇大门 -->
-  <div class="screen active" id="screen-home"></div>
   <!-- 大世界：10 房间横向相连 -->
   <div class="screen" id="screen-world"></div>
-  <!-- Phase 2 世界地图：主屏进入的全屏俯视地图 -->
-  <div class="screen" id="screen-map"></div>
+  <!-- Phase 2 v4：默认屏 = 地图屏（等距 3D） -->
+  <div class="screen active" id="screen-map"></div>
+  <!-- Phase 2 v3：房子内部屏（点大房子进入，7 间平铺） -->
+  <div class="screen" id="screen-interior"></div>
   <!-- 换装面板（悬浮在世界之上） -->
   <div class="screen overlay-screen" id="screen-dressup"></div>
   <!-- 做饭面板（悬浮在世界之上） -->
