@@ -119,6 +119,27 @@
     reset() {
       state = JSON.parse(JSON.stringify(DEFAULT_STATE));
       saveNow();
+    },
+    /* v0.7 起：ROOM_SETS 在 assets-room.js 加载之后才可用，由 world.js init() 调一次。
+       对每个房间 items，过滤掉不在新 ROOM_SETS 里的旧 item（item.id 不再被该房间支持）。 */
+    migrateRoomSets() {
+      const R = window.RoomAssets;
+      if (!R || !R.ROOM_SETS) return { migrated: 0, dropped: 0 };
+      let migrated = 0, dropped = 0;
+      for (const roomId in state.rooms) {
+        const allowed = R.ROOM_SETS[roomId];
+        if (!allowed) continue;
+        const set = new Set(allowed);
+        const before = state.rooms[roomId].items.length;
+        state.rooms[roomId].items = state.rooms[roomId].items.filter(it => set.has(it.id));
+        const after = state.rooms[roomId].items.length;
+        if (after < before) {
+          migrated++;
+          dropped += (before - after);
+        }
+      }
+      if (migrated > 0) saveNow();
+      return { migrated, dropped };
     }
   };
 
