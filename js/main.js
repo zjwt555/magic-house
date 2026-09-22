@@ -213,9 +213,9 @@
         <ellipse cx="780" cy="100" rx="48" ry="18" fill="#fff"/>
         <ellipse cx="755" cy="92" rx="26" ry="14" fill="#fff"/>
         <ellipse cx="800" cy="88" rx="22" ry="12" fill="#fff"/>
-        <ellipse cx="200" cy="180" rx="40" ry="14" fill="#fff" opacity=".75"/>
-        <ellipse cx="180" cy="174" rx="22" ry="11" fill="#fff" opacity=".75"/>
-        <ellipse cx="220" cy="170" rx="18" ry="10" fill="#fff" opacity=".75"/>
+        <ellipse cx="280" cy="170" rx="40" ry="14" fill="#fff" opacity=".75"/>
+        <ellipse cx="260" cy="164" rx="22" ry="11" fill="#fff" opacity=".75"/>
+        <ellipse cx="300" cy="160" rx="18" ry="10" fill="#fff" opacity=".75"/>
       </g>
       <!-- 太阳 -->
       <g transform="translate(60,60)">
@@ -226,177 +226,230 @@
         }).join('')}
       </g>
       <!-- 草地装饰：花 + 灌木 + 路灯 + 邮箱 + 路径石 -->
-      <!-- 花 (4 朵) -->
+      <!-- 花 (5 朵) -->
       <g>
-        <g transform="translate(180,572)">
-          <line x1="0" y1="0" x2="0" y2="12" stroke="#4e9e4a" stroke-width="3"/>
-          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="#ff9eb5"/>
-          <ellipse cx="-5" cy="-2" rx="4.5" ry="6" fill="#ff9eb5" transform="rotate(-60)"/>
-          <ellipse cx="5" cy="-2" rx="4.5" ry="6" fill="#ff9eb5" transform="rotate(60)"/>
-          <circle r="3" fill="#fff3c9"/>
+        <g transform="translate(80, 580)">
+          <line x1="0" y1="0" x2="0" y2="10" stroke="#4e9e4a" stroke-width="2.5"/>
+          <ellipse cx="0" cy="-5" rx="4" ry="5" fill="#ff9eb5"/>
+          <ellipse cx="-4" cy="-2" rx="4" ry="5" fill="#ff9eb5" transform="rotate(-60)"/>
+          <ellipse cx="4" cy="-2" rx="4" ry="5" fill="#ff9eb5" transform="rotate(60)"/>
+          <circle r="2.5" fill="#fff3c9"/>
         </g>
-        <g transform="translate(280,590)">
-          <line x1="0" y1="0" x2="0" y2="12" stroke="#4e9e4a" stroke-width="3"/>
-          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="#ffd34d"/>
-          <ellipse cx="-5" cy="-2" rx="4.5" ry="6" fill="#ffd34d" transform="rotate(-60)"/>
-          <ellipse cx="5" cy="-2" rx="4.5" ry="6" fill="#ffd34d" transform="rotate(60)"/>
-          <circle r="3" fill="#fff3c9"/>
+        <g transform="translate(840, 575)">
+          <line x1="0" y1="0" x2="0" y2="10" stroke="#4e9e4a" stroke-width="2.5"/>
+          <ellipse cx="0" cy="-5" rx="4" ry="5" fill="#ffd34d"/>
+          <ellipse cx="-4" cy="-2" rx="4" ry="5" fill="#ffd34d" transform="rotate(-60)"/>
+          <ellipse cx="4" cy="-2" rx="4" ry="5" fill="#ffd34d" transform="rotate(60)"/>
+          <circle r="2.5" fill="#fff3c9"/>
         </g>
-        <g transform="translate(740,575)">
-          <line x1="0" y1="0" x2="0" y2="12" stroke="#4e9e4a" stroke-width="3"/>
-          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="#b79ced"/>
-          <ellipse cx="-5" cy="-2" rx="4.5" ry="6" fill="#b79ced" transform="rotate(-60)"/>
-          <ellipse cx="5" cy="-2" rx="4.5" ry="6" fill="#b79ced" transform="rotate(60)"/>
-          <circle r="3" fill="#fff3c9"/>
+        <g transform="translate(80, 480)">
+          <line x1="0" y1="0" x2="0" y2="10" stroke="#4e9e4a" stroke-width="2.5"/>
+          <ellipse cx="0" cy="-5" rx="4" ry="5" fill="#b79ced"/>
+          <ellipse cx="-4" cy="-2" rx="4" ry="5" fill="#b79ced" transform="rotate(-60)"/>
+          <ellipse cx="4" cy="-2" rx="4" ry="5" fill="#b79ced" transform="rotate(60)"/>
+          <circle r="2.5" fill="#fff3c9"/>
         </g>
-        <g transform="translate(620,605)">
-          <line x1="0" y1="0" x2="0" y2="12" stroke="#4e9e4a" stroke-width="3"/>
-          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="#ff8f7a"/>
-          <ellipse cx="-5" cy="-2" rx="4.5" ry="6" fill="#ff8f7a" transform="rotate(-60)"/>
-          <ellipse cx="5" cy="-2" rx="4.5" ry="6" fill="#ff8f7a" transform="rotate(60)"/>
-          <circle r="3" fill="#fff3c9"/>
+        <g transform="translate(840, 480)">
+          <line x1="0" y1="0" x2="0" y2="10" stroke="#4e9e4a" stroke-width="2.5"/>
+          <ellipse cx="0" cy="-5" rx="4" ry="5" fill="#ff8f7a"/>
+          <ellipse cx="-4" cy="-2" rx="4" ry="5" fill="#ff8f7a" transform="rotate(-60)"/>
+          <ellipse cx="4" cy="-2" rx="4" ry="5" fill="#ff8f7a" transform="rotate(60)"/>
+          <circle r="2.5" fill="#fff3c9"/>
+        </g>
+        <g transform="translate(160, 595)">
+          <line x1="0" y1="0" x2="0" y2="10" stroke="#4e9e4a" stroke-width="2.5"/>
+          <ellipse cx="0" cy="-5" rx="4" ry="5" fill="#ff9eb5"/>
+          <ellipse cx="-4" cy="-2" rx="4" ry="5" fill="#ff9eb5" transform="rotate(-60)"/>
+          <ellipse cx="4" cy="-2" rx="4" ry="5" fill="#ff9eb5" transform="rotate(60)"/>
+          <circle r="2.5" fill="#fff3c9"/>
         </g>
       </g>
-      <!-- 灌木 (3 丛) -->
+      <!-- 灌木 (4 丛) -->
       <g opacity=".9">
-        <ellipse cx="350" cy="600" rx="24" ry="14" fill="#6cc46a"/>
-        <ellipse cx="338" cy="595" rx="14" ry="10" fill="#7ed47b"/>
-        <ellipse cx="850" cy="555" rx="22" ry="12" fill="#6cc46a"/>
-        <ellipse cx="80" cy="555" rx="20" ry="11" fill="#6cc46a"/>
+        <ellipse cx="400" cy="600" rx="24" ry="14" fill="#6cc46a"/>
+        <ellipse cx="388" cy="595" rx="14" ry="10" fill="#7ed47b"/>
+        <ellipse cx="500" cy="605" rx="22" ry="12" fill="#6cc46a"/>
+        <ellipse cx="700" cy="555" rx="20" ry="11" fill="#6cc46a"/>
+        <ellipse cx="690" cy="550" rx="12" ry="8" fill="#7ed47b"/>
       </g>
       <!-- 一条小路（门口）+ 路径石 -->
-      <polygon points="450,520 510,520 540,640 420,640" fill="#f2d9a0"/>
-      <ellipse cx="475" cy="555" rx="6" ry="3" fill="#dcbf85"/>
-      <ellipse cx="480" cy="585" rx="7" ry="3.5" fill="#dcbf85"/>
-      <ellipse cx="487" cy="615" rx="8" ry="4" fill="#dcbf85"/>
+      <polygon points="410,400 490,400 540,520 360,520" fill="#f2d9a0"/>
+      <ellipse cx="425" cy="445" rx="6" ry="3" fill="#dcbf85"/>
+      <ellipse cx="432" cy="475" rx="7" ry="3.5" fill="#dcbf85"/>
+      <ellipse cx="441" cy="500" rx="8" ry="4" fill="#dcbf85"/>
       <!-- 路灯（小路左侧） -->
       <g>
-        <rect x="395" y="500" width="4" height="36" fill="#7a5a3a"/>
-        <rect x="389" y="490" width="16" height="12" fill="#ffd34d" stroke="#a06820" stroke-width="1.5" rx="2"/>
-        <circle cx="397" cy="496" r="3" fill="#fff8c9"/>
+        <rect x="375" y="380" width="4" height="36" fill="#7a5a3a"/>
+        <rect x="369" y="370" width="16" height="12" fill="#ffd34d" stroke="#a06820" stroke-width="1.5" rx="2"/>
+        <circle cx="377" cy="376" r="3" fill="#fff8c9"/>
       </g>
       <!-- 邮箱（小路右侧） -->
       <g>
-        <rect x="550" y="510" width="3" height="30" fill="#7a5a3a"/>
-        <rect x="544" y="490" width="15" height="22" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5" rx="2"/>
-        <rect x="549" y="498" width="5" height="2" fill="#fff"/>
+        <rect x="525" y="390" width="3" height="30" fill="#7a5a3a"/>
+        <rect x="519" y="370" width="15" height="22" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5" rx="2"/>
+        <rect x="524" y="378" width="5" height="2" fill="#fff"/>
       </g>
-      <!-- 大房子整体（等距 3D iso cube） + 拟物 -->
+      <!-- 大房子整体（平面矩形）+ 拟物 -->
       <g class="map-house" data-room="house">
-        ${(() => {
-          const h = MAP_HOUSE;
-          return _isoCube(h.cx, h.cy, h.w, h.h, h.color, { strokeAmt: 0.35 });
-        })()}
-        <!-- 顶面屋顶瓦片菱形（更明显） -->
-        <polygon points="${MAP_HOUSE.cx},${MAP_HOUSE.cy - 32}
-          ${MAP_HOUSE.cx + 68},${MAP_HOUSE.cy - 10}
-          ${MAP_HOUSE.cx},${MAP_HOUSE.cy + 12}
-          ${MAP_HOUSE.cx - 68},${MAP_HOUSE.cy - 10}"
-          fill="#b98cd9" stroke="#7a4ec9" stroke-width="2.5" opacity=".95"/>
-        <!-- 屋顶瓦片细线（菱形内部多道平行线） -->
-        <line x1="${MAP_HOUSE.cx - 34}" y1="${MAP_HOUSE.cy - 10}" x2="${MAP_HOUSE.cx + 34}" y2="${MAP_HOUSE.cy - 10}" stroke="#a06fc6" stroke-width="1" opacity=".6"/>
-        <line x1="${MAP_HOUSE.cx - 50}" y1="${MAP_HOUSE.cy + 1}" x2="${MAP_HOUSE.cx + 50}" y2="${MAP_HOUSE.cy + 1}" stroke="#a06fc6" stroke-width="1" opacity=".6"/>
-        <!-- 烟囱 + 3 个飘动烟雾 -->
-        <rect x="${MAP_HOUSE.cx + 50}" y="${MAP_HOUSE.cy - 50}" width="16" height="22" fill="#a06fc6" stroke="#7a4ec9" stroke-width="1.5"/>
-        <rect x="${MAP_HOUSE.cx + 52}" y="${MAP_HOUSE.cy - 48}" width="12" height="4" fill="#7a4ec9"/>
-        <circle cx="${MAP_HOUSE.cx + 58}" cy="${MAP_HOUSE.cy - 58}" r="5" fill="#fff" opacity=".75"/>
-        <circle cx="${MAP_HOUSE.cx + 65}" cy="${MAP_HOUSE.cy - 70}" r="7" fill="#fff" opacity=".55"/>
-        <circle cx="${MAP_HOUSE.cx + 72}" cy="${MAP_HOUSE.cy - 84}" r="9" fill="#fff" opacity=".35"/>
-        <!-- 顶面 1 个天窗（左侧） -->
-        <rect x="${MAP_HOUSE.cx - 50}" y="${MAP_HOUSE.cy + 0}" width="22" height="14" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="1.5" rx="2"/>
-        <line x1="${MAP_HOUSE.cx - 50}" y1="${MAP_HOUSE.cy + 7}" x2="${MAP_HOUSE.cx - 28}" y2="${MAP_HOUSE.cy + 7}" stroke="#7a4ec9" stroke-width="1"/>
-        <!-- 顶面 1 个天窗（右侧） -->
-        <rect x="${MAP_HOUSE.cx + 28}" y="${MAP_HOUSE.cy + 0}" width="22" height="14" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="1.5" rx="2"/>
-        <line x1="${MAP_HOUSE.cx + 28}" y1="${MAP_HOUSE.cy + 7}" x2="${MAP_HOUSE.cx + 50}" y2="${MAP_HOUSE.cy + 7}" stroke="#7a4ec9" stroke-width="1"/>
-        <!-- 左面窗户（菱形梯形） -->
-        <polygon points="${MAP_HOUSE.cx - 80},${MAP_HOUSE.cy + 60}
-          ${MAP_HOUSE.cx - 100},${MAP_HOUSE.cy + 70}
-          ${MAP_HOUSE.cx - 100},${MAP_HOUSE.cy + 100}
-          ${MAP_HOUSE.cx - 80},${MAP_HOUSE.cy + 90}"
-          fill="#cdf0ff" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="2"/>
-        <line x1="${MAP_HOUSE.cx - 90}" y1="${MAP_HOUSE.cy + 70}" x2="${MAP_HOUSE.cx - 90}" y2="${MAP_HOUSE.cy + 100}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1"/>
-        <line x1="${MAP_HOUSE.cx - 100}" y1="${MAP_HOUSE.cy + 80}" x2="${MAP_HOUSE.cx - 80}" y2="${MAP_HOUSE.cy + 80}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1"/>
-        <!-- 右面窗户 -->
-        <polygon points="${MAP_HOUSE.cx + 80},${MAP_HOUSE.cy + 60}
-          ${MAP_HOUSE.cx + 100},${MAP_HOUSE.cy + 70}
-          ${MAP_HOUSE.cx + 100},${MAP_HOUSE.cy + 100}
-          ${MAP_HOUSE.cx + 80},${MAP_HOUSE.cy + 90}"
-          fill="#cdf0ff" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="2"/>
-        <line x1="${MAP_HOUSE.cx + 90}" y1="${MAP_HOUSE.cy + 70}" x2="${MAP_HOUSE.cx + 90}" y2="${MAP_HOUSE.cy + 100}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1"/>
-        <line x1="${MAP_HOUSE.cx + 100}" y1="${MAP_HOUSE.cy + 80}" x2="${MAP_HOUSE.cx + 80}" y2="${MAP_HOUSE.cy + 80}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1"/>
-        <!-- 顶面一扇门（房子正面朝前） -->
-        <rect x="${MAP_HOUSE.cx - 16}" y="${MAP_HOUSE.cy + 76}" width="32" height="56" rx="3"
-          fill="${_darken(MAP_HOUSE.color, 0.05)}" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="2"/>
-        <circle cx="${MAP_HOUSE.cx + 9}" cy="${MAP_HOUSE.cy + 104}" r="2.5" fill="${_darken(MAP_HOUSE.color, 0.55)}"/>
-        <!-- 门上方小窗 -->
-        <rect x="${MAP_HOUSE.cx - 8}" y="${MAP_HOUSE.cy + 82}" width="16" height="10" fill="#cdf0ff" stroke="${_darken(MAP_HOUSE.color, 0.40)}" stroke-width="1.2"/>
+        <!-- 屋顶梯形（紫色） -->
+        <polygon points="170,160 730,160 670,100 230,100" fill="#b98cd9" stroke="#7a4ec9" stroke-width="2.5" opacity=".95"/>
+        <!-- 屋顶瓦片细线 -->
+        <line x1="240" y1="135" x2="720" y2="135" stroke="#a06fc6" stroke-width="1" opacity=".55"/>
+        <line x1="260" y1="155" x2="700" y2="155" stroke="#a06fc6" stroke-width="1" opacity=".55"/>
+        <!-- 主体矩形（粉白墙） -->
+        <rect x="180" y="160" width="540" height="240" fill="#fff3f7" stroke="#f0c4d4" stroke-width="3" rx="4"/>
+        <!-- 窗户 (2 排 × 3 列) -->
+        <g>
+          <rect x="220" y="200" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="238" y1="200" x2="238" y2="244" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="220" y1="222" x2="256" y2="222" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <g>
+          <rect x="320" y="200" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="338" y1="200" x2="338" y2="244" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="320" y1="222" x2="356" y2="222" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <g>
+          <rect x="420" y="200" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="438" y1="200" x2="438" y2="244" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="420" y1="222" x2="456" y2="222" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <g>
+          <rect x="520" y="200" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="538" y1="200" x2="538" y2="244" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="520" y1="222" x2="556" y2="222" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <g>
+          <rect x="620" y="200" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="638" y1="200" x2="638" y2="244" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="620" y1="222" x2="656" y2="222" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <g>
+          <rect x="270" y="290" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="288" y1="290" x2="288" y2="334" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="270" y1="312" x2="306" y2="312" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <g>
+          <rect x="370" y="290" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="388" y1="290" x2="388" y2="334" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="370" y1="312" x2="406" y2="312" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <g>
+          <rect x="470" y="290" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="488" y1="290" x2="488" y2="334" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="470" y1="312" x2="506" y2="312" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <g>
+          <rect x="570" y="290" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+          <line x1="588" y1="290" x2="588" y2="334" stroke="#7a4ec9" stroke-width="1.2"/>
+          <line x1="570" y1="312" x2="606" y2="312" stroke="#7a4ec9" stroke-width="1.2"/>
+        </g>
+        <!-- 门（中央大窗户+门） -->
+        <rect x="630" y="290" width="36" height="44" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2" rx="3"/>
+        <line x1="648" y1="290" x2="648" y2="334" stroke="#7a4ec9" stroke-width="1.2"/>
+        <line x1="630" y1="312" x2="666" y2="312" stroke="#7a4ec9" stroke-width="1.2"/>
+        <!-- 大门（前方正中央） -->
+        <rect x="420" y="350" width="60" height="50" fill="#b98cd9" stroke="#7a4ec9" stroke-width="2.5" rx="3"/>
+        <circle cx="471" cy="375" r="2.5" fill="#5a2c5a"/>
+        <!-- 门上小窗 -->
+        <rect x="430" y="358" width="40" height="14" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="1.2" rx="1.5"/>
+        <line x1="450" y1="358" x2="450" y2="372" stroke="#7a4ec9" stroke-width="0.8"/>
+        <!-- 烟囱（右上角） -->
+        <rect x="610" y="80" width="22" height="30" fill="#a06fc6" stroke="#7a4ec9" stroke-width="2"/>
+        <rect x="612" y="84" width="18" height="6" fill="#7a4ec9"/>
+        <!-- 3 朵烟囱烟雾（白圆渐变） -->
+        <circle cx="621" cy="68" r="7" fill="#fff" opacity=".75"/>
+        <circle cx="628" cy="54" r="9" fill="#fff" opacity=".55"/>
+        <circle cx="636" cy="40" r="11" fill="#fff" opacity=".35"/>
+        <!-- 门廊灯（左上角） -->
+        <circle cx="200" cy="180" r="6" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>
+        <!-- 大房子标签（"我家"） -->
+        <text x="450" y="430" text-anchor="middle" font-size="16" font-weight="800" fill="#7a4ec9">我家</text>
       </g>
-      <!-- 室外 3 区（iso cube + 拟物） -->
-      <!-- 院子：秋千 + 沙坑 + 信箱 + 花圃 -->
+      <!-- 室外 3 区（平面矩形 + 拟物） -->
+      <!-- 院子：秋千 + 沙坑 + 信箱 + 花 -->
       <g class="map-room map-outdoor" data-room="yard">
-        ${_isoCube(MAP_ROOM_POSITIONS.yard.cx, MAP_ROOM_POSITIONS.yard.cy, MAP_ROOM_POSITIONS.yard.w, MAP_ROOM_POSITIONS.yard.h, MAP_ROOM_POSITIONS.yard.color, { leftAmt: 0.18, rightAmt: 0.36 })}
+        <!-- 主体矩形 -->
+        <rect x="30" y="220" width="130" height="100" fill="#a8e6a1" stroke="#6cc46a" stroke-width="3" rx="8"/>
         <!-- 秋千架 -->
-        <rect x="120" y="290" width="3" height="40" fill="#7a5a3a"/>
-        <rect x="160" y="290" width="3" height="40" fill="#7a5a3a"/>
-        <line x1="120" y1="290" x2="163" y2="290" stroke="#7a5a3a" stroke-width="2.5"/>
-        <line x1="140" y1="293" x2="140" y2="320" stroke="#5a4a2a" stroke-width="1.2"/>
-        <line x1="146" y1="293" x2="146" y2="318" stroke="#5a4a2a" stroke-width="1.2"/>
-        <rect x="135" y="316" width="18" height="6" rx="2" fill="#ff9eb5" stroke="#c45875" stroke-width="1"/>
+        <rect x="55" y="240" width="3" height="40" fill="#7a5a3a"/>
+        <rect x="105" y="240" width="3" height="40" fill="#7a5a3a"/>
+        <line x1="55" y1="240" x2="108" y2="240" stroke="#7a5a3a" stroke-width="2.5"/>
+        <line x1="78" y1="243" x2="78" y2="270" stroke="#5a4a2a" stroke-width="1.2"/>
+        <line x1="86" y1="243" x2="86" y2="268" stroke="#5a4a2a" stroke-width="1.2"/>
+        <rect x="72" y="266" width="22" height="6" rx="2" fill="#ff9eb5" stroke="#c45875" stroke-width="1"/>
         <!-- 沙坑（黄椭圆） -->
-        <ellipse cx="130" cy="338" rx="20" ry="7" fill="#f7d488" stroke="#c4944f" stroke-width="1.5"/>
+        <ellipse cx="55" cy="290" rx="18" ry="6" fill="#f7d488" stroke="#c4944f" stroke-width="1.5"/>
         <!-- 信箱（小红柱） -->
-        <rect x="173" y="318" width="10" height="14" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2" rx="1.5"/>
-        <rect x="170" y="315" width="16" height="3" fill="#7a5a3a"/>
-        <!-- 顶面 1 朵小花 -->
-        <g transform="translate(150, 304)">
+        <rect x="135" y="280" width="10" height="14" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2" rx="1.5"/>
+        <rect x="132" y="277" width="16" height="3" fill="#7a5a3a"/>
+        <!-- 1 朵小花 -->
+        <g transform="translate(95, 250)">
           <ellipse cx="0" cy="-2" rx="3" ry="4" fill="#ff9eb5"/>
           <circle r="1.5" fill="#fff3c9"/>
         </g>
+        <!-- 标签 -->
+        <text x="95" y="345" text-anchor="middle" font-size="14" font-weight="800" fill="#4e9e4a">院子</text>
       </g>
       <!-- 公园：喷泉 + 池塘 + 大树 + 野餐桌 -->
       <g class="map-room map-outdoor" data-room="park">
-        ${_isoCube(MAP_ROOM_POSITIONS.park.cx, MAP_ROOM_POSITIONS.park.cy, MAP_ROOM_POSITIONS.park.w, MAP_ROOM_POSITIONS.park.h, MAP_ROOM_POSITIONS.park.color, { leftAmt: 0.18, rightAmt: 0.36 })}
+        <rect x="30" y="430" width="130" height="100" fill="#9ad7f0" stroke="#7ec8e3" stroke-width="3" rx="8"/>
         <!-- 喷泉（中心白圆 + 水花） -->
-        <circle cx="140" cy="490" r="9" fill="#fff" stroke="#7ec8e3" stroke-width="1.5"/>
-        <circle cx="140" cy="486" r="2" fill="#9ad7f0"/>
-        <!-- 喷泉水花 -->
-        <line x1="140" y1="478" x2="140" y2="472" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
-        <line x1="132" y1="482" x2="128" y2="478" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
-        <line x1="148" y1="482" x2="152" y2="478" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="65" cy="460" r="10" fill="#fff" stroke="#7ec8e3" stroke-width="1.5"/>
+        <circle cx="65" cy="456" r="2.5" fill="#9ad7f0"/>
+        <line x1="65" y1="446" x2="65" y2="440" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
+        <line x1="55" y1="450" x2="50" y2="446" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
+        <line x1="75" y1="450" x2="80" y2="446" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>
         <!-- 池塘（深蓝椭圆） -->
-        <ellipse cx="120" cy="525" rx="14" ry="5" fill="#4a90c4" stroke="#2c5a87" stroke-width="1.5"/>
-        <ellipse cx="120" cy="523" rx="11" ry="3" fill="#7eb0d6"/>
+        <ellipse cx="45" cy="505" rx="16" ry="5" fill="#4a90c4" stroke="#2c5a87" stroke-width="1.5"/>
+        <ellipse cx="45" cy="503" rx="12" ry="3" fill="#7eb0d6"/>
         <!-- 大树（绿椭圆 + 棕干） -->
-        <rect x="156" y="500" width="5" height="20" fill="#7a5a3a"/>
-        <ellipse cx="158" cy="495" rx="12" ry="9" fill="#6cc46a"/>
-        <ellipse cx="153" cy="492" rx="7" ry="6" fill="#7ed47b"/>
+        <rect x="88" y="478" width="5" height="22" fill="#7a5a3a"/>
+        <ellipse cx="90" cy="473" rx="13" ry="10" fill="#6cc46a"/>
+        <ellipse cx="85" cy="470" rx="7" ry="6" fill="#7ed47b"/>
         <!-- 野餐桌（小红方 + 小蓝方） -->
-        <rect x="170" y="510" width="14" height="8" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2"/>
-        <rect x="171" y="518" width="2" height="6" fill="#7a5a3a"/>
-        <rect x="181" y="518" width="2" height="6" fill="#7a5a3a"/>
+        <rect x="110" y="490" width="18" height="9" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2"/>
+        <rect x="111" y="498" width="2" height="6" fill="#7a5a3a"/>
+        <rect x="125" y="498" width="2" height="6" fill="#7a5a3a"/>
+        <!-- 2 朵小花 -->
+        <g transform="translate(40, 445)">
+          <ellipse cx="0" cy="-2" rx="2.5" ry="3" fill="#fff"/>
+          <circle r="1" fill="#ffd34d"/>
+        </g>
+        <g transform="translate(135, 445)">
+          <ellipse cx="0" cy="-2" rx="2.5" ry="3" fill="#fff"/>
+          <circle r="1" fill="#ffd34d"/>
+        </g>
+        <text x="95" y="555" text-anchor="middle" font-size="14" font-weight="800" fill="#4f9cc0">公园</text>
       </g>
       <!-- 商店：糖果墙 + 招牌 + 灯笼 + 收银台 -->
       <g class="map-room map-outdoor" data-room="shop">
-        ${_isoCube(MAP_ROOM_POSITIONS.shop.cx, MAP_ROOM_POSITIONS.shop.cy, MAP_ROOM_POSITIONS.shop.w, MAP_ROOM_POSITIONS.shop.h, MAP_ROOM_POSITIONS.shop.color, { leftAmt: 0.18, rightAmt: 0.36 })}
-        <!-- 招牌（红色顶 + 米黄底） -->
-        <rect x="800" y="468" width="40" height="12" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5" rx="2"/>
-        <text x="820" y="478" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">商店</text>
+        <rect x="740" y="430" width="130" height="100" fill="#fff6e8" stroke="#ff9eb5" stroke-width="3" rx="8"/>
+        <!-- 招牌（红色顶 + 米黄底 + 商店字） -->
+        <rect x="750" y="408" width="60" height="14" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5" rx="2"/>
+        <text x="780" y="418" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">商店</text>
         <!-- 招牌柱 -->
-        <line x1="806" y1="480" x2="806" y2="500" stroke="#7a5a3a" stroke-width="2"/>
-        <line x1="834" y1="480" x2="834" y2="500" stroke="#7a5a3a" stroke-width="2"/>
+        <line x1="755" y1="422" x2="755" y2="440" stroke="#7a5a3a" stroke-width="2"/>
+        <line x1="805" y1="422" x2="805" y2="440" stroke="#7a5a3a" stroke-width="2"/>
         <!-- 糖果墙（彩色横条） -->
-        <rect x="810" y="492" width="20" height="2.5" fill="#ff5c5c"/>
-        <rect x="810" y="495.5" width="20" height="2.5" fill="#ffd34d"/>
-        <rect x="810" y="499" width="20" height="2.5" fill="#7ec8e3"/>
-        <rect x="810" y="502.5" width="20" height="2.5" fill="#98d8a0"/>
-        <rect x="810" y="506" width="20" height="2.5" fill="#b79ced"/>
-        <!-- 灯笼（左右各 1） -->
-        <ellipse cx="800" cy="500" rx="4" ry="5" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>
-        <line x1="800" y1="494" x2="800" y2="496" stroke="#7a5a3a" stroke-width="1"/>
-        <ellipse cx="840" cy="500" rx="4" ry="5" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>
-        <line x1="840" y1="494" x2="840" y2="496" stroke="#7a5a3a" stroke-width="1"/>
+        <rect x="753" y="448" width="30" height="4" fill="#ff5c5c"/>
+        <rect x="753" y="453" width="30" height="4" fill="#ffd34d"/>
+        <rect x="753" y="458" width="30" height="4" fill="#7ec8e3"/>
+        <rect x="753" y="463" width="30" height="4" fill="#98d8a0"/>
+        <rect x="753" y="468" width="30" height="4" fill="#b79ced"/>
+        <!-- 灯笼（左 + 右） -->
+        <ellipse cx="745" cy="455" rx="5" ry="6" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>
+        <line x1="745" y1="448" x2="745" y2="450" stroke="#7a5a3a" stroke-width="1"/>
+        <ellipse cx="815" cy="455" rx="5" ry="6" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>
+        <line x1="815" y1="448" x2="815" y2="450" stroke="#7a5a3a" stroke-width="1"/>
         <!-- 收银台（小灰方） -->
-        <rect x="850" y="510" width="14" height="10" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="1.2"/>
+        <rect x="820" y="495" width="20" height="14" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="1.2"/>
+        <!-- 1 朵小花 -->
+        <g transform="translate(750, 500)">
+          <ellipse cx="0" cy="-2" rx="3" ry="4" fill="#ffd34d"/>
+          <circle r="1.5" fill="#fff"/>
+        </g>
+        <text x="805" y="555" text-anchor="middle" font-size="14" font-weight="800" fill="#d96b8a">商店</text>
       </g>
     </svg>`;
 const MAP_CLOSE_SVG = `
