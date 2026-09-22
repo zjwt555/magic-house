@@ -780,23 +780,12 @@
       const lamps = $$('#screen-map rect[fill="#ffd34d"][stroke="#a06820"]').length;
       log('地图屏有 ≥ 4 个路灯', lamps >= 4, `n=${lamps}`);
 
-      /* 点大房子 → 进 interior 屏 */
+      /* 点大房子 → 直接进世界屏 bedroom（v8 删除 interior 中间层） */
       click(houseEl);
       await sleep(300);
-      log('点大房子进 interior 屏', activeScreen() === 'screen-interior', `screen=${activeScreen()}`);
-
-      /* interior 屏 7 个房间块 */
-      const intRooms = $$('#screen-interior .interior-room');
-      log('interior 屏 7 个房间块', intRooms.length === 7, `n=${intRooms.length}`);
-
-      /* Phase 2 v5：interior 拟物丰富度（每房间有 2-3 个小家具） */
-      const intAllShapes = $$('#screen-interior svg *');
-      log('interior 屏 SVG 子元素 ≥ 60（v5 拟物丰富）', intAllShapes.length >= 60, `n=${intAllShapes.length}`);
-
-      /* interior 屏返回按钮回地图 */
-      click($('#screen-interior .interior-back'));
-      await sleep(120);
-      log('interior 返回按钮回地图', activeScreen() === 'screen-map', `screen=${activeScreen()}`);
+      log('点大房子进世界屏 bedroom',
+        activeScreen() === 'screen-world' && window.World.currentRoomId === 'bedroom',
+        `screen=${activeScreen()} room=${window.World.currentRoomId}`);
 
       /* 室外 3 区直接跳世界屏 */
       click($('#screen-map .map-outdoor[data-room="park"]'));
