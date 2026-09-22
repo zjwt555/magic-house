@@ -735,6 +735,83 @@
       'st_star', 'st_flower']
   };
 
+  /* v0.7：每个房间的初始样板间布置（item 必在对应 ROOM_SETS 中）
+     孩子进游戏时（和"全部还原"）已经摆好一组物品，不必从抽屉里拖。
+     物品 id 来自 ROOM_SETS（用抽屉可拖拽的物品），不是 fixture（背景层）。 */
+  const DEFAULT_LAYOUT = {
+    balcony: [                              // 8 件抽屉，摆 4 件
+      { id: 'clothline',    x: 0.50, y: 0.40 },
+      { id: 'deckchair',    x: 0.28, y: 0.85 },
+      { id: 'flowerstand',  x: 0.75, y: 0.78 },
+      { id: 'plant',        x: 0.15, y: 0.70 }
+    ],
+    bedroom: [                              // 11 件抽屉，摆 6 件
+      { id: 'bed',     x: 0.50, y: 0.85 },
+      { id: 'rug',     x: 0.50, y: 0.92 },
+      { id: 'lamp',    x: 0.22, y: 0.80 },
+      { id: 'catbed',  x: 0.78, y: 0.85 },
+      { id: 'teddy',   x: 0.18, y: 0.92 },
+      { id: 'frame',   x: 0.85, y: 0.50 }
+    ],
+    bathroom: [                              // 11 件抽屉，摆 5 件
+      { id: 'bathtub',   x: 0.30, y: 0.78 },
+      { id: 'sink',      x: 0.72, y: 0.72 },
+      { id: 'toilet',    x: 0.88, y: 0.85 },
+      { id: 'bmirror',   x: 0.50, y: 0.42 },
+      { id: 'towelrack', x: 0.18, y: 0.45 }
+    ],
+    living: [                                // 13 件抽屉，摆 7 件
+      { id: 'tv',       x: 0.50, y: 0.55 },
+      { id: 'sofa',     x: 0.50, y: 0.78 },
+      { id: 'coffee',   x: 0.50, y: 0.86 },
+      { id: 'armchair', x: 0.18, y: 0.78 },
+      { id: 'fishtank', x: 0.82, y: 0.72 },
+      { id: 'cushion',  x: 0.32, y: 0.84 },
+      { id: 'rug',      x: 0.50, y: 0.94 }
+    ],
+    kitchen: [                               // 9 件抽屉，摆 4 件
+      { id: 'dining',  x: 0.50, y: 0.78 },
+      { id: 'table',   x: 0.50, y: 0.86 },
+      { id: 'frame',   x: 0.85, y: 0.45 },
+      { id: 'rug',     x: 0.50, y: 0.95 }
+    ],
+    study: [                                 // 11 件抽屉，摆 6 件
+      { id: 'desk',      x: 0.50, y: 0.75 },
+      { id: 'globe',     x: 0.25, y: 0.82 },
+      { id: 'armchair',  x: 0.80, y: 0.82 },
+      { id: 'bookshelf', x: 0.18, y: 0.45 },
+      { id: 'frame',     x: 0.85, y: 0.45 },
+      { id: 'rug',       x: 0.50, y: 0.93 }
+    ],
+    wardrobe: [                              // 11 件抽屉，摆 4 件
+      { id: 'bmirror',   x: 0.50, y: 0.50 },
+      { id: 'towelrack', x: 0.20, y: 0.50 },
+      { id: 'teddy',     x: 0.80, y: 0.85 },
+      { id: 'rug',       x: 0.50, y: 0.92 }
+    ],
+    yard: [                                  // 12 件抽屉，摆 5 件
+      { id: 'swing',   x: 0.30, y: 0.70 },
+      { id: 'sandbox', x: 0.70, y: 0.90 },
+      { id: 'tent',    x: 0.50, y: 0.70 },
+      { id: 'bigtree', x: 0.15, y: 0.65 },
+      { id: 'fence',   x: 0.85, y: 0.50 }
+    ],
+    park: [                                  // 12 件抽屉，摆 6 件
+      { id: 'slide',     x: 0.20, y: 0.65 },
+      { id: 'fountain',  x: 0.50, y: 0.85 },
+      { id: 'pond',      x: 0.80, y: 0.90 },
+      { id: 'bench',     x: 0.50, y: 0.70 },
+      { id: 'bigtree',   x: 0.15, y: 0.55 },
+      { id: 'picnicmat', x: 0.80, y: 0.65 }
+    ],
+    shop: [                                  // 9 件抽屉，摆 4 件
+      { id: 'shopshelf', x: 0.25, y: 0.45 },
+      { id: 'counter',   x: 0.70, y: 0.80 },
+      { id: 'toypile',   x: 0.30, y: 0.80 },
+      { id: 'frame',     x: 0.85, y: 0.45 }
+    ]
+  };
+
   /* 固定装置归属（渲染在房间背景层，不可拖不可收） */
   const FIXTURES = { kitchen: ['fridge', 'stove'], wardrobe: ['wardrobecab'] };
 
@@ -781,5 +858,5 @@
     }
   }
 
-  window.RoomAssets = { ITEMS, ORDER, ROOM_SETS, WORLD_ROOMS, FIXTURES, FOODS, WALLS, FLOORS, applyBg };
+  window.RoomAssets = { ITEMS, ORDER, ROOM_SETS, DEFAULT_LAYOUT, WORLD_ROOMS, FIXTURES, FOODS, WALLS, FLOORS, applyBg };
 })();
