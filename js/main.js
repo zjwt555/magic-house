@@ -385,8 +385,13 @@
               <text x="18" y="26" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">?</text>
             </svg>
           </button>
-          <button class="btn-corner btn-reset" aria-label="全部还原">
+          <button class="btn-corner btn-reset" aria-label="重置样板间">
             ${RESET_ICON_SVG}
+          </button>
+          <button class="btn-corner btn-relayout" aria-label="重新布置所有房间">
+            <svg viewBox="0 0 36 36">
+              <text x="18" y="27" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">✨</text>
+            </svg>
           </button>
         </div>` + HOME_SVG + HELP_HTML + RESET_CONFIRM_HTML;
 
@@ -440,6 +445,18 @@
         Sound.praise('房间已经全部还原啦');
         FX.confetti(el, 28);
         closeReset();
+      });
+
+      /* v0.7：✨ 重新布置 —— 只重摆所有房间 items（不动娃娃/食物/换装）。
+         适合"女儿自己摆的有点乱，想一键按新样板间摆好"。 */
+      el.querySelector('.btn-relayout').addEventListener('click', () => {
+        Sound.pop();
+        Store.relayout();
+        /* 主屏上看不到效果（要进世界才看得到）—— 但 reload 后就生效 */
+        Sound.praise('全部房间已重新摆好');
+        FX.sparkles(el, window.innerWidth / 2, window.innerHeight / 2, 14);
+        /* 自动跳到世界让娃立刻看到新布置 */
+        setTimeout(() => { Sound.door(); window.showScreen('world'); }, 600);
       });
     },
     onEnter() {
