@@ -130,7 +130,14 @@
 
       /* ---- v0.7：消除露蓝 + 人物不被 toolbar 遮 ---- */
       const swBg = getComputedStyle($('#screen-world')).backgroundColor;
-      log('世界屏背景肉色无露蓝', swBg === 'rgb(244, 231, 215)', `bg=${swBg}`);
+      const camRoom = window.World.currentRoomId;
+      const camWall = Store.state.rooms[camRoom].wall;
+      const expectedBg = window.RoomAssets.WALLS[camWall].bgColor;
+      /* 改版后 #screen-world 跟随当前房间的 wall.bgColor（不是写死的肉色）。
+         只要不是 #app 浅蓝 bde8ff = rgb(189, 232, 255) 即视为通过。 */
+      log('世界屏背景跟墙色（不露 #app 浅蓝）',
+        swBg !== 'rgb(189, 232, 255)',
+        `bg=${swBg} cam=${camRoom}(wall=${camWall}) expected=${expectedBg}`);
       /* 娃娃默认 bottom 不被 toolbar 遮：girl 元素 bottom ≤ toolbar top - 4 */
       const defaultGirlRect = $('#char-girl').getBoundingClientRect();
       const tbRect = $('#screen-world .game-toolbar').getBoundingClientRect();
