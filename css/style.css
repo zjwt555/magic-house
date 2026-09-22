@@ -223,17 +223,21 @@ html, body {
   display: flex;
   align-items: stretch;
   gap: 10px;
-  padding: 10px calc(10px + env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom))
-           calc(10px + env(safe-area-inset-left));
-  background: rgba(255, 255, 255, .78);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  /* 取消浮岛卡片圆角 —— 让 toolbar 视觉上与 #screen-world 肉色背景融为一体，
-     配合下方淡分割线，避免 iPad 上圆角+半透明白色造成的"两边露蓝"错觉 */
-  border-radius: 0;
+  /* 左右 padding 改为 0，让 toolbar 真正铺满屏幕宽度 —— 原来
+     safe-area 让左右 padding 各加 ~44px，iPad 横屏下 toolbar 视觉上"凹进去"，
+     露出 #app 的浅蓝背景；现在改为透明 + 子元素自己留 safe-area */
+  padding: 10px 0 calc(10px + env(safe-area-inset-bottom)) 0;
+  background: transparent;
   border-top: 1px solid rgba(180, 140, 100, .18);
   min-height: 118px;
   z-index: 30;
+}
+
+/* toolbar 子元素自己留 safe-area，避免被 iPad 横屏摄像头黑边遮 */
+.game-toolbar > .tab-row,
+.game-toolbar > .item-drawer {
+  padding-left: calc(10px + env(safe-area-inset-left));
+  padding-right: calc(10px + env(safe-area-inset-right));
 }
 
 /* 分类标签（换装/厨房食材等） */
