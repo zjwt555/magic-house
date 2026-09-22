@@ -73,6 +73,37 @@
       Store.reset();
       await sleep(60);
 
+      /* ---- 0.5 v0.7：房间初始布局（DEFAULT_LAYOUT）验证 ---- */
+      /* 清掉 localStorage 模拟新游戏，重新 load，看默认布局是否生效 */
+      localStorage.removeItem('magic-house-v1');
+      Store.state;   // 触发 load()
+      log('新游戏各房间默认摆好物品',
+        Object.values(Store.state.rooms).every(r => Array.isArray(r.items) && r.items.length >= 4),
+        `counts=${Object.entries(Store.state.rooms).map(([k,v])=>`${k}=${v.items.length}`).join(',')}`);
+      log('bedroom 默认 6 件（bed+rug+lamp+catbed+teddy+frame）',
+        Store.state.rooms.bedroom.items.length === 6 &&
+        ['bed','rug','lamp','catbed','teddy','frame'].every(id => Store.state.rooms.bedroom.items.some(it => it.id === id)),
+        `items=${Store.state.rooms.bedroom.items.map(it => it.id).join(',')}`);
+      log('living 默认 7 件（tv+sofa+coffee+armchair+fishtank+cushion+rug）',
+        Store.state.rooms.living.items.length === 7 &&
+        ['tv','sofa','coffee','armchair','fishtank','cushion','rug'].every(id => Store.state.rooms.living.items.some(it => it.id === id)),
+        `items=${Store.state.rooms.living.items.map(it => it.id).join(',')}`);
+      log('wardrobe 默认 4 件（bmirror+towelrack+teddy+rug）',
+        Store.state.rooms.wardrobe.items.length === 4 &&
+        ['bmirror','towelrack','teddy','rug'].every(id => Store.state.rooms.wardrobe.items.some(it => it.id === id)),
+        `items=${Store.state.rooms.wardrobe.items.map(it => it.id).join(',')}`);
+      log('Store.relayout()：清空 + 重新按默认摆',
+        (() => {
+          Store.state.rooms.living.items.push({id: 'junk', x: 0.5, y: 0.5});
+          Store.relayout();
+          return !Store.state.rooms.living.items.some(it => it.id === 'junk')
+              && Store.state.rooms.living.items.length === 7;
+        })(),
+        `living-items=${Store.state.rooms.living.items.length}`);
+      /* 恢复老存档路径（让后续老测试能跑） */
+      localStorage.removeItem('magic-house-v1');
+      Store.state;
+
       /* ---- 1. 主界面 ---- */
       const doors = $$('#screen-home .door-group');
       log('主界面一扇大门', doors.length === 1, `doors=${doors.length}`);
@@ -95,11 +126,12 @@
       Store.save();
       click($('#screen-home .reset-yes'));
       await sleep(80);
-      log('点确定后房间清空',
-        Store.state.rooms.living.items.length === 0
-        && Store.state.props.length === 0
-        && Store.state.doll.dress !== 'fairy',
-        `items=${Store.state.rooms.living.items.length} props=${Store.state.props.length} dress=${Store.state.doll.dress}`);
+      log('点确定后还原（按样板间摆好）',
+        Store.state.rooms.living.items.length === 7 &&
+        Store.state.rooms.living.items.some(it => it.id === 'tv') &&
+        Store.state.props.length === 0 &&
+        Store.state.doll.dress !== 'fairy',
+        `living-items=${Store.state.rooms.living.items.length} props=${Store.state.props.length} dress=${Store.state.doll.dress}`);
       log('还原弹窗自动关闭', $('#screen-home .reset-confirm').classList.contains('hidden'));
       /* 再试"再想想"路径 */
       click($('#screen-home .btn-reset'));
@@ -312,7 +344,7 @@
       log('客厅抽屉含电视', !!tvCard);
       click(tvCard);
       await sleep(150);
-      log('客厅加电视', Store.state.rooms.living.items.length === 1, Store.state.rooms.living.items.length);
+      log('客厅加电视', Store.state.rooms.living.items.length === 8, Store.state.rooms.living.items.length);
       const tvNode = $$('#screen-world .world-room[data-room="living"] .room-item')[0];
       const [tx, ty] = center(tvNode);
       pe('pointerdown', tvNode, tx, ty);
@@ -324,7 +356,7 @@
       pe('pointerdown', tvNode, 0, 0); // 占位
       pe('pointerup', tvNode, 0, 0);
       await sleep(20);
-      log('轻点电视互动不误删', Store.state.rooms.living.items.length === 1);
+      log('轻点电视互动不误删', Store.state.rooms.living.items.length === 8);
 
       /* ---- 5. 角色拖动/走路 ---- */
       const girl = $('#char-girl');
@@ -528,13 +560,13 @@
       log('院子草地地板', Store.state.rooms.yard.floor === 3, Store.state.rooms.yard.floor);
       click([...yardCards].find(c => c.dataset.id === 'swing'));
       await sleep(150);
-      log('院子加秋千', Store.state.rooms.yard.items.length === 1, Store.state.rooms.yard.items.length);
+      log('院子加秋千', Store.state.rooms.yard.items.length === 6, Store.state.rooms.yard.items.length);
       const swingNode = $$('#screen-world .world-room[data-room="yard"] .room-item')[0];
       const [swx, swy] = center(swingNode);
       pe('pointerdown', swingNode, swx, swy);
       pe('pointerup', swingNode, swx, swy);
       await sleep(100);
-      log('轻点秋千互动不误删', Store.state.rooms.yard.items.length === 1);
+      log('轻点秋千互动不误删', Store.state.rooms.yard.items.length === 6);
       click($$('.world-dot')[8]); // 公园
       await sleep(180);
       log('跳到公园', window.World.currentRoomId === 'park');
