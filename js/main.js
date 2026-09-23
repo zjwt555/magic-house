@@ -274,36 +274,10 @@
       return out;
     }
 
-    if (entry.id === 'house') {
-      /* L3-3 v3 大房子：取消 PNG，程序化圆胖版（参考图风） */
+        if (entry.id === 'house') {
+      /* L3-3 v5: 改回 apple-touch-icon.png（老吴 9-23 指定，PNG 自带房子识别度） */
       const hx = 0, hy = 0, hw = 280, hh = 280;
-      out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#fff3f7" stroke="#f0c4d4" stroke-width="3" rx="20"/>';
-      /* 草地弧形 */
-      out += '<path d="M' + hx + ',' + (hy + hh - 30) + ' Q' + (hx + hw / 2) + ',' + (hy + hh) + ' ' + (hx + hw) + ',' + (hy + hh - 30) + ' L' + (hx + hw) + ',' + (hy + hh) + ' L' + hx + ',' + (hy + hh) + ' Z" fill="#b8e896" stroke="#6cc46a" stroke-width="3"/>';
-      /* 紫色梯形山墙 */
-      out += '<polygon points="' + (hx + 30) + ',' + (hy + 95) + ' ' + (hx + 250) + ',' + (hy + 95) + ' ' + (hx + 225) + ',' + (hy + 25) + ' ' + (hx + 55) + ',' + (hy + 25) + '" fill="#b98cd9" stroke="#7a4ec9" stroke-width="3" stroke-linejoin="round"/>';
-      out += '<polygon points="' + (hx + 50) + ',' + (hy + 90) + ' ' + (hx + 230) + ',' + (hy + 90) + ' ' + (hx + 220) + ',' + (hy + 60) + ' ' + (hx + 60) + ',' + (hy + 60) + '" fill="#caa4e4" opacity=".4"/>';
-      /* 山墙中央圆窗（参考图核心） */
-      out += '<circle cx="' + (hx + 140) + '" cy="' + (hy + 70) + '" r="20" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="3"/>';
-      out += '<line x1="' + (hx + 120) + '" y1="' + (hy + 70) + '" x2="' + (hx + 160) + '" y2="' + (hy + 70) + '" stroke="#7a4ec9" stroke-width="2.5"/>';
-      out += '<line x1="' + (hx + 140) + '" y1="' + (hy + 50) + '" x2="' + (hx + 140) + '" y2="' + (hy + 90) + '" stroke="#7a4ec9" stroke-width="2.5"/>';
-      /* 2 个黄色方窗 */
-      out += '<rect x="' + (hx + 50) + '" y="' + (hy + 135) + '" width="44" height="44" rx="8" fill="#ffd34d" stroke="#a06820" stroke-width="3"/>';
-      out += '<line x1="' + (hx + 72) + '" y1="' + (hy + 135) + '" x2="' + (hx + 72) + '" y2="' + (hy + 179) + '" stroke="#a06820" stroke-width="2"/>';
-      out += '<line x1="' + (hx + 50) + '" y1="' + (hy + 157) + '" x2="' + (hx + 94) + '" y2="' + (hy + 157) + '" stroke="#a06820" stroke-width="2"/>';
-      out += '<rect x="' + (hx + 186) + '" y="' + (hy + 135) + '" width="44" height="44" rx="8" fill="#ffd34d" stroke="#a06820" stroke-width="3"/>';
-      out += '<line x1="' + (hx + 208) + '" y1="' + (hy + 135) + '" x2="' + (hx + 208) + '" y2="' + (hy + 179) + '" stroke="#a06820" stroke-width="2"/>';
-      out += '<line x1="' + (hx + 186) + '" y1="' + (hy + 157) + '" x2="' + (hx + 230) + '" y2="' + (hy + 157) + '" stroke="#a06820" stroke-width="2"/>';
-      /* 粉色圆胖门 */
-      out += '<rect x="' + (hx + 108) + '" y="' + (hy + 195) + '" width="64" height="60" rx="14" fill="#ff9eb5" stroke="#d96a8e" stroke-width="3"/>';
-      out += '<ellipse cx="' + (hx + 118) + '" cy="' + (hy + 215) + '" rx="8" ry="5" fill="#ffd9ea" opacity=".7"/>';
-      out += '<circle cx="' + (hx + 162) + '" cy="' + (hy + 225) + '" r="4" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
-      /* 我家标签 */
-      out += '<polygon points="' + (hx + 108) + ',' + (hy + 18) + ' ' + (hx + 172) + ',' + (hy + 18) + ' ' + (hx + 182) + ',' + (hy + 38) + ' ' + (hx + 172) + ',' + (hy + 58) + ' ' + (hx + 108) + ',' + (hy + 58) + ' ' + (hx + 98) + ',' + (hy + 38) + '" fill="#fff" opacity=".95" stroke="#7a4ec9" stroke-width="2.5"/>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 44) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#7a4ec9">' + entry.label + '</text>';
-      /* 装饰 */
-      out += '<polygon points="40,30 45,42 57,44 48,53 50,65 40,59 30,65 32,53 23,44 35,42" fill="#ffd34d" stroke="#a06820" stroke-width="1.5" stroke-linejoin="round"/>';
-      out += '<g transform="translate(245, 255)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="0" cy="-7" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="-3" cy="3" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="3" cy="3" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><circle r="2" fill="#ffd34d"/></g>';
+      out += '<image href="icons/apple-touch-icon.png" x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" preserveAspectRatio="xMidYMid meet"/>';
       return out;
     }
 
