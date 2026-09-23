@@ -1067,9 +1067,8 @@ html, body {
    Phase 2 · 世界地图（screen-map）
    =========================================================== */
 #screen-map {
-  /* 与主屏一致的天空+草地渐变（保持视觉风格统一） */
-  background: linear-gradient(#8fd3ff 0%, #c9ecff 55%, #d8f5d0 55.5%, #a8e6a1 100%);
-  display: none;             /* 默认隐藏（screen 类已设 display:none，.active 才显示） */
+  background: linear-gradient(180deg, #ffe5f0 0%, #fff5e0 50%, #d8f5e6 100%);
+  display: none;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
   overflow: hidden;
@@ -1082,6 +1081,7 @@ html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(180deg, #ffe5f0 0%, #fff5e0 50%, #d8f5e6 100%);
 }
 
 /* 顶部条：左 4 按钮 + 中标题（沿用原主屏 .home-corner/.btn-corner 风格） */
@@ -1178,9 +1178,7 @@ html, body {
   width: 100%;
   height: 100%;
   display: block;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #ffe5f0 0%, #fff5e0 50%, #d8f5e6 100%);
-  box-shadow: 0 6px 18px rgba(180, 120, 160, .18);
+  background: transparent;
 }
 
 .map-room {
