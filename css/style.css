@@ -14,7 +14,8 @@ html, body {
   user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
-  background: #bde8ff;
+  /* iPad PWA home indicator / safe-area 间隙 fallback —— 改成地图屏底色薄荷绿，避免露出浅蓝 */
+  background: #d8f5e6;
   font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
 
@@ -24,7 +25,8 @@ html, body {
   height: 100dvh;
   position: relative;
   overflow: hidden;
-  background: #bde8ff;
+  /* 配合 manifest.background_color，home indicator 间隙 fallback 改为地图屏底色薄荷绿 */
+  background: #d8f5e6;
 }
 
 /* ---------- 屏幕管理 ---------- */
@@ -1076,9 +1078,10 @@ html, body {
 #screen-map.active { display: flex; flex-direction: column; }
 
 .map-screen {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  /* 防御性：position: absolute + inset: 0 确保覆盖到屏幕最底边，
+     避免 flex height:100% + safe-area padding 的亚像素空隙透出 #app 浅蓝 */
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #ffe5f0 0%, #fff5e0 50%, #d8f5e6 100%);
