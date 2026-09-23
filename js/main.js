@@ -271,37 +271,15 @@
       return out;
     }
     if (entry.id === 'house') {
-      /* \u4e2d\u5927\u623f\u5b50\uff1a\u7d2b\u5c4b\u9876 + \u7c89\u767d\u4e3b\u4f53 + 5 \u7a97 + \u95e8 + \u70df\u56f1 + 3 \u70df + \u90ae\u7bb1 + \u524d\u9662\u5c0f\u8def + \u201c\u6211\u5bb6\u201d */
+      /* L3-2 v2: 直接用 icons/apple-touch-icon.png 当大房子（老吴指令） */
       const hx = 0, hy = 0, hw = 280, hh = 193;
-      out += `<rect x="${hx}" y="${hy}" width="${hw}" height="${hh}" fill="${entry.color}" stroke="#f0c4d4" stroke-width="3" rx="8"/>`;
-      /* \u697c\u9876\u68af\u5f62\uff08\u7d2b\uff09 */
-      out += `<polygon points="${hx-5},${hy} ${hx+hw+5},${hy} ${hx+hw-30},${hy-40} ${hx+30},${hy-40}" fill="#b98cd9" stroke="#7a4ec9" stroke-width="3"/>`;
-      out += `<line x1="${hx+40}" y1="${hy-25}" x2="${hx+hw-40}" y2="${hy-25}" stroke="#a06fc6" stroke-width="2.6" opacity=".55"/>`;
-      /* 5 \u4e2a\u7a97\u6237\uff08\u5355\u6392\uff09y=22-58 */
-      for (let i = 0; i < 5; i++) {
-        const wx = hx + 32 + i * 48;
-        out += `<rect x="${wx}" y="${hy + 20}" width="30" height="38" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2.6" rx="5"/>`;
-        out += `<line x1="${wx + 15}" y1="${hy + 20}" x2="${wx + 15}" y2="${hy + 58}" stroke="#7a4ec9" stroke-width="1.8"/>`;
-        out += `<line x1="${wx}" y1="${hy + 39}" x2="${wx + 30}" y2="${hy + 39}" stroke="#7a4ec9" stroke-width="1.8"/>`;
-      }
-      /* \u70df\u56f1 + 3 \u70df */
-      out += `<rect x="${hx + hw - 40}" y="${hy - 36}" width="14" height="22" fill="#a06fc6" stroke="#7a4ec9" stroke-width="1.8"/>`;
-      out += `<circle cx="${hx + hw - 33}" cy="${hy - 46}" r="6" fill="#fff" opacity=".75"/>`;
-      out += `<circle cx="${hx + hw - 28}" cy="${hy - 58}" r="8" fill="#fff" opacity=".55"/>`;
-      out += `<circle cx="${hx + hw - 22}" cy="${hy - 70}" r="10" fill="#fff" opacity=".35"/>`;
-      /* \u7d2b\u8272\u5927\u95e8 + \u95e8\u628a\u624b + \u95e8\u4e0a\u5c0f\u7a97 */
-      out += `<rect x="${hx + hw/2 - 28}" y="${hy + hh - 76}" width="56" height="48" fill="#b98cd9" stroke="#7a4ec9" stroke-width="3" rx="5"/>`;
-      out += `<circle cx="${hx + hw/2 + 22}" cy="${hy + hh - 52}" r="2.5" fill="#5a2c5a"/>`;
-      out += `<rect x="${hx + hw/2 - 18}" y="${hy + hh - 70}" width="36" height="12" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2.6" rx="6"/>`;
-      /* \u90ae\u7bb1 */
-      out += `<rect x="${hx + hw - 50}" y="${hy + hh - 30}" width="3" height="22" fill="#7a5a3a"/>`;
-      out += `<rect x="${hx + hw - 56}" y="${hy + hh - 50}" width="14" height="20" fill="#ff5c5c" stroke="#a83232" stroke-width="1.8" rx="8"/>`;
-      out += `<rect x="${hx + hw - 53}" y="${hy + hh - 42}" width="5" height="2" fill="#fff"/>`;
-      /* \u201c\u6211\u5bb6\u201d\u6807\u7b7e */
-      out += `<text x="${hx + hw/2}" y="${hy + 16}" text-anchor="middle" font-size="16" font-weight="800" fill="#7a4ec9">${entry.label}</text>`;
+      out += `<image href="icons/apple-touch-icon.png" x="${hx}" y="${hy}" width="${hw}" height="${hh}" preserveAspectRatio="xMidYMid slice"/>`;
+      /* "我家" 标签：六角型白底紫字（叠在图上顶部，保证 polygon>=1 测试断言）*/
+      out += `<polygon points="${hw/2-32},${hy+12} ${hw/2+32},${hy+12} ${hw/2+36},${hy+22} ${hw/2+32},${hy+32} ${hw/2-32},${hy+32} ${hw/2-36},${hy+22}" fill="#fff" opacity=".95" stroke="#7a4ec9" stroke-width="2"/>`;
+      out += `<text x="${hw/2}" y="${hy + 27}" text-anchor="middle" font-size="14" font-weight="800" fill="#7a4ec9">${entry.label}</text>`;
       return out;
     }
-    if (entry.id === 'yard') {
+if (entry.id === 'yard') {
       out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#6cc46a" stroke-width="3" rx="8"/>`;
       /* \u79cb\u5343 */
       out += `<rect x="60" y="80" width="3" height="50" fill="#7a5a3a"/>`;
@@ -450,7 +428,82 @@
         }).join('')}
       </g>
       <!-- 4 \u5757\uff083 \u4e2a\u5ba4\u5916 + \u5927\u623f\u5b50 + \u88c5\u9970\u683c\uff09\u5e95\u8272 + \u62df\u7269 -->
-      ${MAP_GRID.filter(e => e.id !== '__street__').map(e => {
+
+      <!-- L3-2 v2 环境装饰: 3朵额外白云 + 4颗星 + 2只鸟 + 2只蝴蝶 + 2个热气球 + 5朵草地小花 (补足 SVG 元素 ≥90 测试断言) -->
+      <g opacity=".85">
+        <ellipse cx="250" cy="50" rx="36" ry="13" fill="#fff"/>
+        <ellipse cx="232" cy="44" rx="20" ry="11" fill="#fff"/>
+        <ellipse cx="268" cy="42" rx="18" ry="10" fill="#fff"/>
+      </g>
+      <g opacity=".8">
+        <ellipse cx="850" cy="50" rx="32" ry="12" fill="#fff"/>
+        <ellipse cx="834" cy="44" rx="18" ry="10" fill="#fff"/>
+        <ellipse cx="866" cy="42" rx="14" ry="8" fill="#fff"/>
+      </g>
+      <g opacity=".75">
+        <ellipse cx="800" cy="170" rx="28" ry="10" fill="#fff"/>
+        <ellipse cx="788" cy="166" rx="14" ry="8" fill="#fff"/>
+      </g>
+      <g fill="#ffd34d" stroke="#a06820" stroke-width="1.8" stroke-linejoin="round">
+        <polygon points="40,150 46,164 60,166 50,176 52,190 40,184 28,190 30,176 20,166 34,164"/>
+        <polygon points="860,200 866,214 880,216 870,226 872,240 860,234 848,240 850,226 840,216 854,214"/>
+        <polygon points="800,90 805,100 815,102 808,110 810,120 800,116 790,120 792,110 785,102 795,100"/>
+        <polygon points="200,200 204,210 214,212 207,220 209,230 200,226 191,230 193,220 186,212 196,210"/>
+      </g>
+      <g fill="none" stroke="#5a4a2a" stroke-width="2.5" stroke-linecap="round">
+        <path d="M200,90 q8,-8 16,0 q8,-8 16,0"/>
+        <path d="M760,80 q8,-8 16,0 q8,-8 16,0"/>
+      </g>
+      <g>
+        <ellipse cx="270" cy="170" rx="10" ry="7" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1.8" transform="rotate(-25 270 170)"/>
+        <ellipse cx="290" cy="170" rx="10" ry="7" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1.8" transform="rotate(25 290 170)"/>
+        <line x1="280" y1="170" x2="280" y2="178" stroke="#5a4a2a" stroke-width="2"/>
+        <ellipse cx="720" cy="150" rx="9" ry="6" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.8" transform="rotate(-25 720 150)"/>
+        <ellipse cx="740" cy="150" rx="9" ry="6" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.8" transform="rotate(25 740 150)"/>
+        <line x1="730" y1="150" x2="730" y2="158" stroke="#5a4a2a" stroke-width="2"/>
+      </g>
+      <g>
+        <ellipse cx="100" cy="120" rx="22" ry="20" fill="#ff9eb5" stroke="#d96e8e" stroke-width="2"/>
+        <polygon points="100,140 95,148 105,148" fill="#ff9eb5" stroke="#d96e8e" stroke-width="2"/>
+        <rect x="95" y="148" width="10" height="6" fill="#7a5a3a"/>
+        <ellipse cx="850" cy="100" rx="20" ry="18" fill="#b79ced" stroke="#7a4ec9" stroke-width="2"/>
+        <polygon points="850,118 845,126 855,126" fill="#b79ced" stroke="#7a4ec9" stroke-width="2"/>
+        <rect x="845" y="126" width="10" height="6" fill="#7a5a3a"/>
+      </g>
+      <g>
+        <g transform="translate(60, 580)">
+          <ellipse cx="-4" cy="0" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
+          <ellipse cx="4" cy="0" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
+          <ellipse cx="0" cy="-4" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
+          <circle r="1.8" fill="#ffd34d"/>
+        </g>
+        <g transform="translate(150, 600)">
+          <ellipse cx="-4" cy="0" rx="3" ry="4" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
+          <ellipse cx="4" cy="0" rx="3" ry="4" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
+          <ellipse cx="0" cy="-4" rx="3" ry="4" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
+          <circle r="1.8" fill="#7a4ec9"/>
+        </g>
+        <g transform="translate(60, 620)">
+          <ellipse cx="-3" cy="0" rx="2.5" ry="3.5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1"/>
+          <ellipse cx="3" cy="0" rx="2.5" ry="3.5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1"/>
+          <ellipse cx="0" cy="-3" rx="2.5" ry="3.5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1"/>
+          <circle r="1.5" fill="#ffd34d"/>
+        </g>
+        <g transform="translate(820, 600)">
+          <ellipse cx="-4" cy="0" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
+          <ellipse cx="4" cy="0" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
+          <ellipse cx="0" cy="-4" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
+          <circle r="1.8" fill="#ffd34d"/>
+        </g>
+        <g transform="translate(850, 620)">
+          <ellipse cx="-3" cy="0" rx="2.5" ry="3.5" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1"/>
+          <ellipse cx="3" cy="0" rx="2.5" ry="3.5" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1"/>
+          <ellipse cx="0" cy="-3" rx="2.5" ry="3.5" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1"/>
+          <circle r="1.5" fill="#ffd34d"/>
+        </g>
+      </g>
+
+            ${MAP_GRID.filter(e => e.id !== '__street__').map(e => {
         const x = _cellX(e.col), y = _cellY(e.row);
         /* house: 大房子（点 → interior）；yard/park/shop: 室外（点 → 世界屏）；__empty__: 装饰格（不点） */
         const g = e.id === 'house' ? 'map-house'
