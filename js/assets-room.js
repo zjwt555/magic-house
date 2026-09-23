@@ -1,4 +1,5 @@
-/* ============ 房间素材库：家具 / 贴纸 / 墙纸 / 地板 ============ */
+    bedroom: ['bed', 'rug', 'lamp', 'plant', 'catbed', 'teddy', 'frame', 'clock', 'bmirror', 'towelrack',
+      'st_star', 'st_flower', 'st_butterfly'],/* ============ 房间素材库：家具 / 贴纸 / 墙纸 / 地板 ============ */
 (function () {
   'use strict';
 
@@ -2450,7 +2451,7 @@
   };
 
   /* 世界房间顺序（横向大房子从左到右，最右是室外） */
-  const WORLD_ROOMS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe', 'yard', 'park', 'shop'];
+  const WORLD_ROOMS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard', 'park', 'shop'];
 
   /* 各房间的家具清单顺序 */
   const ROOM_SETS = {
@@ -2471,9 +2472,7 @@
     /* v0.7：书房不动 —— 主题本就很合理 */
     study: ['desk', 'globe', 'bookshelf', 'armchair', 'lamp', 'plant', 'frame', 'clock',
       'rug', 'st_star', 'st_flower'],
-    /* v0.7：换衣间改造 —— 删 piano（错位），加 bmirror（试衣镜）、towelrack（挂衣杆） */
-    wardrobe: ['rug', 'lamp', 'plant', 'frame', 'clock', 'bmirror', 'towelrack', 'teddy',
-      'st_star', 'st_flower', 'st_butterfly'],
+
     yard: ['swing', 'sandbox', 'tent', 'fence', 'mailbox', 'bigtree', 'plant', 'catbed',
       'st_flower', 'st_butterfly', 'st_duck', 'st_star'],
     park: ['slide', 'fountain', 'pond', 'bench', 'bigtree', 'tent', 'picnicmat', 'swing', 'mailbox',
@@ -2493,13 +2492,15 @@
       { id: 'flowerstand',  x: 0.75, y: 0.78 },
       { id: 'plant',        x: 0.15, y: 0.70 }
     ],
-    bedroom: [                              // 11 件抽屉，摆 6 件
-      { id: 'bed',     x: 0.50, y: 0.85 },
-      { id: 'rug',     x: 0.50, y: 0.92 },
-      { id: 'lamp',    x: 0.22, y: 0.80 },
-      { id: 'catbed',  x: 0.78, y: 0.85 },
-      { id: 'teddy',   x: 0.18, y: 0.92 },
-      { id: 'frame',   x: 0.85, y: 0.50 }
+    bedroom: [                              // 13 件抽屉（含 wardrobe 合并），摆 8 件
+      { id: 'bed',       x: 0.50, y: 0.85 },
+      { id: 'rug',       x: 0.50, y: 0.92 },
+      { id: 'lamp',      x: 0.22, y: 0.80 },
+      { id: 'catbed',    x: 0.78, y: 0.85 },
+      { id: 'teddy',     x: 0.18, y: 0.92 },
+      { id: 'frame',     x: 0.85, y: 0.30 },
+      { id: 'bmirror',   x: 0.50, y: 0.42 },
+      { id: 'towelrack', x: 0.15, y: 0.55 }
     ],
     bathroom: [                              // 11 件抽屉，摆 5 件
       { id: 'bathtub',   x: 0.30, y: 0.78 },
@@ -2531,12 +2532,7 @@
       { id: 'frame',     x: 0.85, y: 0.45 },
       { id: 'rug',       x: 0.50, y: 0.93 }
     ],
-    wardrobe: [                              // 11 件抽屉，摆 4 件
-      { id: 'bmirror',   x: 0.50, y: 0.50 },
-      { id: 'towelrack', x: 0.20, y: 0.50 },
-      { id: 'teddy',     x: 0.80, y: 0.85 },
-      { id: 'rug',       x: 0.50, y: 0.92 }
-    ],
+
     yard: [                                  // 12 件抽屉，摆 5 件
       { id: 'swing',   x: 0.30, y: 0.70 },
       { id: 'sandbox', x: 0.70, y: 0.90 },
@@ -2561,7 +2557,7 @@
   };
 
   /* 固定装置归属（渲染在房间背景层，不可拖不可收） */
-  const FIXTURES = { kitchen: ['fridge', 'stove'], wardrobe: ['wardrobecab'] };
+  const FIXTURES = { kitchen: ['fridge', 'stove'], bedroom: ['wardrobecab'] };
 
   /* 厨房冰箱里的食物（复用厨房素材库的食材 SVG） */
   const FOODS = ['apple', 'strawberry', 'banana', 'grape', 'orange', 'watermelon', 'milk',
