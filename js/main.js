@@ -270,7 +270,7 @@
         out += '<circle r="2.5" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>';
         out += '</g>';
       });
-      out += '<text x="140" y="270" text-anchor="middle" font-size="16" font-weight="800" fill="#4e7a3a">${entry.label}</text>';
+      out += '<text x="140" y="270" text-anchor="middle" font-size="16" font-weight="800" fill="#4e7a3a">' + entry.label + '</text>';
       return out;
     }
 
@@ -300,7 +300,7 @@
       out += '<circle cx="' + (hx + 162) + '" cy="' + (hy + 225) + '" r="4" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
       /* 我家标签 */
       out += '<polygon points="' + (hx + 108) + ',' + (hy + 18) + ' ' + (hx + 172) + ',' + (hy + 18) + ' ' + (hx + 182) + ',' + (hy + 38) + ' ' + (hx + 172) + ',' + (hy + 58) + ' ' + (hx + 108) + ',' + (hy + 58) + ' ' + (hx + 98) + ',' + (hy + 38) + '" fill="#fff" opacity=".95" stroke="#7a4ec9" stroke-width="2.5"/>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 44) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#7a4ec9">${entry.label}</text>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 44) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#7a4ec9">' + entry.label + '</text>';
       /* 装饰 */
       out += '<polygon points="40,30 45,42 57,44 48,53 50,65 40,59 30,65 32,53 23,44 35,42" fill="#ffd34d" stroke="#a06820" stroke-width="1.5" stroke-linejoin="round"/>';
       out += '<g transform="translate(245, 255)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="0" cy="-7" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="-3" cy="3" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="3" cy="3" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><circle r="2" fill="#ffd34d"/></g>';
@@ -329,7 +329,7 @@
       /* 花 */
       out += '<g transform="translate(180, 50)"><ellipse cx="-5" cy="-2" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><ellipse cx="5" cy="-2" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><ellipse cx="0" cy="-8" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><circle r="2.5" fill="#ffd34d" stroke="#a06820" stroke-width="1"/></g>';
       out += '<g transform="translate(40, 170)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 265) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4e9e4a">${entry.label}</text>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 265) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4e9e4a">' + entry.label + '</text>';
       return out;
     }
 
@@ -360,7 +360,7 @@
       /* 花 */
       out += '<g transform="translate(180, 70)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
       out += '<g transform="translate(110, 180)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><circle r="2" fill="#ffd34d"/></g>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 270) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4f9cc0">${entry.label}</text>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 270) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4f9cc0">' + entry.label + '</text>';
       return out;
     }
 
@@ -371,7 +371,7 @@
       /* 招牌 */
       out += '<rect x="60" y="40" width="160" height="44" rx="14" fill="#ff5c5c" stroke="#a83232" stroke-width="3"/>';
       out += '<ellipse cx="80" cy="52" rx="14" ry="4" fill="#ff9e9e" opacity=".7"/>';
-      out += '<text x="140" y="72" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">${SHOP_DETAIL.signText}</text>';
+      out += '<text x="140" y="72" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">' + SHOP_DETAIL.signText + '</text>';
       out += '<rect x="65" y="84" width="6" height="22" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2"/>';
       out += '<rect x="209" y="84" width="6" height="22" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2"/>';
       /* 5 色糖果条 */
@@ -391,7 +391,7 @@
       out += '<rect x="' + SHOP_DETAIL.carpet[0] + '" y="' + (SHOP_DETAIL.carpet[1] + 12) + '" width="' + SHOP_DETAIL.carpet[2] + '" height="' + SHOP_DETAIL.carpet[3] + '" rx="4" fill="#ff8f7a" stroke="#a8503a" stroke-width="1.5"/>';
       /* 花 */
       out += '<g transform="translate(' + SHOP_DETAIL.flower[0] + ',' + (SHOP_DETAIL.flower[1] + 12) + ')"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 265) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#d96b8a">${entry.label}</text>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 265) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#d96b8a">' + entry.label + '</text>';
       return out;
     }
 
