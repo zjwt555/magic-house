@@ -1,6 +1,8 @@
 # 本地临时文件
 .chrome-test*/
 shot-*.png
+*-image.png
+_*.png
 test-dom.txt
 _dom.txt
 _chrome-err.txt
