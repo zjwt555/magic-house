@@ -486,6 +486,11 @@
         out += '<line x1="' + (s.x + 15) + '" y1="' + s.y + '" x2="' + (s.x + 15) + '" y2="' + (s.y + s.h) + '" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>';
       }
     });
+    /* L3-3 v4: 4 个角落 30x30 油油油油油油油油油填充（中大房与 4 角格子之间） */
+    out += '<rect x="280" y="280" width="30" height="30" fill="#5a5a5a" rx="3"/>';
+    out += '<rect x="590" y="280" width="30" height="30" fill="#5a5a5a" rx="3"/>';
+    out += '<rect x="280" y="590" width="30" height="30" fill="#5a5a5a" rx="3"/>';
+    out += '<rect x="590" y="590" width="30" height="30" fill="#5a5a5a" rx="3"/>';
     return out;
   }
   
