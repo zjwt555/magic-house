@@ -7,43 +7,90 @@
   const SKIN = '#ffe0c7';
   const SKIN_LINE = '#f5c9a8';
 
-  /* ---------- 身体 + 脸（永远在最底层的固定部分） ---------- */
+  /* ---------- 身体 + 脸（永远在最底层的固定部分）v2 精致化 ---------- */
   const BODY = `
+    <defs>
+      <!-- 皮肤渐变：上亮下暗（模拟立体） -->
+      <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffeacc"/>
+        <stop offset="60%" stop-color="${SKIN}"/>
+        <stop offset="100%" stop-color="${SKIN_LINE}"/>
+      </linearGradient>
+      <!-- 腮红径向渐变：中心深，外圈淡 -->
+      <radialGradient id="blushGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ff95a8" stop-opacity=".55"/>
+        <stop offset="60%" stop-color="#ffb3c1" stop-opacity=".3"/>
+        <stop offset="100%" stop-color="#ffb3c1" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
     <!-- 腿 -->
-    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="${SKIN}"/>
-    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="${SKIN}"/>
-    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="${SKIN}"/>
-    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="${SKIN}"/>
+    <rect x="127" y="282" width="21" height="118" rx="10.5" fill="url(#skinGrad)"/>
+    <rect x="152" y="282" width="21" height="118" rx="10.5" fill="url(#skinGrad)"/>
+    <ellipse cx="137.5" cy="404" rx="16" ry="11" fill="url(#skinGrad)"/>
+    <ellipse cx="162.5" cy="404" rx="16" ry="11" fill="url(#skinGrad)"/>
+    <!-- 膝盖阴影（立体感） -->
+    <ellipse cx="137.5" cy="332" rx="8" ry="4" fill="${SKIN_LINE}" opacity=".35"/>
+    <ellipse cx="162.5" cy="332" rx="8" ry="4" fill="${SKIN_LINE}" opacity=".35"/>
     <!-- 手臂（手张开，方便拿星星棒） -->
-    <line x1="122" y1="206" x2="102" y2="264" stroke="${SKIN}" stroke-width="20" stroke-linecap="round"/>
-    <line x1="178" y1="206" x2="198" y2="264" stroke="${SKIN}" stroke-width="20" stroke-linecap="round"/>
-    <circle cx="101" cy="268" r="10.5" fill="${SKIN}"/>
-    <circle cx="199" cy="268" r="10.5" fill="${SKIN}"/>
+    <line x1="122" y1="206" x2="102" y2="264" stroke="url(#skinGrad)" stroke-width="20" stroke-linecap="round"/>
+    <line x1="178" y1="206" x2="198" y2="264" stroke="url(#skinGrad)" stroke-width="20" stroke-linecap="round"/>
+    <!-- 手：加手指分缝 -->
+    <circle cx="101" cy="268" r="10.5" fill="url(#skinGrad)"/>
+    <circle cx="199" cy="268" r="10.5" fill="url(#skinGrad)"/>
+    <line x1="101" y1="258" x2="101" y2="278" stroke="${SKIN_LINE}" stroke-width="1.2" opacity=".5"/>
+    <line x1="199" y1="258" x2="199" y2="278" stroke="${SKIN_LINE}" stroke-width="1.2" opacity=".5"/>
     <!-- 脖子 + 身体 -->
     <rect x="141" y="162" width="18" height="26" rx="6" fill="${SKIN_LINE}"/>
-    <rect x="114" y="182" width="72" height="108" rx="26" fill="${SKIN}"/>
+    <rect x="114" y="182" width="72" height="108" rx="26" fill="url(#skinGrad)"/>
+    <!-- 锁骨阴影 -->
+    <path d="M120,194 Q150,200 180,194" stroke="${SKIN_LINE}" stroke-width="2" fill="none" opacity=".4" stroke-linecap="round"/>
     <!-- 耳朵 -->
-    <circle cx="89" cy="124" r="10" fill="${SKIN}"/>
-    <circle cx="211" cy="124" r="10" fill="${SKIN}"/>
+    <circle cx="89" cy="124" r="10" fill="url(#skinGrad)"/>
+    <circle cx="211" cy="124" r="10" fill="url(#skinGrad)"/>
+    <!-- 耳朵内侧粉色 -->
+    <ellipse cx="89" cy="126" rx="5" ry="6" fill="#ffb3c1" opacity=".55"/>
+    <ellipse cx="211" cy="126" rx="5" ry="6" fill="#ffb3c1" opacity=".55"/>
     <!-- 头 -->
-    <ellipse cx="150" cy="118" rx="60" ry="56" fill="${SKIN}"/>
-    <!-- 眉毛 -->
-    <path d="M116,97 Q128,92 140,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-    <path d="M160,97 Q172,92 184,97" stroke="#c99b76" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-    <!-- 大眼睛 -->
-    <ellipse cx="128" cy="118" rx="9.5" ry="12" fill="#5b3a29"/>
-    <ellipse cx="172" cy="118" rx="9.5" ry="12" fill="#5b3a29"/>
-    <circle cx="125" cy="113" r="3.2" fill="#fff"/>
-    <circle cx="169" cy="113" r="3.2" fill="#fff"/>
-    <circle cx="131" cy="123" r="1.7" fill="#fff" opacity=".85"/>
-    <circle cx="175" cy="123" r="1.7" fill="#fff" opacity=".85"/>
-    <!-- 小鼻子 -->
-    <ellipse cx="150" cy="132" rx="2.4" ry="1.7" fill="#f0b98f"/>
-    <!-- 微笑 -->
-    <path d="M139,144 Q150,161 161,144 Q150,150 139,144 Z" fill="#e2756f"/>
-    <!-- 腮红 -->
-    <circle cx="106" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"/>
-    <circle cx="194" cy="140" r="9.5" fill="#ffb3c1" opacity=".7"/>`;
+    <ellipse cx="150" cy="118" rx="60" ry="56" fill="url(#skinGrad)"/>
+    <!-- 前额发际线阴影（强化发型边缘） -->
+    <path d="M104,108 Q120,90 150,86 Q180,90 196,108" stroke="${SKIN_LINE}" stroke-width="2.5" fill="none" opacity=".35" stroke-linecap="round"/>
+    <!-- 下颌阴影（圆脸立体感） -->
+    <ellipse cx="150" cy="158" rx="40" ry="10" fill="${SKIN_LINE}" opacity=".18"/>
+    <!-- 眉毛（更细 + 倾斜更有表情） -->
+    <path d="M114,98 Q126,91 140,98" stroke="#a87a55" stroke-width="3.8" fill="none" stroke-linecap="round"/>
+    <path d="M160,98 Q174,91 186,98" stroke="#a87a55" stroke-width="3.8" fill="none" stroke-linecap="round"/>
+    <!-- 大眼睛：上眼睑弧线 + 睫毛 -->
+    <path d="M117,108 Q128,103 139,108" stroke="#3d2a1c" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <path d="M161,108 Q172,103 183,108" stroke="#3d2a1c" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <!-- 睫毛（上 + 下） -->
+    <line x1="118" y1="105" x2="116" y2="100" stroke="#3d2a1c" stroke-width="2" stroke-linecap="round"/>
+    <line x1="124" y1="103" x2="123" y2="98" stroke="#3d2a1c" stroke-width="2" stroke-linecap="round"/>
+    <line x1="130" y1="103" x2="130" y2="97" stroke="#3d2a1c" stroke-width="2" stroke-linecap="round"/>
+    <line x1="162" y1="103" x2="162" y2="97" stroke="#3d2a1c" stroke-width="2" stroke-linecap="round"/>
+    <line x1="168" y1="103" x2="167" y2="98" stroke="#3d2a1c" stroke-width="2" stroke-linecap="round"/>
+    <line x1="174" y1="105" x2="172" y2="100" stroke="#3d2a1c" stroke-width="2" stroke-linecap="round"/>
+    <!-- 眼球 + 大高光 + 小高光 + 底部小反光 -->
+    <ellipse cx="128" cy="118" rx="10" ry="13" fill="#4a2f22"/>
+    <ellipse cx="172" cy="118" rx="10" ry="13" fill="#4a2f22"/>
+    <circle cx="124" cy="113" r="4.5" fill="#fff"/>
+    <circle cx="168" cy="113" r="4.5" fill="#fff"/>
+    <circle cx="132" cy="124" r="2.2" fill="#fff" opacity=".9"/>
+    <circle cx="176" cy="124" r="2.2" fill="#fff" opacity=".9"/>
+    <circle cx="129" cy="120" r="1" fill="#fff" opacity=".6"/>
+    <circle cx="173" cy="120" r="1" fill="#fff" opacity=".6"/>
+    <!-- 小鼻子（高光） -->
+    <ellipse cx="150" cy="132" rx="2.6" ry="1.8" fill="#ee9b80"/>
+    <ellipse cx="150" cy="131.5" rx="1.5" ry="0.7" fill="#ffc8a8" opacity=".7"/>
+    <!-- 微笑（上唇 + 下唇） -->
+    <path d="M139,144 Q144.5,148 150,147" stroke="#c66560" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M150,147 Q155.5,148 161,144" stroke="#c66560" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M141,144 Q150,153 159,144 Q155,151 150,151 Q145,151 141,144 Z" fill="#e2756f" opacity=".9"/>
+    <ellipse cx="150" cy="149" rx="3" ry="1.2" fill="#ff8a8a" opacity=".5"/>
+    <!-- 腮红（径向渐变） -->
+    <circle cx="106" cy="140" r="14" fill="url(#blushGrad)"/>
+    <circle cx="194" cy="140" r="14" fill="url(#blushGrad)"/>
+    <!-- 鼻尖小腮红（更可爱） -->
+    <circle cx="150" cy="135" r="3.5" fill="#ffb3c1" opacity=".4"/>`;
 
   /* ---------- 发型（back + front 两片，currentColor） ---------- */
   const HAIR_BACK_BASE = `<ellipse cx="150" cy="112" rx="66" ry="62" fill="currentColor"/>`;
@@ -394,32 +441,95 @@
       </g>` }
   };
 
-  /* ---------- 小猫（200x180 坐标系） ---------- */
+  /* ---------- 小猫（200x180 坐标系）v2 精致化 ---------- */
   const CAT_BASE = `
-    <path d="M138,132 Q172,128 168,96" stroke="#f2a65a" stroke-width="13" fill="none" stroke-linecap="round"/>
-    <ellipse cx="100" cy="118" rx="44" ry="42" fill="#f7b967"/>
+    <defs>
+      <!-- 橘色身体渐变（上亮下暗） -->
+      <radialGradient id="catBodyGrad" cx="50%" cy="35%" r="65%">
+        <stop offset="0%" stop-color="#fbc97c"/>
+        <stop offset="60%" stop-color="#f7b967"/>
+        <stop offset="100%" stop-color="#e8974a"/>
+      </radialGradient>
+      <!-- 头部渐变 -->
+      <radialGradient id="catHeadGrad" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#fcc77a"/>
+        <stop offset="100%" stop-color="#e8974a"/>
+      </radialGradient>
+      <!-- 鼻头渐变 -->
+      <radialGradient id="catNoseGrad" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#ff9bb0"/>
+        <stop offset="100%" stop-color="#e27589"/>
+      </radialGradient>
+    </defs>
+    <!-- 尾巴（带条纹） -->
+    <path d="M138,132 Q172,128 168,96" stroke="url(#catBodyGrad)" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <!-- 尾巴条纹 -->
+    <ellipse cx="156" cy="130" rx="5" ry="2.5" fill="#d88040" opacity=".55" transform="rotate(-15 156 130)"/>
+    <ellipse cx="166" cy="116" rx="4" ry="2" fill="#d88040" opacity=".55" transform="rotate(-30 166 116)"/>
+    <!-- 身体 -->
+    <ellipse cx="100" cy="118" rx="44" ry="42" fill="url(#catBodyGrad)"/>
+    <!-- 肚子（更亮 + 椭圆形） -->
     <ellipse cx="100" cy="134" rx="26" ry="27" fill="#fff6e8"/>
-    <rect x="78" y="60" width="10" height="18" rx="5" fill="#e8974a"/>
-    <rect x="112" y="60" width="10" height="18" rx="5" fill="#e8974a"/>
-    <circle cx="100" cy="62" r="35" fill="#f7b967"/>
-    <polygon points="76,42 80,18 98,36" fill="#f7b967"/>
-    <polygon points="124,42 120,18 102,36" fill="#f7b967"/>
-    <polygon points="80,38 82,26 91,35" fill="#ffb3c1"/>
-    <polygon points="120,38 118,26 109,35" fill="#ffb3c1"/>
-    <circle cx="87" cy="60" r="5.5" fill="#5b3a29"/>
-    <circle cx="113" cy="60" r="5.5" fill="#5b3a29"/>
-    <circle cx="85.5" cy="58" r="2" fill="#fff"/>
-    <circle cx="111.5" cy="58" r="2" fill="#fff"/>
-    <polygon points="100,68 96,73 104,73" fill="#ff8fa0"/>
-    <path d="M100,73 Q96,79 91,77 M100,73 Q104,79 109,77" stroke="#7a4d1d" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <circle cx="78" cy="70" r="4.5" fill="#ffb3c1" opacity=".7"/>
-    <circle cx="122" cy="70" r="4.5" fill="#ffb3c1" opacity=".7"/>
-    <ellipse cx="76" cy="156" rx="12" ry="8" fill="#f7b967"/>
-    <ellipse cx="124" cy="156" rx="12" ry="8" fill="#f7b967"/>
-    <line x1="73" y1="153" x2="73" y2="159" stroke="#e8974a" stroke-width="2"/>
-    <line x1="79" y1="153" x2="79" y2="159" stroke="#e8974a" stroke-width="2"/>
-    <line x1="121" y1="153" x2="121" y2="159" stroke="#e8974a" stroke-width="2"/>
-    <line x1="127" y1="153" x2="127" y2="159" stroke="#e8974a" stroke-width="2"/>`;
+    <!-- 肚子光泽 -->
+    <ellipse cx="92" cy="124" rx="10" ry="6" fill="#fff" opacity=".4"/>
+    <!-- 耳朵（带渐变 + 内耳粉） -->
+    <rect x="78" y="60" width="10" height="18" rx="5" fill="url(#catHeadGrad)"/>
+    <rect x="112" y="60" width="10" height="18" rx="5" fill="url(#catHeadGrad)"/>
+    <!-- 头 -->
+    <circle cx="100" cy="62" r="35" fill="url(#catHeadGrad)"/>
+    <!-- 头顶光泽 -->
+    <ellipse cx="86" cy="44" rx="14" ry="6" fill="#fff" opacity=".35" transform="rotate(-20 86 44)"/>
+    <!-- 耳朵外三角 -->
+    <polygon points="76,42 80,18 98,36" fill="url(#catHeadGrad)"/>
+    <polygon points="124,42 120,18 102,36" fill="url(#catHeadGrad)"/>
+    <!-- 内耳粉（更鲜艳 + 高光） -->
+    <polygon points="80,38 82,26 91,35" fill="#ff9bb5"/>
+    <polygon points="120,38 118,26 109,35" fill="#ff9bb5"/>
+    <ellipse cx="86" cy="33" rx="2" ry="3" fill="#ffd0dd" opacity=".7"/>
+    <ellipse cx="115" cy="33" rx="2" ry="3" fill="#ffd0dd" opacity=".7"/>
+    <!-- 上眼睑弧线（更可爱） -->
+    <path d="M80,55 Q87,49 94,55" stroke="#3d2a1c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M106,55 Q113,49 120,55" stroke="#3d2a1c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- 睫毛 -->
+    <line x1="80" y1="53" x2="78" y2="48" stroke="#3d2a1c" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="86" y1="51" x2="85" y2="46" stroke="#3d2a1c" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="114" y1="51" x2="115" y2="46" stroke="#3d2a1c" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="120" y1="53" x2="122" y2="48" stroke="#3d2a1c" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- 眼球（大 + 多重高光） -->
+    <ellipse cx="87" cy="62" rx="6.5" ry="8" fill="#4a2f22"/>
+    <ellipse cx="113" cy="62" rx="6.5" ry="8" fill="#4a2f22"/>
+    <circle cx="84" cy="58" r="3.2" fill="#fff"/>
+    <circle cx="110" cy="58" r="3.2" fill="#fff"/>
+    <circle cx="89" cy="66" r="1.5" fill="#fff" opacity=".85"/>
+    <circle cx="115" cy="66" r="1.5" fill="#fff" opacity=".85"/>
+    <circle cx="86" cy="64" r="0.7" fill="#fff" opacity=".6"/>
+    <circle cx="112" cy="64" r="0.7" fill="#fff" opacity=".6"/>
+    <!-- 鼻头（渐变） -->
+    <polygon points="100,68 96,73 104,73" fill="url(#catNoseGrad)"/>
+    <!-- 鼻头高光 -->
+    <ellipse cx="100" cy="69" rx="1.5" ry="0.8" fill="#fff" opacity=".6"/>
+    <!-- 嘴（清晰 M 形） -->
+    <path d="M100,73 Q95,79 90,77" stroke="#7a4d1d" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M100,73 Q105,79 110,77" stroke="#7a4d1d" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <!-- 嘴中心舌红点 -->
+    <ellipse cx="100" cy="76" rx="2" ry="1.4" fill="#ff7a8a" opacity=".7"/>
+    <!-- 胡须根（鼻两侧小白点） -->
+    <circle cx="93" cy="74" r="0.8" fill="#5b3a29"/>
+    <circle cx="107" cy="74" r="0.8" fill="#5b3a29"/>
+    <!-- 腮红（径向） -->
+    <circle cx="78" cy="70" r="6" fill="#ff95a8" opacity=".35"/>
+    <circle cx="122" cy="70" r="6" fill="#ff95a8" opacity=".35"/>
+    <!-- 爪子 -->
+    <ellipse cx="76" cy="156" rx="12" ry="8" fill="url(#catBodyGrad)"/>
+    <ellipse cx="124" cy="156" rx="12" ry="8" fill="url(#catBodyGrad)"/>
+    <!-- 爪子肉垫 -->
+    <ellipse cx="76" cy="158" rx="5" ry="3" fill="#ffb3c1" opacity=".7"/>
+    <ellipse cx="124" cy="158" rx="5" ry="3" fill="#ffb3c1" opacity=".7"/>
+    <!-- 脚趾线 -->
+    <line x1="73" y1="153" x2="73" y2="159" stroke="#c47a3a" stroke-width="1.8"/>
+    <line x1="79" y1="153" x2="79" y2="159" stroke="#c47a3a" stroke-width="1.8"/>
+    <line x1="121" y1="153" x2="121" y2="159" stroke="#c47a3a" stroke-width="1.8"/>
+    <line x1="127" y1="153" x2="127" y2="159" stroke="#c47a3a" stroke-width="1.8"/>`;
 
   const CAT_ACCS = {
     bow: `
