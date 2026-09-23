@@ -106,9 +106,30 @@
   /* ---------- 角色 ---------- */
   function charEl(who) { return track.querySelector('#char-' + who); }
 
+  /* 动态算最大 y：根据 stage 实际高度和 character 实际尺寸，
+     保证 character bottom ≤ toolbar top - 4。capMaxY=0.65 是大屏兜底。 */
+  function maxCharY() {
+    const stageRect = stage.getBoundingClientRect();
+    const tbRect = document.querySelector('#screen-world .game-toolbar').getBoundingClientRect();
+    const charElNode = charEl('girl') || charEl('cat');
+    const charHeight = charElNode.offsetHeight || 100;
+    /* stage.bottom = toolbar.top；character top = stage.top + c.y * stage.height
+       要 character bottom ≤ toolbar.top - 4，即 top + charHeight ≤ toolbar.top - 4
+       即 stage.top + c.y * stage.height ≤ toolbar.top - 4 - charHeight
+       即 c.y ≤ (toolbar.top - 4 - charHeight - stage.top) / stage.height
+       大屏时结果 > 0.65，用 capMaxY=0.65 兜底。 */
+    const usableY = (tbRect.top - 4 - charHeight - stageRect.top) / stageRect.height;
+    return Math.max(0.42, Math.min(0.65, usableY));
+  }
+
   function renderChar(who) {
     const c = Store.state.char[who];
+    /* clamp y on render too — 用 maxCharY() 动态算（防止 headless 小视口下 character 溢出 toolbar） */
+    c.y = Math.min(maxCharY(), Math.max(0.42, c.y));
     const node = charEl(who);
+    /* 关键 — 防止 CSS transition 把人留在动画中间态（refreshCharacters 在 .map-leave 切屏时调，
+       测试 sleep(300) 只跑了 ~80ms，0.5s transition 还在中间，画面看着还在 0.72） */
+    node.style.transitionDuration = '0s';
     node.style.left = (roomIdx(c.room) * roomW + c.x * roomW) + 'px';
     node.style.top = (c.y * 100) + '%';
     node.querySelector('.char-inner').style.transform = `scaleX(${c.face})`;
@@ -175,7 +196,7 @@
     const dx = x - c.x;
     if (Math.abs(dx) > 0.02) c.face = dx > 0 ? 1 : -1;
     c.x = Math.min(0.94, Math.max(0.06, x));
-    c.y = Math.min(0.72, Math.max(0.42, y));
+    c.y = Math.min(maxCharY(), Math.max(0.42, y));
     Store.save();
     const dist = Math.abs(dx);
     node.style.transitionDuration = Math.min(1.1, 0.35 + dist * 1.4) + 's';
@@ -191,7 +212,7 @@
     const c = Store.state.char[who];
     c.room = roomId;
     c.x = Math.min(0.94, Math.max(0.06, x));
-    c.y = Math.min(0.72, Math.max(0.42, y));
+    c.y = Math.min(maxCharY(), Math.max(0.42, y));
     Store.save();
     const node = charEl(who);
     node.style.transitionDuration = '0s';
@@ -516,7 +537,7 @@
       const y = (e.clientY - sr.top) / sr.height;
       c.room = roomAt(idx);
       c.x = Math.min(0.94, Math.max(0.06, roomX));
-      c.y = Math.min(0.72, Math.max(0.42, y));
+      c.y = Math.min(maxCharY(), Math.max(0.42, y));
       const node = drag.node;
       node.style.transitionDuration = '0s';
       node.style.left = (idx * roomW + c.x * roomW) + 'px';
