@@ -124,13 +124,6 @@
         <rect x="17" y="15" width="14" height="8" rx="8" fill="#9ad7f0"/>
         <circle cx="38" cy="16" r="4.5" fill="#98d8a0"/>
       </svg>` },
-    dressup: { label: '换衣间', svg: `
-      <svg viewBox="0 0 48 48">
-        <rect x="8" y="10" width="32" height="30" rx="8" fill="#e8a3bd"/>
-        <line x1="24" y1="12" x2="24" y2="38" stroke="#d98cb0" stroke-width="3"/>
-        <path d="M14 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#e05c86" transform="translate(2,2)"/>
-        <path d="M28 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#7ec8e3" transform="translate(2,2)"/>
-      </svg>` },
     yard: { label: '院子', svg: `
       <svg viewBox="0 0 48 48">
         <circle cx="24" cy="18" r="14" fill="#6cc46a"/>
@@ -159,7 +152,8 @@
         <circle cx="36" cy="29" r="4" fill="#ffd166"/>
       </svg>` }
   };
-  const PICK_ORDER = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'dressup', 'yard', 'park', 'shop'];
+  /* 房间选择器只列真实世界房间；换衣间是 Overlay，不在横向 WORLD_ROOMS 中。 */
+  const PICK_ORDER = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard', 'park', 'shop'];
 
   /* ---------- Phase 2 v7：3×3 网格街道 + 家在中央（数据驱动）---------- */
   /* 网格坐标 (col, row) -> (x, y, w, h)
@@ -345,7 +339,8 @@
         out += '<line x1="' + (s.x + 15) + '" y1="' + s.y + '" x2="' + (s.x + 15) + '" y2="' + (s.y + s.h) + '" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>';
       }
     });
-    return out;
+    /* 街道只负责视觉，不参与命中；否则后绘制的街道会盖住 park/shop 热区。 */
+    return `<g pointer-events="none" aria-hidden="true">${out}</g>`;
   }
   
   /* MAP_SVG v7\uff1a3\u00d73 \u7f51\u683c + 4 \u5757 + 4 \u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3 + \u62df\u7269 */
@@ -450,7 +445,12 @@
         const g = e.id === 'house' ? 'map-house'
                 : e.id === '__empty__' ? 'map-empty'
                 : 'map-room map-outdoor';
-        return `<g class="${g}" data-room="${e.id}" transform="translate(${x},${y})">${_renderBlock(e)}</g>`;
+        /* 地点块自身负责命中；街道层统一 pointer-events:none，
+           透明 shield 覆盖 PNG alpha 透明区域，避免触摸落到街道背景。 */
+        const hitShield = (g === 'map-room map-outdoor')
+          ? '<rect x="0" y="0" width="280" height="280" fill="none" pointer-events="all"/>'
+          : '';
+        return `<g class="${g}" data-room="${e.id}" transform="translate(${x},${y})" pointer-events="all">${hitShield}${_renderBlock(e)}</g>`;
       }).join('')}
       <!-- 4 \u6bb5\u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3 + \u8def\u706f + \u7ea2\u7eff\u706f + \u8d70\u4eba\u6a2a\u7ebf -->
       ${_renderStreets()}
@@ -555,7 +555,7 @@ const MAP_CLOSE_SVG = `
       <div class="help-card">
         <h3>📖 给家长的小指南</h3>
         <ul>
-          <li>🏠 <b>大世界</b>：默认是地图屏。点大房子轮廓进 7 间房列表，再选一个进世界；点室外 3 区直接跳</li>
+          <li>🏠 <b>大世界</b>：默认是地图屏。点大房子进入卧室，点换房间按钮可直达其他房间；点院子、公园或商店直接去室外</li>
           <li>🚶 <b>娃娃会走路</b>：在世界里点一下地板娃娃就走过去；<b>按住娃娃/小猫</b>可以拎到任何房间</li>
           <li>👗 <b>换装</b>：去换衣间点<b>大衣柜</b>，点分类标签再点衣服即可穿上</li>
           <li>🛏️ <b>布置房间</b>：在世界屏点下方家具放进房间，按住拖动换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
@@ -602,7 +602,7 @@ const MAP_CLOSE_SVG = `
             <div class="map-marker map-marker-girl" data-for="girl"></div>
             <div class="map-marker map-marker-cat" data-for="cat"></div>
           </div>
-          <div class="map-hint">点大房子进房间 · 点院子去室外</div>
+          <div class="map-hint">点大房子进卧室 · 点院子/公园/商店去室外</div>
           ${HELP_HTML}
           ${RESET_CONFIRM_HTML}
         </div>`;
