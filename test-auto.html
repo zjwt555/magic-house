@@ -70,7 +70,7 @@
         `items=${mig.rooms.bedroom.items.length} wall=${mig.rooms.bedroom.wall}`);
       log('迁移:老lastRoom→bedroom', mig.lastRoom === 'bedroom', mig.lastRoom);
       log('迁移:角色字段生成', !!(mig.char && mig.char.girl && mig.char.cat), JSON.stringify(mig.char.girl));
-      log('迁移:7房间齐备', Object.keys(mig.rooms).length === 10, Object.keys(mig.rooms).join(','));
+      log('迁移:7房间齐备', Object.keys(mig.rooms).length === 9, Object.keys(mig.rooms).join(','));
       Store.reset();
       await sleep(60);
 
@@ -81,18 +81,14 @@
       log('新游戏各房间默认摆好物品',
         Object.values(Store.state.rooms).every(r => Array.isArray(r.items) && r.items.length >= 4),
         `counts=${Object.entries(Store.state.rooms).map(([k,v])=>`${k}=${v.items.length}`).join(',')}`);
-      log('bedroom 默认 6 件（bed+rug+lamp+catbed+teddy+frame）',
-        Store.state.rooms.bedroom.items.length === 6 &&
-        ['bed','rug','lamp','catbed','teddy','frame'].every(id => Store.state.rooms.bedroom.items.some(it => it.id === id)),
+      log('bedroom 默认 8 件（bed+rug+lamp+catbed+teddy+frame+bmirror+towelrack）',
+        Store.state.rooms.bedroom.items.length === 8 &&
+        ['bed','rug','lamp','catbed','teddy','frame','bmirror','towelrack'].every(id => Store.state.rooms.bedroom.items.some(it => it.id === id)),
         `items=${Store.state.rooms.bedroom.items.map(it => it.id).join(',')}`);
       log('living 默认 7 件（tv+sofa+coffee+armchair+fishtank+cushion+rug）',
         Store.state.rooms.living.items.length === 7 &&
         ['tv','sofa','coffee','armchair','fishtank','cushion','rug'].every(id => Store.state.rooms.living.items.some(it => it.id === id)),
         `items=${Store.state.rooms.living.items.map(it => it.id).join(',')}`);
-      log('wardrobe 默认 4 件（bmirror+towelrack+teddy+rug）',
-        Store.state.rooms.wardrobe.items.length === 4 &&
-        ['bmirror','towelrack','teddy','rug'].every(id => Store.state.rooms.wardrobe.items.some(it => it.id === id)),
-        `items=${Store.state.rooms.wardrobe.items.map(it => it.id).join(',')}`);
       log('Store.relayout()：清空 + 重新按默认摆',
         (() => {
           Store.state.rooms.living.items.push({id: 'junk', x: 0.5, y: 0.5});
@@ -375,14 +371,14 @@
 
       /* ---- 2. 世界结构 ---- */
       const rooms = $$('#screen-world .world-room');
-      log('世界10个场景', rooms.length === 10, rooms.length);
+      log('世界9个场景', rooms.length === 9, rooms.length);
       log('固定装置:厨房冰箱+灶台', $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length === 2,
         $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length);
-      log('固定装置:换衣间衣柜', $$('#screen-world .world-room[data-room="wardrobe"] .world-fixture').length === 1);
+      log('固定装置:卧室衣柜', $$('#screen-world .world-room[data-room="bedroom"] .world-fixture[data-act="wardrobe"]').length === 1);
       log('角色在场', !!$('#char-girl') && !!$('#char-cat'));
       /* Phase 2：dots 导航已删，验证 .world-room 数 = 10 */
-      log('世界屏 10 个场景（dots 已删）',
-        $$('#screen-world .world-room').length === 10,
+      log('世界屏 9 个场景（dots 已删）',
+        $$('#screen-world .world-room').length === 9,
         `n=${$$('#screen-world .world-room').length}`);
 
       /* ---- 3. 相机 ---- */
@@ -652,16 +648,15 @@
         [...$$('#screen-world .item-card')].some(c => c.dataset.id === id)));
 
       /* ---- v0.7：ROOM_SETS 重分配后的抽屉内容验证 ---- */
-      window.World.jumpTo('wardrobe'); // wardrobe
+      window.World.jumpTo('bedroom'); // bedroom（合并后，wardrobe 抽屉已移到这里）
       await sleep(180);
       const wCards = [...$$('#screen-world .item-card')];
-      log('换衣间不再含钢琴（piano 已从 wardrobe 移除）',
+      log('卧室不再含钢琴（piano 已从 bedroom 移除）',
         !wCards.some(c => c.dataset.id === 'piano'),
         `cards=${wCards.map(c => c.dataset.id).join(',')}`);
-      log('换衣间含试衣镜和挂衣架（新增换衣主题）',
-        wCards.some(c => c.dataset.id === 'bmirror') && wCards.some(c => c.dataset.id === 'towelrack'),
-        `has-bmirror=${wCards.some(c => c.dataset.id === 'bmirror')} has-towelrack=${wCards.some(c => c.dataset.id === 'towelrack')}`);
-      window.World.jumpTo('bedroom'); // bedroom
+      log('卧室含试衣镜和挂衣架（合并 wardrobe 后）',
+        Store.state.rooms.bedroom.items.some(it => it.id === 'bmirror') && Store.state.rooms.bedroom.items.some(it => it.id === 'towelrack'),
+        `has-bmirror=${Store.state.rooms.bedroom.items.some(it => it.id === 'bmirror')} has-towelrack=${Store.state.rooms.bedroom.items.some(it => it.id === 'towelrack')}`);
       await sleep(180);
       const bCards = [...$$('#screen-world .item-card')];
       log('卧室不再含钢琴（piano 已从 bedroom 移除）',
@@ -679,19 +674,15 @@
       log('客厅仍含电视（核心物品不能丢）',
         lCards.some(c => c.dataset.id === 'tv'),
         `has-tv=${lCards.some(c => c.dataset.id === 'tv')}`);
-      /* 迁移测试：手动给 wardrobe push 一个 piano 和 sofa（不在新 ROOM_SETS 里），
+      /* 迁移测试：手动给 bedroom push 一个 piano 和 sofa（不在新 ROOM_SETS 里），
          调 migrateRoomSets 后应该被清掉。 */
-      Store.state.rooms.wardrobe.items.push({ id: 'piano', x: 0.5, y: 0.7 });
-      Store.state.rooms.wardrobe.items.push({ id: 'sofa', x: 0.3, y: 0.5 });
       Store.state.rooms.bedroom.items.push({ id: 'piano', x: 0.5, y: 0.7 });
+      Store.state.rooms.bedroom.items.push({ id: 'sofa', x: 0.3, y: 0.5 });
       Store.save();
       const migRes = Store.migrateRoomSets();
-      log('迁移：wardrobe 里的 piano 和 sofa 被自动清掉',
-        !Store.state.rooms.wardrobe.items.some(it => it.id === 'piano' || it.id === 'sofa'),
-        `wardrobe-items=${Store.state.rooms.wardrobe.items.map(it => it.id).join(',')} dropped=${migRes.dropped}`);
-      log('迁移：bedroom 里的 piano 也被清掉（piano 在 v0.7 全清）',
-        !Store.state.rooms.bedroom.items.some(it => it.id === 'piano'),
-        `bedroom-items=${Store.state.rooms.bedroom.items.map(it => it.id).join(',')}`);
+      log('迁移：bedroom 里的 piano 和 sofa 被自动清掉',
+        !Store.state.rooms.bedroom.items.some(it => it.id === 'piano' || it.id === 'sofa'),
+        `bedroom-items=${Store.state.rooms.bedroom.items.map(it => it.id).join(',')} dropped=${migRes.dropped}`);
       /* 跳回 shop 继续后续测试 */
       window.World.jumpTo('shop'); // shop
       await sleep(180);
@@ -707,7 +698,7 @@
       /* ---- 10. 存档完整性 ---- */
       Store.saveNow();
       const saved = JSON.parse(localStorage.getItem('magic-house-v1'));
-      log('存档含角色/道具/10房间', !!(saved.char && Array.isArray(saved.props) && Object.keys(saved.rooms).length === 10));
+      log('存档含角色/道具/9房间（wardrobe 合并到 bedroom）', !!(saved.char && Array.isArray(saved.props) && Object.keys(saved.rooms).length === 9));
 
       /* ---- 11. Phase 2 学校场景样品（仅入库未上线） ---- */
       const items = window.RoomAssets.ITEMS;
@@ -725,8 +716,8 @@
       log('Phase 2 样品:未进任何 ROOM_SETS（抽屉看不到）',
         !Object.values(window.RoomAssets.ROOM_SETS).some(set =>
           set.includes('blackboard') || set.includes('ball') || set.includes('pencilbox')));
-      log('Phase 2 样品:WORLD_ROOMS 仍 10 个',
-        window.RoomAssets.WORLD_ROOMS.length === 10,
+      log('Phase 2 样品:WORLD_ROOMS 仍 9 个（wardrobe 合并到 bedroom）',
+        window.RoomAssets.WORLD_ROOMS.length === 9,
         `WORLD_ROOMS.length=${window.RoomAssets.WORLD_ROOMS.length}`);
 
       /* ---- 13. Phase 2 v4：世界地图 + 房子内部屏（默认屏=地图，主屏删除）---- */
