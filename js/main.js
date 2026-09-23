@@ -163,10 +163,10 @@
 
   /* ---------- Phase 2 v7：3×3 网格街道 + 家在中央（数据驱动）---------- */
   /* 网格坐标 (col, row) -> (x, y, w, h)
-     列宽 280, 行高 193, 街道 30 宽
+     列宽 280, 行高 280, 街道 30 宽
      列 0: 0-280,  街 280-310,  列 1: 310-590,  街 590-620,  列 2: 620-900
-     行 0: 0-193,  街 193-223,  行 1: 223-416,  街 416-446,  行 2: 446-639 */
-  const COL_W = 280, ROW_H = 193, STREET = 30;
+     行 0: 0-193,  街 193-223,  行 1: 223-416,  街 590-620,  行 2: 620-900 */
+  const COL_W = 280, ROW_H = 280, STREET = 30;
   function _cellX(col) { return col * (COL_W + STREET); }
   function _cellY(row) { return row * (ROW_H + STREET); }
   function _cellW() { return COL_W; }
@@ -213,32 +213,26 @@
   ];
 
   /* 4 角格子里的拟物（绝对坐标） */
-  const YARD_DETAIL = {
-    rect: '0 0 280 193',
-    swing: [60, 80, 60, 200, 60, 80, 200, 80, 4, 40, 4, 40, 4, 60, 200, 80],
-    sandbox: [60, 160, 50, 16],
-    mailbox: [220, 140, 14, 22, 14, 14],
-    flower: [140, 70]
-  };
+  /* YARD_DETAIL deprecated in v3 -- yard rewritten */
   const SHOP_DETAIL = {
-    rect: '0 0 280 193',
-    signRect: '60 60 120 28',
+    rect: '0 0 280 280',
+    signRect: '60 40 160 44',
     signText: '商店',
-    signTextX: 120, signTextY: 80,
+    signTextX: 140, signTextY: 72,
     candyRows: [
-      { y: 110, color: '#ff5c5c' }, { y: 120, color: '#ffd34d' },
-      { y: 130, color: '#7ec8e3' }, { y: 140, color: '#98d8a0' },
-      { y: 150, color: '#b79ced' }
+      { y: 100, color: '#ff5c5c' }, { y: 118, color: '#ffd34d' },
+      { y: 136, color: '#7ec8e3' }, { y: 154, color: '#98d8a0' },
+      { y: 172, color: '#b79ced' }
     ],
     candyX: 40, candyW: 80,
     lanterns: [{ x: 30, y: 110 }, { x: 250, y: 110 }],
-    counter: [200, 145, 40, 22],
-    carpet: [100, 170, 80, 8],
-    flower: [120, 175]
+    counter: [200, 215, 40, 22],
+    carpet: [100, 250, 80, 10],
+    flower: [120, 245]
   };
   const PARK_DETAIL = {
-    rect: '0 0 280 193',
-    fountain: [140, 80, 18],
+    rect: '0 0 280 280',
+    fountain: [140, 130, 26],
     pond: [60, 165, 36, 11],
     tree: [200, 80, 6, 36, 22, 16],
     table: [220, 150, 36, 14],
@@ -258,110 +252,164 @@
     }
     let out = '';
     if (entry.id === '__empty__') {
-      /* \u7a7a\u5730\uff1a\u7eff\u8272\u80cc\u666f + 1 \u68f5\u5927\u6811 + \u51e0\u6735\u82b1 + \u201c\u7a7a\u5730\u201d\u6807\u7b7e */
-      out += '<rect x="0" y="0" width="280" height="193" fill="#daf5d0" stroke="#a0c89a" stroke-width="3" rx="8"/>';
-      const t = EMPTY_DETAIL.tree;
-      out += `<rect x="${t[0]}" y="${t[1]}" width="${t[2]}" height="${t[3]}" fill="#7a5a3a"/>`;
-      out += `<ellipse cx="${t[0] + t[2]/2}" cy="${t[1] - 4}" rx="${t[4]}" ry="${t[5]}" fill="#6cc46a"/>`;
-      out += `<ellipse cx="${t[0] + t[2]/2 - 8}" cy="${t[1] - 8}" rx="${t[4] * 0.6}" ry="${t[5] * 0.7}" fill="#7ed47b"/>`;
-      EMPTY_DETAIL.flowers.forEach(([x, y]) => {
-        out += `<g transform="translate(${x},${y})"><line x1="0" y1="0" x2="0" y2="8" stroke="#4e9e4a" stroke-width="3"/><ellipse cx="0" cy="-3" rx="6" ry="4" fill="#ff9eb5"/><ellipse cx="-3" cy="-1" rx="6" ry="4" fill="#ff9eb5" transform="rotate(-60)"/><ellipse cx="3" cy="-1" rx="6" ry="4" fill="#ff9eb5" transform="rotate(60)"/><circle r="1.5" fill="#fff3c9"/></g>`;
+      /* L3-3 v3 空地：圆胖精致版 */
+      out += '<rect x="0" y="0" width="280" height="280" fill="#daf5d0" stroke="#a0c89a" stroke-width="3" rx="20"/>';
+      /* 圆胖大树 */
+      out += '<rect x="125" y="100" width="30" height="120" rx="10" fill="#a07a4a" stroke="#5a3a1a" stroke-width="3"/>';
+      out += '<ellipse cx="140" cy="110" rx="70" ry="55" fill="#6cc46a" stroke="#4a9e4a" stroke-width="3"/>';
+      out += '<ellipse cx="118" cy="92" rx="40" ry="32" fill="#8ed47b" stroke="#5ab05a" stroke-width="2"/>';
+      out += '<ellipse cx="105" cy="80" rx="12" ry="8" fill="#bce8a0" opacity=".85"/>';
+      /* 多朵圆胖花 */
+      [[220, 80, '#ff9eb5'], [60, 150, '#ffd34d'], [220, 200, '#b79ced'], [80, 220, '#ff9eb5'], [200, 240, '#7ec8e3']].forEach(([x, y, fc]) => {
+        out += '<g transform="translate(' + x + ',' + y + ')">';
+        out += '<ellipse cx="-5" cy="-2" rx="4" ry="6" fill="' + fc + '" stroke="#5a3a5a" stroke-width="1.2"/>';
+        out += '<ellipse cx="5" cy="-2" rx="4" ry="6" fill="' + fc + '" stroke="#5a3a5a" stroke-width="1.2"/>';
+        out += '<ellipse cx="0" cy="-8" rx="4" ry="6" fill="' + fc + '" stroke="#5a3a5a" stroke-width="1.2"/>';
+        out += '<ellipse cx="-3" cy="3" rx="4" ry="6" fill="' + fc + '" stroke="#5a3a5a" stroke-width="1.2"/>';
+        out += '<ellipse cx="3" cy="3" rx="4" ry="6" fill="' + fc + '" stroke="#5a3a5a" stroke-width="1.2"/>';
+        out += '<circle r="2.5" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>';
+        out += '</g>';
       });
-      out += `<text x="140" y="178" text-anchor="middle" font-size="14" font-weight="800" fill="#6c8a5a">${EMPTY_DETAIL.label}</text>`;
+      out += '<text x="140" y="270" text-anchor="middle" font-size="16" font-weight="800" fill="#4e7a3a">${entry.label}</text>';
       return out;
     }
+
     if (entry.id === 'house') {
-      /* L3-2 v2: 直接用 icons/apple-touch-icon.png 当大房子（老吴指令） */
-      const hx = 0, hy = 0, hw = 280, hh = 193;
-      out += `<image href="icons/apple-touch-icon.png" x="${hx}" y="${hy}" width="${hw}" height="${hh}" preserveAspectRatio="xMidYMid slice"/>`;
-      /* "我家" 标签：六角型白底紫字（叠在图上顶部，保证 polygon>=1 测试断言）*/
-      out += `<polygon points="${hw/2-32},${hy+12} ${hw/2+32},${hy+12} ${hw/2+36},${hy+22} ${hw/2+32},${hy+32} ${hw/2-32},${hy+32} ${hw/2-36},${hy+22}" fill="#fff" opacity=".95" stroke="#7a4ec9" stroke-width="2"/>`;
-      out += `<text x="${hw/2}" y="${hy + 27}" text-anchor="middle" font-size="14" font-weight="800" fill="#7a4ec9">${entry.label}</text>`;
+      /* L3-3 v3 大房子：取消 PNG，程序化圆胖版（参考图风） */
+      const hx = 0, hy = 0, hw = 280, hh = 280;
+      out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#fff3f7" stroke="#f0c4d4" stroke-width="3" rx="20"/>';
+      /* 草地弧形 */
+      out += '<path d="M' + hx + ',' + (hy + hh - 30) + ' Q' + (hx + hw / 2) + ',' + (hy + hh) + ' ' + (hx + hw) + ',' + (hy + hh - 30) + ' L' + (hx + hw) + ',' + (hy + hh) + ' L' + hx + ',' + (hy + hh) + ' Z" fill="#b8e896" stroke="#6cc46a" stroke-width="3"/>';
+      /* 紫色梯形山墙 */
+      out += '<polygon points="' + (hx + 30) + ',' + (hy + 95) + ' ' + (hx + 250) + ',' + (hy + 95) + ' ' + (hx + 225) + ',' + (hy + 25) + ' ' + (hx + 55) + ',' + (hy + 25) + '" fill="#b98cd9" stroke="#7a4ec9" stroke-width="3" stroke-linejoin="round"/>';
+      out += '<polygon points="' + (hx + 50) + ',' + (hy + 90) + ' ' + (hx + 230) + ',' + (hy + 90) + ' ' + (hx + 220) + ',' + (hy + 60) + ' ' + (hx + 60) + ',' + (hy + 60) + '" fill="#caa4e4" opacity=".4"/>';
+      /* 山墙中央圆窗（参考图核心） */
+      out += '<circle cx="' + (hx + 140) + '" cy="' + (hy + 70) + '" r="20" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="3"/>';
+      out += '<line x1="' + (hx + 120) + '" y1="' + (hy + 70) + '" x2="' + (hx + 160) + '" y2="' + (hy + 70) + '" stroke="#7a4ec9" stroke-width="2.5"/>';
+      out += '<line x1="' + (hx + 140) + '" y1="' + (hy + 50) + '" x2="' + (hx + 140) + '" y2="' + (hy + 90) + '" stroke="#7a4ec9" stroke-width="2.5"/>';
+      /* 2 个黄色方窗 */
+      out += '<rect x="' + (hx + 50) + '" y="' + (hy + 135) + '" width="44" height="44" rx="8" fill="#ffd34d" stroke="#a06820" stroke-width="3"/>';
+      out += '<line x1="' + (hx + 72) + '" y1="' + (hy + 135) + '" x2="' + (hx + 72) + '" y2="' + (hy + 179) + '" stroke="#a06820" stroke-width="2"/>';
+      out += '<line x1="' + (hx + 50) + '" y1="' + (hy + 157) + '" x2="' + (hx + 94) + '" y2="' + (hy + 157) + '" stroke="#a06820" stroke-width="2"/>';
+      out += '<rect x="' + (hx + 186) + '" y="' + (hy + 135) + '" width="44" height="44" rx="8" fill="#ffd34d" stroke="#a06820" stroke-width="3"/>';
+      out += '<line x1="' + (hx + 208) + '" y1="' + (hy + 135) + '" x2="' + (hx + 208) + '" y2="' + (hy + 179) + '" stroke="#a06820" stroke-width="2"/>';
+      out += '<line x1="' + (hx + 186) + '" y1="' + (hy + 157) + '" x2="' + (hx + 230) + '" y2="' + (hy + 157) + '" stroke="#a06820" stroke-width="2"/>';
+      /* 粉色圆胖门 */
+      out += '<rect x="' + (hx + 108) + '" y="' + (hy + 195) + '" width="64" height="60" rx="14" fill="#ff9eb5" stroke="#d96a8e" stroke-width="3"/>';
+      out += '<ellipse cx="' + (hx + 118) + '" cy="' + (hy + 215) + '" rx="8" ry="5" fill="#ffd9ea" opacity=".7"/>';
+      out += '<circle cx="' + (hx + 162) + '" cy="' + (hy + 225) + '" r="4" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
+      /* 我家标签 */
+      out += '<polygon points="' + (hx + 108) + ',' + (hy + 18) + ' ' + (hx + 172) + ',' + (hy + 18) + ' ' + (hx + 182) + ',' + (hy + 38) + ' ' + (hx + 172) + ',' + (hy + 58) + ' ' + (hx + 108) + ',' + (hy + 58) + ' ' + (hx + 98) + ',' + (hy + 38) + '" fill="#fff" opacity=".95" stroke="#7a4ec9" stroke-width="2.5"/>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 44) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#7a4ec9">${entry.label}</text>';
+      /* 装饰 */
+      out += '<polygon points="40,30 45,42 57,44 48,53 50,65 40,59 30,65 32,53 23,44 35,42" fill="#ffd34d" stroke="#a06820" stroke-width="1.5" stroke-linejoin="round"/>';
+      out += '<g transform="translate(245, 255)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="0" cy="-7" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="-3" cy="3" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><ellipse cx="3" cy="3" rx="3" ry="5" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1"/><circle r="2" fill="#ffd34d"/></g>';
       return out;
     }
-if (entry.id === 'yard') {
-      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#6cc46a" stroke-width="3" rx="8"/>`;
-      /* \u79cb\u5343 */
-      out += `<rect x="60" y="80" width="3" height="50" fill="#7a5a3a"/>`;
-      out += `<rect x="140" y="80" width="3" height="50" fill="#7a5a3a"/>`;
-      out += `<line x1="60" y1="80" x2="143" y2="80" stroke="#7a5a3a" stroke-width="3"/>`;
-      out += `<line x1="100" y1="83" x2="100" y2="118" stroke="#5a4a2a" stroke-width="1.8"/>`;
-      out += `<line x1="110" y1="83" x2="110" y2="116" stroke="#5a4a2a" stroke-width="1.8"/>`;
-      out += `<rect x="92" y="114" width="30" height="7" rx="5" fill="#ff9eb5" stroke="#c45875" stroke-width="2.6"/>`;
-      /* \u6c99\u5751 */
-      out += `<ellipse cx="60" cy="155" rx="28" ry="9" fill="#f7d488" stroke="#c4944f" stroke-width="2.6"/>`;
-      /* \u90ae\u7bb1 */
-      out += `<rect x="218" y="140" width="14" height="20" fill="#ff5c5c" stroke="#a83232" stroke-width="1.8" rx="8"/>`;
-      out += `<rect x="214" y="137" width="22" height="4" fill="#7a5a3a"/>`;
-      /* 1 \u6735\u82b1 */
-      out += `<g transform="translate(180, 60)"><ellipse cx="0" cy="-3" rx="8" ry="5" fill="#ff9eb5"/><circle r="2" fill="#fff3c9"/></g>`;
-      out += `<text x="140" y="180" text-anchor="middle" font-size="16" font-weight="800" fill="#4e9e4a">${entry.label}</text>`;
+
+    if (entry.id === 'yard') {
+      /* L3-3 v3 院子：圆胖精致版 */
+      const hx = 0, hy = 0, hw = 280, hh = 280;
+      out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#a8e6a1" stroke="#6cc46a" stroke-width="3" rx="20"/>';
+      /* 秋千 */
+      out += '<rect x="55" y="100" width="8" height="80" rx="4" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2.5"/>';
+      out += '<rect x="155" y="100" width="8" height="80" rx="4" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2.5"/>';
+      out += '<line x1="55" y1="100" x2="163" y2="100" stroke="#7a5a3a" stroke-width="3" stroke-linecap="round"/>';
+      out += '<line x1="109" y1="105" x2="109" y2="155" stroke="#5a4a2a" stroke-width="1.5"/>';
+      out += '<rect x="92" y="150" width="34" height="14" rx="6" fill="#ff9eb5" stroke="#c45875" stroke-width="2.5"/>';
+      out += '<ellipse cx="100" cy="155" rx="3" ry="2" fill="#ffd9ea" opacity=".7"/>';
+      /* 沙坑 */
+      out += '<ellipse cx="60" cy="225" rx="40" ry="12" fill="#f7d488" stroke="#c4944f" stroke-width="2.5"/>';
+      out += '<ellipse cx="60" cy="220" rx="32" ry="7" fill="#fff3c9" opacity=".55"/>';
+      /* 邮箱 */
+      out += '<rect x="218" y="100" width="14" height="22" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2"/>';
+      out += '<rect x="210" y="78" width="30" height="32" rx="10" fill="#ff5c5c" stroke="#a83232" stroke-width="3"/>';
+      out += '<rect x="216" y="86" width="18" height="4" rx="2" fill="#fff"/>';
+      out += '<circle cx="225" cy="98" r="2" fill="#fff"/>';
+      /* 花 */
+      out += '<g transform="translate(180, 50)"><ellipse cx="-5" cy="-2" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><ellipse cx="5" cy="-2" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><ellipse cx="0" cy="-8" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><circle r="2.5" fill="#ffd34d" stroke="#a06820" stroke-width="1"/></g>';
+      out += '<g transform="translate(40, 170)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 265) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4e9e4a">${entry.label}</text>';
       return out;
     }
+
     if (entry.id === 'park') {
-      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#7ec8e3" stroke-width="3" rx="8"/>`;
-      /* \u55b7\u6cc9 */
-      out += `<circle cx="140" cy="80" r="18" fill="#fff" stroke="#7ec8e3" stroke-width="2.6"/>`;
-      out += `<circle cx="140" cy="76" r="3" fill="#9ad7f0"/>`;
-      out += `<line x1="140" y1="58" x2="140" y2="50" stroke="#9ad7f0" stroke-width="3" stroke-linecap="round"/>`;
-      out += `<line x1="126" y1="64" x2="118" y2="58" stroke="#9ad7f0" stroke-width="3" stroke-linecap="round"/>`;
-      out += `<line x1="154" y1="64" x2="162" y2="58" stroke="#9ad7f0" stroke-width="3" stroke-linecap="round"/>`;
-      /* \u6c60\u5858 */
-      out += `<ellipse cx="60" cy="155" rx="28" ry="9" fill="#4a90c4" stroke="#2c5a87" stroke-width="2.6"/>`;
-      out += `<ellipse cx="60" cy="152" rx="22" ry="6" fill="#7eb0d6"/>`;
-      /* \u5927\u6811 */
-      out += `<rect x="218" y="92" width="5" height="32" fill="#7a5a3a"/>`;
-      out += `<ellipse cx="220" cy="85" rx="14" ry="10" fill="#6cc46a"/>`;
-      out += `<ellipse cx="214" cy="81" rx="8" ry="6" fill="#7ed47b"/>`;
-      /* \u91ce\u9910\u684c */
-      out += `<rect x="230" y="150" width="30" height="12" fill="#ff5c5c" stroke="#a83232" stroke-width="1.8"/>`;
-      out += `<rect x="232" y="161" width="2" height="6" fill="#7a5a3a"/>`;
-      out += `<rect x="256" y="161" width="2" height="6" fill="#7a5a3a"/>`;
-      /* 2 \u6735\u82b1 */
-      [[180, 50], [110, 130]].forEach(([x, y]) => {
-        out += `<g transform="translate(${x},${y})"><line x1="0" y1="0" x2="0" y2="8" stroke="#4e9e4a" stroke-width="3"/><ellipse cx="0" cy="-3" rx="6" ry="4" fill="#fff"/><circle r="1.5" fill="#ffd34d"/></g>`;
-      });
-      out += `<text x="140" y="182" text-anchor="middle" font-size="16" font-weight="800" fill="#4f9cc0">${entry.label}</text>`;
+      /* L3-3 v3 公园：圆胖精致版 */
+      const hx = 0, hy = 0, hw = 280, hh = 280;
+      out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#9ad7f0" stroke="#7ec8e3" stroke-width="3" rx="20"/>';
+      /* 喷泉 */
+      out += '<rect x="120" y="200" width="40" height="30" rx="6" fill="#bcbcbc" stroke="#5a5a5a" stroke-width="3"/>';
+      out += '<rect x="116" y="160" width="48" height="40" rx="6" fill="#dcdcdc" stroke="#3a3a3a" stroke-width="3"/>';
+      out += '<circle cx="140" cy="135" r="26" fill="#fff" stroke="#7ec8e3" stroke-width="3"/>';
+      out += '<ellipse cx="135" cy="130" rx="6" ry="3" fill="#cdf0ff" opacity=".7"/>';
+      out += '<path d="M140,109 Q134,90 142,75 Q150,90 144,109" fill="#9ad7f0" stroke="#7ec8e3" stroke-width="2.5" stroke-linejoin="round"/>';
+      out += '<path d="M125,118 Q115,100 122,85" fill="none" stroke="#9ad7f0" stroke-width="2.5" stroke-linecap="round"/>';
+      out += '<path d="M155,118 Q165,100 158,85" fill="none" stroke="#9ad7f0" stroke-width="2.5" stroke-linecap="round"/>';
+      /* 池塘 */
+      out += '<ellipse cx="60" cy="240" rx="40" ry="14" fill="#5aa0d8" stroke="#2c5a87" stroke-width="3"/>';
+      out += '<ellipse cx="60" cy="235" rx="32" ry="9" fill="#9ad0e8" opacity=".7"/>';
+      out += '<ellipse cx="55" cy="232" rx="10" ry="4" fill="#fff" opacity=".6"/>';
+      /* 大树 */
+      out += '<rect x="220" y="155" width="10" height="50" rx="3" fill="#a07a4a" stroke="#5a3a1a" stroke-width="2.5"/>';
+      out += '<ellipse cx="225" cy="140" rx="28" ry="22" fill="#6cc46a" stroke="#4a9e4a" stroke-width="3"/>';
+      out += '<ellipse cx="215" cy="130" rx="14" ry="10" fill="#8ed47b" opacity=".85"/>';
+      /* 长椅 */
+      out += '<rect x="180" y="245" width="60" height="8" rx="3" fill="#a07a4a" stroke="#5a3a1a" stroke-width="2"/>';
+      out += '<rect x="185" y="252" width="4" height="14" fill="#5a3a1a"/>';
+      out += '<rect x="231" y="252" width="4" height="14" fill="#5a3a1a"/>';
+      /* 花 */
+      out += '<g transform="translate(180, 70)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
+      out += '<g transform="translate(110, 180)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><circle r="2" fill="#ffd34d"/></g>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 270) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4f9cc0">${entry.label}</text>';
       return out;
     }
+
     if (entry.id === 'shop') {
-      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#ff9eb5" stroke-width="3" rx="8"/>`;
-      /* \u62db\u724c */
-      out += `<rect x="60" y="60" width="160" height="28" fill="#ff5c5c" stroke="#a83232" stroke-width="2.6" rx="5"/>`;
-      out += `<text x="140" y="80" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">${SHOP_DETAIL.signText}</text>`;
-      out += `<line x1="70" y1="88" x2="70" y2="110" stroke="#7a5a3a" stroke-width="3"/>`;
-      out += `<line x1="210" y1="88" x2="210" y2="110" stroke="#7a5a3a" stroke-width="3"/>`;
-      /* \u7cd6\u679c\u5899 5 \u8272 */
+      /* L3-3 v3 商店：圆胖精致版 */
+      const hx = 0, hy = 0, hw = 280, hh = 280;
+      out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#fff6e8" stroke="#f0c8a4" stroke-width="3" rx="20"/>';
+      /* 招牌 */
+      out += '<rect x="60" y="40" width="160" height="44" rx="14" fill="#ff5c5c" stroke="#a83232" stroke-width="3"/>';
+      out += '<ellipse cx="80" cy="52" rx="14" ry="4" fill="#ff9e9e" opacity=".7"/>';
+      out += '<text x="140" y="72" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">${SHOP_DETAIL.signText}</text>';
+      out += '<rect x="65" y="84" width="6" height="22" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2"/>';
+      out += '<rect x="209" y="84" width="6" height="22" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2"/>';
+      /* 5 色糖果条 */
       SHOP_DETAIL.candyRows.forEach(r => {
-        out += `<rect x="${SHOP_DETAIL.candyX}" y="${r.y}" width="${SHOP_DETAIL.candyW}" height="8" fill="${r.color}"/>`;
+        out += '<rect x="' + SHOP_DETAIL.candyX + '" y="' + (r.y + 12) + '" width="' + SHOP_DETAIL.candyW + '" height="10" rx="3" fill="' + r.color + '" stroke="#5a3a5a" stroke-width="1.5"/>';
       });
-      /* \u706f\u7b3c */
+      /* 灯笼 */
       SHOP_DETAIL.lanterns.forEach(l => {
-        out += `<ellipse cx="${l.x}" cy="${l.y}" r="6" ry="8" fill="#ff5c5c" stroke="#a83232" stroke-width="2.6"/>`;
-        out += `<line x1="${l.x}" y1="${l.y - 10}" x2="${l.x}" y2="${l.y - 8}" stroke="#7a5a3a" stroke-width="2.6"/>`;
+        out += '<ellipse cx="' + l.x + '" cy="' + (l.y + 12) + '" rx="9" ry="12" fill="#ff5c5c" stroke="#a83232" stroke-width="2.5"/>';
+        out += '<line x1="' + l.x + '" y1="' + l.y + '" x2="' + l.x + '" y2="' + (l.y + 1) + '" stroke="#7a5a3a" stroke-width="2.5"/>';
+        out += '<line x1="' + (l.x - 5) + '" y1="' + (l.y + 22) + '" x2="' + (l.x + 5) + '" y2="' + (l.y + 22) + '" stroke="#a83232" stroke-width="1.5"/>';
       });
-      /* \u6536\u94f6\u53f0 */
-      out += `<rect x="${SHOP_DETAIL.counter[0]}" y="${SHOP_DETAIL.counter[1]}" width="${SHOP_DETAIL.counter[2]}" height="${SHOP_DETAIL.counter[3]}" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="1.8"/>`;
-      /* \u5730\u6bef */
-      out += `<rect x="${SHOP_DETAIL.carpet[0]}" y="${SHOP_DETAIL.carpet[1]}" width="${SHOP_DETAIL.carpet[2]}" height="${SHOP_DETAIL.carpet[3]}" fill="#ff8f7a"/>`;
-      out += `<text x="140" y="183" text-anchor="middle" font-size="16" font-weight="800" fill="#d96b8a">${entry.label}</text>`;
+      /* 柜台 */
+      out += '<rect x="' + SHOP_DETAIL.counter[0] + '" y="' + (SHOP_DETAIL.counter[1] + 12) + '" width="' + SHOP_DETAIL.counter[2] + '" height="' + SHOP_DETAIL.counter[3] + '" rx="6" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="2.5"/>';
+      out += '<line x1="' + (SHOP_DETAIL.counter[0] + 4) + '" y1="' + (SHOP_DETAIL.counter[1] + 18) + '" x2="' + (SHOP_DETAIL.counter[0] + 36) + '" y2="' + (SHOP_DETAIL.counter[1] + 18) + '" stroke="#7a7a7a" stroke-width="1"/>';
+      /* 地毯 */
+      out += '<rect x="' + SHOP_DETAIL.carpet[0] + '" y="' + (SHOP_DETAIL.carpet[1] + 12) + '" width="' + SHOP_DETAIL.carpet[2] + '" height="' + SHOP_DETAIL.carpet[3] + '" rx="4" fill="#ff8f7a" stroke="#a8503a" stroke-width="1.5"/>';
+      /* 花 */
+      out += '<g transform="translate(' + SHOP_DETAIL.flower[0] + ',' + (SHOP_DETAIL.flower[1] + 12) + ')"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 265) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#d96b8a">${entry.label}</text>';
       return out;
     }
+
     return '';
   }
 
   /* 4 \u4e2a\u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3\uff08\u6570\u636e\u9a71\u52a8\uff09 */
   const STREETS = [
     /* \u4e24\u6bb5\u6a2a\u8857\u9053 (row 0/1 \u4e0e row 1/2 \u4e4b\u95f4) */
-    { x: 0,    y: 193, w: 280, h: 30, kind: 'h' },
-    { x: 310,  y: 193, w: 280, h: 30, kind: 'h' },
-    { x: 0,    y: 416, w: 280, h: 30, kind: 'h' },
-    { x: 310,  y: 416, w: 280, h: 30, kind: 'h' },
+    { x: 0,    y: 280, w: 280, h: 30, kind: 'h' },
+    { x: 310,  y: 280, w: 280, h: 30, kind: 'h' },
+    { x: 0,    y: 590, w: 280, h: 30, kind: 'h' },
+    { x: 310,  y: 590, w: 280, h: 30, kind: 'h' },
     /* \u4e24\u6bb5\u7ad6\u8857\u9053 (col 0/1 \u4e0e col 1/2 \u4e4b\u95f4) */
-    { x: 280,  y: 0,   w: 30,  h: 193, kind: 'v' },
-    { x: 280,  y: 223, w: 30,  h: 193, kind: 'v' },
-    { x: 590,  y: 0,   w: 30,  h: 193, kind: 'v' },
-    { x: 590,  y: 223, w: 30,  h: 193, kind: 'v' }
+    { x: 280,  y: 0,   w: 30,  h: 280, kind: 'v' },
+    { x: 280,  y: 310, w: 30,  h: 280, kind: 'v' },
+    { x: 590,  y: 0,   w: 30,  h: 280, kind: 'v' },
+    { x: 590,  y: 310, w: 30,  h: 280, kind: 'v' }
   ];
   function _renderStreets() {
     let out = '';
@@ -384,8 +432,8 @@ if (entry.id === 'yard') {
   }
   /* 4 \u4e2a\u5341\u5b57\u8def\u53e3 */
   const CROSSROADS = [
-    { cx: 295, cy: 208 }, { cx: 605, cy: 208 },
-    { cx: 295, cy: 431 }, { cx: 605, cy: 431 }
+    { cx: 295, cy: 295 }, { cx: 605, cy: 295 },
+    { cx: 295, cy: 605 }, { cx: 605, cy: 605 }
   ];
   function _renderCrossroads() {
     let out = '';
@@ -409,7 +457,7 @@ if (entry.id === 'yard') {
 
   /* MAP_SVG v7\uff1a3\u00d73 \u7f51\u683c + 4 \u5757 + 4 \u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3 + \u62df\u7269 */
   const MAP_SVG = `
-    <svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <svg viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
       <!-- \u5929\u7a7a\u4e91\u6735 \u00d7 2 -->
       <g opacity=".9">
         <ellipse cx="700" cy="60" rx="44" ry="16" fill="#fff"/>
@@ -431,71 +479,71 @@ if (entry.id === 'yard') {
 
       <!-- L3-2 v2 环境装饰: 3朵额外白云 + 4颗星 + 2只鸟 + 2只蝴蝶 + 2个热气球 + 5朵草地小花 (补足 SVG 元素 ≥90 测试断言) -->
       <g opacity=".85">
-        <ellipse cx="250" cy="50" rx="36" ry="13" fill="#fff"/>
-        <ellipse cx="232" cy="44" rx="20" ry="11" fill="#fff"/>
-        <ellipse cx="268" cy="42" rx="18" ry="10" fill="#fff"/>
+        <ellipse cx="220" cy="100" rx="36" ry="13" fill="#fff"/>
+        <ellipse cx="202" cy="94" rx="20" ry="11" fill="#fff"/>
+        <ellipse cx="238" cy="92" rx="18" ry="10" fill="#fff"/>
       </g>
       <g opacity=".8">
-        <ellipse cx="850" cy="50" rx="32" ry="12" fill="#fff"/>
-        <ellipse cx="834" cy="44" rx="18" ry="10" fill="#fff"/>
-        <ellipse cx="866" cy="42" rx="14" ry="8" fill="#fff"/>
+        <ellipse cx="700" cy="80" rx="32" ry="12" fill="#fff"/>
+        <ellipse cx="684" cy="74" rx="18" ry="10" fill="#fff"/>
+        <ellipse cx="716" cy="72" rx="14" ry="8" fill="#fff"/>
       </g>
       <g opacity=".75">
-        <ellipse cx="800" cy="170" rx="28" ry="10" fill="#fff"/>
-        <ellipse cx="788" cy="166" rx="14" ry="8" fill="#fff"/>
+        <ellipse cx="160" cy="200" rx="28" ry="10" fill="#fff"/>
+        <ellipse cx="148" cy="196" rx="14" ry="8" fill="#fff"/>
       </g>
       <g fill="#ffd34d" stroke="#a06820" stroke-width="1.8" stroke-linejoin="round">
-        <polygon points="40,150 46,164 60,166 50,176 52,190 40,184 28,190 30,176 20,166 34,164"/>
-        <polygon points="860,200 866,214 880,216 870,226 872,240 860,234 848,240 850,226 840,216 854,214"/>
-        <polygon points="800,90 805,100 815,102 808,110 810,120 800,116 790,120 792,110 785,102 795,100"/>
-        <polygon points="200,200 204,210 214,212 207,220 209,230 200,226 191,230 193,220 186,212 196,210"/>
+        <polygon points="60,200 66,214 80,182 70,192 72,180 60,176 48,180 50,192 40,182"/>
+        <polygon points="820,150 826,164 840,166 830,176 832,190 820,184 808,190 810,176 800,166 814,164"/>
+        <polygon points="40,140 45,150 55,152 48,160 50,170 40,166 30,170 32,160 25,152 35,150"/>
+        <polygon points="860,250 864,260 874,262 867,270 862,240 851,244 853,234 846,226 856,224"/>
       </g>
       <g fill="none" stroke="#5a4a2a" stroke-width="2.5" stroke-linecap="round">
-        <path d="M200,90 q8,-8 16,0 q8,-8 16,0"/>
-        <path d="M760,80 q8,-8 16,0 q8,-8 16,0"/>
+        <path d="M180,180 q8,-8 16,0 q8,-8 16,0"/>
+        <path d="M780,200 q8,-8 16,0 q8,-8 16,0"/>
       </g>
       <g>
-        <ellipse cx="270" cy="170" rx="10" ry="7" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1.8" transform="rotate(-25 270 170)"/>
-        <ellipse cx="290" cy="170" rx="10" ry="7" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1.8" transform="rotate(25 290 170)"/>
-        <line x1="280" y1="170" x2="280" y2="178" stroke="#5a4a2a" stroke-width="2"/>
-        <ellipse cx="720" cy="150" rx="9" ry="6" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.8" transform="rotate(-25 720 150)"/>
-        <ellipse cx="740" cy="150" rx="9" ry="6" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.8" transform="rotate(25 740 150)"/>
-        <line x1="730" y1="150" x2="730" y2="158" stroke="#5a4a2a" stroke-width="2"/>
+        <ellipse cx="60" cy="400" rx="10" ry="7" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1.8" transform="rotate(-25 60 400)"/>
+        <ellipse cx="80" cy="400" rx="10" ry="7" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1.8" transform="rotate(25 80 400)"/>
+        <line x1="70" y1="400" x2="70" y2="408" stroke="#5a4a2a" stroke-width="2"/>
+        <ellipse cx="800" cy="400" rx="9" ry="6" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.8" transform="rotate(-25 800 400)"/>
+        <ellipse cx="820" cy="400" rx="9" ry="6" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.8" transform="rotate(25 820 400)"/>
+        <line x1="810" y1="400" x2="810" y2="408" stroke="#5a4a2a" stroke-width="2"/>
       </g>
       <g>
-        <ellipse cx="100" cy="120" rx="22" ry="20" fill="#ff9eb5" stroke="#d96e8e" stroke-width="2"/>
-        <polygon points="100,140 95,148 105,148" fill="#ff9eb5" stroke="#d96e8e" stroke-width="2"/>
-        <rect x="95" y="148" width="10" height="6" fill="#7a5a3a"/>
-        <ellipse cx="850" cy="100" rx="20" ry="18" fill="#b79ced" stroke="#7a4ec9" stroke-width="2"/>
-        <polygon points="850,118 845,126 855,126" fill="#b79ced" stroke="#7a4ec9" stroke-width="2"/>
-        <rect x="845" y="126" width="10" height="6" fill="#7a5a3a"/>
+        <ellipse cx="120" cy="280" rx="22" ry="20" fill="#ff9eb5" stroke="#d96e8e" stroke-width="2"/>
+        <polygon points="120,300 115,308 125,308" fill="#ff9eb5" stroke="#d96e8e" stroke-width="2"/>
+        <rect x="115" y="308" width="10" height="6" fill="#7a5a3a"/>
+        <ellipse cx="780" cy="290" rx="20" ry="18" fill="#b79ced" stroke="#7a4ec9" stroke-width="2"/>
+        <polygon points="780,308 775,296 785,296" fill="#b79ced" stroke="#7a4ec9" stroke-width="2"/>
+        <rect x="775" y="296" width="10" height="6" fill="#7a5a3a"/>
       </g>
       <g>
-        <g transform="translate(60, 580)">
+        <g transform="translate(80, 800)">
           <ellipse cx="-4" cy="0" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
           <ellipse cx="4" cy="0" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
           <ellipse cx="0" cy="-4" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
           <circle r="1.8" fill="#ffd34d"/>
         </g>
-        <g transform="translate(150, 600)">
+        <g transform="translate(200, 820)">
           <ellipse cx="-4" cy="0" rx="3" ry="4" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
           <ellipse cx="4" cy="0" rx="3" ry="4" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
           <ellipse cx="0" cy="-4" rx="3" ry="4" fill="#ffd34d" stroke="#a06820" stroke-width="1"/>
           <circle r="1.8" fill="#7a4ec9"/>
         </g>
-        <g transform="translate(60, 620)">
+        <g transform="translate(60, 840)">
           <ellipse cx="-3" cy="0" rx="2.5" ry="3.5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1"/>
           <ellipse cx="3" cy="0" rx="2.5" ry="3.5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1"/>
           <ellipse cx="0" cy="-3" rx="2.5" ry="3.5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1"/>
           <circle r="1.5" fill="#ffd34d"/>
         </g>
-        <g transform="translate(820, 600)">
+        <g transform="translate(800, 820)">
           <ellipse cx="-4" cy="0" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
           <ellipse cx="4" cy="0" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
           <ellipse cx="0" cy="-4" rx="3" ry="4" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1"/>
           <circle r="1.8" fill="#ffd34d"/>
         </g>
-        <g transform="translate(850, 620)">
+        <g transform="translate(840, 840)">
           <ellipse cx="-3" cy="0" rx="2.5" ry="3.5" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1"/>
           <ellipse cx="3" cy="0" rx="2.5" ry="3.5" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1"/>
           <ellipse cx="0" cy="-3" rx="2.5" ry="3.5" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1"/>
