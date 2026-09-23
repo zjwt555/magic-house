@@ -8,6 +8,7 @@ _dom.txt
 _chrome-err.txt
 _*.txt
 _*.html
+_stage-preview/
 node_modules/
 *.log
 .zcode/
