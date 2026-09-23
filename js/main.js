@@ -60,15 +60,15 @@
     <button class="btn-home" aria-label="回家">
       <svg viewBox="0 0 48 48">
         <path d="M24 6L5 22h6v18a2 2 0 0 0 2 2h8V30h6v12h8a2 2 0 0 0 2-2V22h6z"
-          fill="#fff" stroke="#d16a89" stroke-width="2.4" stroke-linejoin="round"/>
-        <rect x="21.5" y="15" width="5" height="6" rx="2" fill="#ffd0dd"/>
+          fill="#fff" stroke="#d16a89" stroke-width="2.8" stroke-linejoin="round"/>
+        <rect x="21.5" y="15" width="5" height="6" rx="5" fill="#ffd0dd"/>
       </svg>
     </button>`;
   window.roomsButtonHTML = `
     <button class="btn-rooms" aria-label="换房间">
       <svg viewBox="0 0 48 48">
         <path d="M10 42V20a2 2 0 0 1 2-2h24a2 2 0 0 1 2 2v22" fill="#fff" stroke="#4f9cc0" stroke-width="2.6" stroke-linejoin="round"/>
-        <path d="M16 40V28a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12" fill="#9ad7f0" stroke="#4f9cc0" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M16 40V28a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12" fill="#9ad7f0" stroke="#4f9cc0" stroke-width="2.8" stroke-linejoin="round"/>
         <circle cx="24" cy="15" r="2.6" fill="#ffd34d"/>
         <path d="M24 6l1.4 3.4 3.6.3-2.7 2.3.8 3.5-3.1-1.9-3.1 1.9.8-3.5-2.7-2.3 3.6-.3z" fill="#ffd34d"/>
       </svg>
@@ -78,24 +78,24 @@
   const ROOM_ICONS = {
     balcony: { label: '阳台', svg: `
       <svg viewBox="0 0 48 48">
-        <rect x="6" y="10" width="36" height="30" rx="4" fill="#dff3ff" stroke="#9ad7f0" stroke-width="2.5"/>
-        <line x1="24" y1="10" x2="24" y2="40" stroke="#9ad7f0" stroke-width="2.5"/>
-        <line x1="6" y1="25" x2="42" y2="25" stroke="#9ad7f0" stroke-width="2.5"/>
+        <rect x="6" y="10" width="36" height="30" rx="8" fill="#dff3ff" stroke="#9ad7f0" stroke-width="3"/>
+        <line x1="24" y1="10" x2="24" y2="40" stroke="#9ad7f0" stroke-width="3"/>
+        <line x1="6" y1="25" x2="42" y2="25" stroke="#9ad7f0" stroke-width="3"/>
         <circle cx="15" cy="18" r="4" fill="#ff9eb5"/>
         <circle cx="33" cy="33" r="4" fill="#ffd34d"/>
         <path d="M10,6 L38,6" stroke="#c98443" stroke-width="3" stroke-linecap="round"/>
       </svg>` },
     bedroom: { label: '卧室', svg: `
       <svg viewBox="0 0 48 48">
-        <rect x="8" y="22" width="8" height="18" rx="3" fill="#2f7fa3"/>
-        <rect x="8" y="32" width="32" height="10" rx="4" fill="#4aa3c9"/>
-        <rect x="30" y="26" width="8" height="16" rx="3" fill="#2f7fa3"/>
-        <rect x="12" y="28" width="11" height="6" rx="3" fill="#fff"/>
+        <rect x="8" y="22" width="8" height="18" rx="6" fill="#2f7fa3"/>
+        <rect x="8" y="32" width="32" height="10" rx="8" fill="#4aa3c9"/>
+        <rect x="30" y="26" width="8" height="16" rx="6" fill="#2f7fa3"/>
+        <rect x="12" y="28" width="11" height="6" rx="6" fill="#fff"/>
       </svg>` },
     bathroom: { label: '卫生间', svg: `
       <svg viewBox="0 0 48 48">
-        <path d="M8 22h32l-3 14q-13 4-26 0z" fill="#fdfdff" stroke="#b8ccd8" stroke-width="2.4"/>
-        <rect x="6" y="19" width="36" height="6" rx="3" fill="#b8ccd8"/>
+        <path d="M8 22h32l-3 14q-13 4-26 0z" fill="#fdfdff" stroke="#b8ccd8" stroke-width="2.8"/>
+        <rect x="6" y="19" width="36" height="6" rx="6" fill="#b8ccd8"/>
         <circle cx="16" cy="16" r="4.5" fill="#fff" opacity=".95"/>
         <circle cx="25" cy="13" r="3.5" fill="#fff" opacity=".95"/>
         <g transform="translate(33,12)"><circle r="4" fill="#ffd34d"/><polygon points="3,0 7,1 3.5,3" fill="#ff9f43"/></g>
@@ -103,31 +103,31 @@
     living: { label: '客厅', svg: `
       <svg viewBox="0 0 48 48">
         <rect x="6" y="14" width="36" height="14" rx="6" fill="#6bb8d8"/>
-        <rect x="4" y="20" width="8" height="14" rx="4" fill="#7ec8e3"/>
-        <rect x="36" y="20" width="8" height="14" rx="4" fill="#7ec8e3"/>
-        <rect x="10" y="24" width="28" height="10" rx="4" fill="#9ad7f0"/>
-        <rect x="8" y="34" width="32" height="5" rx="2.5" fill="#6bb8d8"/>
+        <rect x="4" y="20" width="8" height="14" rx="8" fill="#7ec8e3"/>
+        <rect x="36" y="20" width="8" height="14" rx="8" fill="#7ec8e3"/>
+        <rect x="10" y="24" width="28" height="10" rx="8" fill="#9ad7f0"/>
+        <rect x="8" y="34" width="32" height="5" rx="6" fill="#6bb8d8"/>
       </svg>` },
     kitchen: { label: '厨房', svg: `
       <svg viewBox="0 0 48 48">
         <path d="M10 20h28l-4 18q-10 4-20 0z" fill="#d98324"/>
         <ellipse cx="24" cy="19" rx="12" ry="4" fill="#f2a94f"/>
         <circle cx="24" cy="13" r="3" fill="#fff"/>
-        <path d="M18 8q-2-4 0-7 M30 8q2-4 0-7" stroke="#bde0f5" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M18 8q-2-4 0-7 M30 8q2-4 0-7" stroke="#bde0f5" stroke-width="2.8" fill="none" stroke-linecap="round"/>
       </svg>` },
     study: { label: '书房', svg: `
       <svg viewBox="0 0 48 48">
-        <rect x="6" y="26" width="36" height="5" rx="2.5" fill="#d98c5a"/>
-        <rect x="10" y="31" width="5" height="11" rx="2" fill="#c47a44"/>
-        <rect x="33" y="31" width="5" height="11" rx="2" fill="#c47a44"/>
-        <rect x="14" y="12" width="20" height="14" rx="2" fill="#4a4a55"/>
-        <rect x="17" y="15" width="14" height="8" rx="1.5" fill="#9ad7f0"/>
+        <rect x="6" y="26" width="36" height="5" rx="6" fill="#d98c5a"/>
+        <rect x="10" y="31" width="5" height="11" rx="5" fill="#c47a44"/>
+        <rect x="33" y="31" width="5" height="11" rx="5" fill="#c47a44"/>
+        <rect x="14" y="12" width="20" height="14" rx="5" fill="#4a4a55"/>
+        <rect x="17" y="15" width="14" height="8" rx="8" fill="#9ad7f0"/>
         <circle cx="38" cy="16" r="4.5" fill="#98d8a0"/>
       </svg>` },
     dressup: { label: '换衣间', svg: `
       <svg viewBox="0 0 48 48">
-        <rect x="8" y="10" width="32" height="30" rx="4" fill="#e8a3bd"/>
-        <line x1="24" y1="12" x2="24" y2="38" stroke="#d98cb0" stroke-width="2.5"/>
+        <rect x="8" y="10" width="32" height="30" rx="8" fill="#e8a3bd"/>
+        <line x1="24" y1="12" x2="24" y2="38" stroke="#d98cb0" stroke-width="3"/>
         <path d="M14 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#e05c86" transform="translate(2,2)"/>
         <path d="M28 20 l-2 4 -4 6 q6 3 12 0 l-4 -6 -2 -4 z" fill="#7ec8e3" transform="translate(2,2)"/>
       </svg>` },
@@ -136,7 +136,7 @@
         <circle cx="24" cy="18" r="14" fill="#6cc46a"/>
         <circle cx="12" cy="24" r="9" fill="#7ed47b"/>
         <circle cx="36" cy="24" r="9" fill="#7ed47b"/>
-        <rect x="21" y="28" width="6" height="14" rx="2.5" fill="#a9784a"/>
+        <rect x="21" y="28" width="6" height="14" rx="6" fill="#a9784a"/>
         <circle cx="17" cy="14" r="3" fill="#ff6b6b"/>
         <circle cx="30" cy="20" r="3" fill="#ff6b6b"/>
         <path d="M6 42 Q24 36 42 42" stroke="#5a9e56" stroke-width="3.5" fill="none" stroke-linecap="round"/>
@@ -144,7 +144,7 @@
     park: { label: '公园', svg: `
       <svg viewBox="0 0 48 48">
         <ellipse cx="24" cy="36" rx="18" ry="7" fill="#9ad7f0"/>
-        <rect x="21" y="18" width="6" height="14" rx="2.5" fill="#e8e2d8"/>
+        <rect x="21" y="18" width="6" height="14" rx="6" fill="#e8e2d8"/>
         <ellipse cx="24" cy="17" rx="10" ry="4" fill="#9ad7f0"/>
         <path d="M24 15 Q24 7 18 4 M24 15 Q24 7 30 4 M24 15 Q24 5 24 1" stroke="#7ec8e3" stroke-width="3" fill="none" stroke-linecap="round"/>
         <circle cx="18" cy="4" r="2.5" fill="#bfe6ff"/><circle cx="30" cy="4" r="2.5" fill="#bfe6ff"/>
@@ -152,10 +152,10 @@
     shop: { label: '商店', svg: `
       <svg viewBox="0 0 48 48">
         <path d="M8 16 L8 10 Q24 4 40 10 L40 16 Z" fill="#ff9eb5"/>
-        ${[0, 1, 2].map(i => `<rect x="${11 + i * 10}" y="${8 - (i % 2)}" width="8" height="8" rx="2" fill="#fff" opacity=".9"/>`).join('')}
-        <rect x="10" y="20" width="28" height="20" rx="3" fill="#fff6e8"/>
-        <rect x="14" y="24" width="7" height="10" rx="2" fill="#ff8f9e"/>
-        <rect x="24" y="24" width="7" height="10" rx="2" fill="#7ec8e3"/>
+        ${[0, 1, 2].map(i => `<rect x="${11 + i * 10}" y="${8 - (i % 2)}" width="8" height="8" rx="5" fill="#fff" opacity=".9"/>`).join('')}
+        <rect x="10" y="20" width="28" height="20" rx="6" fill="#fff6e8"/>
+        <rect x="14" y="24" width="7" height="10" rx="5" fill="#ff8f9e"/>
+        <rect x="24" y="24" width="7" height="10" rx="5" fill="#7ec8e3"/>
         <circle cx="36" cy="29" r="4" fill="#ffd166"/>
       </svg>` }
   };
@@ -194,9 +194,9 @@
     const rightD = `${cx + w},${cy + w * 0.5 + h}`;
     const leftD  = `${cx - w},${cy + w * 0.5 + h}`;
     return `
-      <polygon points="${back} ${rightV} ${front} ${leftV}" fill="${top}"   stroke="${stroke}" stroke-width="2"/>
-      <polygon points="${back} ${leftV} ${leftD} ${backD}"   fill="${left}"  stroke="${stroke}" stroke-width="2"/>
-      <polygon points="${back} ${rightV} ${rightD} ${backD}" fill="${right}" stroke="${stroke}" stroke-width="2"/>`;
+      <polygon points="${back} ${rightV} ${front} ${leftV}" fill="${top}"   stroke="${stroke}" stroke-width="3"/>
+      <polygon points="${back} ${leftV} ${leftD} ${backD}"   fill="${left}"  stroke="${stroke}" stroke-width="3"/>
+      <polygon points="${back} ${rightV} ${rightD} ${backD}" fill="${right}" stroke="${stroke}" stroke-width="3"/>`;
   }
 
   /* 9 格数据：4 角室外 + 中央大房子 + 4 个街道占位 */
@@ -259,13 +259,13 @@
     let out = '';
     if (entry.id === '__empty__') {
       /* \u7a7a\u5730\uff1a\u7eff\u8272\u80cc\u666f + 1 \u68f5\u5927\u6811 + \u51e0\u6735\u82b1 + \u201c\u7a7a\u5730\u201d\u6807\u7b7e */
-      out += '<rect x="0" y="0" width="280" height="193" fill="#daf5d0" stroke="#a0c89a" stroke-width="2" rx="4"/>';
+      out += '<rect x="0" y="0" width="280" height="193" fill="#daf5d0" stroke="#a0c89a" stroke-width="3" rx="8"/>';
       const t = EMPTY_DETAIL.tree;
       out += `<rect x="${t[0]}" y="${t[1]}" width="${t[2]}" height="${t[3]}" fill="#7a5a3a"/>`;
       out += `<ellipse cx="${t[0] + t[2]/2}" cy="${t[1] - 4}" rx="${t[4]}" ry="${t[5]}" fill="#6cc46a"/>`;
       out += `<ellipse cx="${t[0] + t[2]/2 - 8}" cy="${t[1] - 8}" rx="${t[4] * 0.6}" ry="${t[5] * 0.7}" fill="#7ed47b"/>`;
       EMPTY_DETAIL.flowers.forEach(([x, y]) => {
-        out += `<g transform="translate(${x},${y})"><line x1="0" y1="0" x2="0" y2="8" stroke="#4e9e4a" stroke-width="2"/><ellipse cx="0" cy="-3" rx="3" ry="4" fill="#ff9eb5"/><ellipse cx="-3" cy="-1" rx="3" ry="4" fill="#ff9eb5" transform="rotate(-60)"/><ellipse cx="3" cy="-1" rx="3" ry="4" fill="#ff9eb5" transform="rotate(60)"/><circle r="1.5" fill="#fff3c9"/></g>`;
+        out += `<g transform="translate(${x},${y})"><line x1="0" y1="0" x2="0" y2="8" stroke="#4e9e4a" stroke-width="3"/><ellipse cx="0" cy="-3" rx="6" ry="4" fill="#ff9eb5"/><ellipse cx="-3" cy="-1" rx="6" ry="4" fill="#ff9eb5" transform="rotate(-60)"/><ellipse cx="3" cy="-1" rx="6" ry="4" fill="#ff9eb5" transform="rotate(60)"/><circle r="1.5" fill="#fff3c9"/></g>`;
       });
       out += `<text x="140" y="178" text-anchor="middle" font-size="14" font-weight="800" fill="#6c8a5a">${EMPTY_DETAIL.label}</text>`;
       return out;
@@ -273,97 +273,97 @@
     if (entry.id === 'house') {
       /* \u4e2d\u5927\u623f\u5b50\uff1a\u7d2b\u5c4b\u9876 + \u7c89\u767d\u4e3b\u4f53 + 5 \u7a97 + \u95e8 + \u70df\u56f1 + 3 \u70df + \u90ae\u7bb1 + \u524d\u9662\u5c0f\u8def + \u201c\u6211\u5bb6\u201d */
       const hx = 0, hy = 0, hw = 280, hh = 193;
-      out += `<rect x="${hx}" y="${hy}" width="${hw}" height="${hh}" fill="${entry.color}" stroke="#f0c4d4" stroke-width="2" rx="4"/>`;
+      out += `<rect x="${hx}" y="${hy}" width="${hw}" height="${hh}" fill="${entry.color}" stroke="#f0c4d4" stroke-width="3" rx="8"/>`;
       /* \u697c\u9876\u68af\u5f62\uff08\u7d2b\uff09 */
-      out += `<polygon points="${hx-5},${hy} ${hx+hw+5},${hy} ${hx+hw-30},${hy-40} ${hx+30},${hy-40}" fill="#b98cd9" stroke="#7a4ec9" stroke-width="2"/>`;
-      out += `<line x1="${hx+40}" y1="${hy-25}" x2="${hx+hw-40}" y2="${hy-25}" stroke="#a06fc6" stroke-width="1" opacity=".55"/>`;
+      out += `<polygon points="${hx-5},${hy} ${hx+hw+5},${hy} ${hx+hw-30},${hy-40} ${hx+30},${hy-40}" fill="#b98cd9" stroke="#7a4ec9" stroke-width="3"/>`;
+      out += `<line x1="${hx+40}" y1="${hy-25}" x2="${hx+hw-40}" y2="${hy-25}" stroke="#a06fc6" stroke-width="2.6" opacity=".55"/>`;
       /* 5 \u4e2a\u7a97\u6237\uff08\u5355\u6392\uff09y=22-58 */
       for (let i = 0; i < 5; i++) {
         const wx = hx + 32 + i * 48;
-        out += `<rect x="${wx}" y="${hy + 20}" width="30" height="38" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="1.5" rx="2"/>`;
-        out += `<line x1="${wx + 15}" y1="${hy + 20}" x2="${wx + 15}" y2="${hy + 58}" stroke="#7a4ec9" stroke-width="0.8"/>`;
-        out += `<line x1="${wx}" y1="${hy + 39}" x2="${wx + 30}" y2="${hy + 39}" stroke="#7a4ec9" stroke-width="0.8"/>`;
+        out += `<rect x="${wx}" y="${hy + 20}" width="30" height="38" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2.6" rx="5"/>`;
+        out += `<line x1="${wx + 15}" y1="${hy + 20}" x2="${wx + 15}" y2="${hy + 58}" stroke="#7a4ec9" stroke-width="1.8"/>`;
+        out += `<line x1="${wx}" y1="${hy + 39}" x2="${wx + 30}" y2="${hy + 39}" stroke="#7a4ec9" stroke-width="1.8"/>`;
       }
       /* \u70df\u56f1 + 3 \u70df */
-      out += `<rect x="${hx + hw - 40}" y="${hy - 36}" width="14" height="22" fill="#a06fc6" stroke="#7a4ec9" stroke-width="1.2"/>`;
+      out += `<rect x="${hx + hw - 40}" y="${hy - 36}" width="14" height="22" fill="#a06fc6" stroke="#7a4ec9" stroke-width="1.8"/>`;
       out += `<circle cx="${hx + hw - 33}" cy="${hy - 46}" r="6" fill="#fff" opacity=".75"/>`;
       out += `<circle cx="${hx + hw - 28}" cy="${hy - 58}" r="8" fill="#fff" opacity=".55"/>`;
       out += `<circle cx="${hx + hw - 22}" cy="${hy - 70}" r="10" fill="#fff" opacity=".35"/>`;
       /* \u7d2b\u8272\u5927\u95e8 + \u95e8\u628a\u624b + \u95e8\u4e0a\u5c0f\u7a97 */
-      out += `<rect x="${hx + hw/2 - 28}" y="${hy + hh - 76}" width="56" height="48" fill="#b98cd9" stroke="#7a4ec9" stroke-width="2" rx="2"/>`;
+      out += `<rect x="${hx + hw/2 - 28}" y="${hy + hh - 76}" width="56" height="48" fill="#b98cd9" stroke="#7a4ec9" stroke-width="3" rx="5"/>`;
       out += `<circle cx="${hx + hw/2 + 22}" cy="${hy + hh - 52}" r="2.5" fill="#5a2c5a"/>`;
-      out += `<rect x="${hx + hw/2 - 18}" y="${hy + hh - 70}" width="36" height="12" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="1" rx="1"/>`;
+      out += `<rect x="${hx + hw/2 - 18}" y="${hy + hh - 70}" width="36" height="12" fill="#cdf0ff" stroke="#7a4ec9" stroke-width="2.6" rx="6"/>`;
       /* \u90ae\u7bb1 */
       out += `<rect x="${hx + hw - 50}" y="${hy + hh - 30}" width="3" height="22" fill="#7a5a3a"/>`;
-      out += `<rect x="${hx + hw - 56}" y="${hy + hh - 50}" width="14" height="20" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2" rx="1.5"/>`;
+      out += `<rect x="${hx + hw - 56}" y="${hy + hh - 50}" width="14" height="20" fill="#ff5c5c" stroke="#a83232" stroke-width="1.8" rx="8"/>`;
       out += `<rect x="${hx + hw - 53}" y="${hy + hh - 42}" width="5" height="2" fill="#fff"/>`;
       /* \u201c\u6211\u5bb6\u201d\u6807\u7b7e */
       out += `<text x="${hx + hw/2}" y="${hy + 16}" text-anchor="middle" font-size="16" font-weight="800" fill="#7a4ec9">${entry.label}</text>`;
       return out;
     }
     if (entry.id === 'yard') {
-      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#6cc46a" stroke-width="2" rx="4"/>`;
+      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#6cc46a" stroke-width="3" rx="8"/>`;
       /* \u79cb\u5343 */
       out += `<rect x="60" y="80" width="3" height="50" fill="#7a5a3a"/>`;
       out += `<rect x="140" y="80" width="3" height="50" fill="#7a5a3a"/>`;
-      out += `<line x1="60" y1="80" x2="143" y2="80" stroke="#7a5a3a" stroke-width="2.5"/>`;
-      out += `<line x1="100" y1="83" x2="100" y2="118" stroke="#5a4a2a" stroke-width="1.2"/>`;
-      out += `<line x1="110" y1="83" x2="110" y2="116" stroke="#5a4a2a" stroke-width="1.2"/>`;
-      out += `<rect x="92" y="114" width="30" height="7" rx="2" fill="#ff9eb5" stroke="#c45875" stroke-width="1"/>`;
+      out += `<line x1="60" y1="80" x2="143" y2="80" stroke="#7a5a3a" stroke-width="3"/>`;
+      out += `<line x1="100" y1="83" x2="100" y2="118" stroke="#5a4a2a" stroke-width="1.8"/>`;
+      out += `<line x1="110" y1="83" x2="110" y2="116" stroke="#5a4a2a" stroke-width="1.8"/>`;
+      out += `<rect x="92" y="114" width="30" height="7" rx="5" fill="#ff9eb5" stroke="#c45875" stroke-width="2.6"/>`;
       /* \u6c99\u5751 */
-      out += `<ellipse cx="60" cy="155" rx="28" ry="9" fill="#f7d488" stroke="#c4944f" stroke-width="1.5"/>`;
+      out += `<ellipse cx="60" cy="155" rx="28" ry="9" fill="#f7d488" stroke="#c4944f" stroke-width="2.6"/>`;
       /* \u90ae\u7bb1 */
-      out += `<rect x="218" y="140" width="14" height="20" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2" rx="1.5"/>`;
+      out += `<rect x="218" y="140" width="14" height="20" fill="#ff5c5c" stroke="#a83232" stroke-width="1.8" rx="8"/>`;
       out += `<rect x="214" y="137" width="22" height="4" fill="#7a5a3a"/>`;
       /* 1 \u6735\u82b1 */
-      out += `<g transform="translate(180, 60)"><ellipse cx="0" cy="-3" rx="4" ry="5" fill="#ff9eb5"/><circle r="2" fill="#fff3c9"/></g>`;
+      out += `<g transform="translate(180, 60)"><ellipse cx="0" cy="-3" rx="8" ry="5" fill="#ff9eb5"/><circle r="2" fill="#fff3c9"/></g>`;
       out += `<text x="140" y="180" text-anchor="middle" font-size="16" font-weight="800" fill="#4e9e4a">${entry.label}</text>`;
       return out;
     }
     if (entry.id === 'park') {
-      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#7ec8e3" stroke-width="2" rx="4"/>`;
+      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#7ec8e3" stroke-width="3" rx="8"/>`;
       /* \u55b7\u6cc9 */
-      out += `<circle cx="140" cy="80" r="18" fill="#fff" stroke="#7ec8e3" stroke-width="1.5"/>`;
+      out += `<circle cx="140" cy="80" r="18" fill="#fff" stroke="#7ec8e3" stroke-width="2.6"/>`;
       out += `<circle cx="140" cy="76" r="3" fill="#9ad7f0"/>`;
-      out += `<line x1="140" y1="58" x2="140" y2="50" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>`;
-      out += `<line x1="126" y1="64" x2="118" y2="58" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>`;
-      out += `<line x1="154" y1="64" x2="162" y2="58" stroke="#9ad7f0" stroke-width="2" stroke-linecap="round"/>`;
+      out += `<line x1="140" y1="58" x2="140" y2="50" stroke="#9ad7f0" stroke-width="3" stroke-linecap="round"/>`;
+      out += `<line x1="126" y1="64" x2="118" y2="58" stroke="#9ad7f0" stroke-width="3" stroke-linecap="round"/>`;
+      out += `<line x1="154" y1="64" x2="162" y2="58" stroke="#9ad7f0" stroke-width="3" stroke-linecap="round"/>`;
       /* \u6c60\u5858 */
-      out += `<ellipse cx="60" cy="155" rx="28" ry="9" fill="#4a90c4" stroke="#2c5a87" stroke-width="1.5"/>`;
+      out += `<ellipse cx="60" cy="155" rx="28" ry="9" fill="#4a90c4" stroke="#2c5a87" stroke-width="2.6"/>`;
       out += `<ellipse cx="60" cy="152" rx="22" ry="6" fill="#7eb0d6"/>`;
       /* \u5927\u6811 */
       out += `<rect x="218" y="92" width="5" height="32" fill="#7a5a3a"/>`;
       out += `<ellipse cx="220" cy="85" rx="14" ry="10" fill="#6cc46a"/>`;
       out += `<ellipse cx="214" cy="81" rx="8" ry="6" fill="#7ed47b"/>`;
       /* \u91ce\u9910\u684c */
-      out += `<rect x="230" y="150" width="30" height="12" fill="#ff5c5c" stroke="#a83232" stroke-width="1.2"/>`;
+      out += `<rect x="230" y="150" width="30" height="12" fill="#ff5c5c" stroke="#a83232" stroke-width="1.8"/>`;
       out += `<rect x="232" y="161" width="2" height="6" fill="#7a5a3a"/>`;
       out += `<rect x="256" y="161" width="2" height="6" fill="#7a5a3a"/>`;
       /* 2 \u6735\u82b1 */
       [[180, 50], [110, 130]].forEach(([x, y]) => {
-        out += `<g transform="translate(${x},${y})"><line x1="0" y1="0" x2="0" y2="8" stroke="#4e9e4a" stroke-width="2"/><ellipse cx="0" cy="-3" rx="3" ry="4" fill="#fff"/><circle r="1.5" fill="#ffd34d"/></g>`;
+        out += `<g transform="translate(${x},${y})"><line x1="0" y1="0" x2="0" y2="8" stroke="#4e9e4a" stroke-width="3"/><ellipse cx="0" cy="-3" rx="6" ry="4" fill="#fff"/><circle r="1.5" fill="#ffd34d"/></g>`;
       });
       out += `<text x="140" y="182" text-anchor="middle" font-size="16" font-weight="800" fill="#4f9cc0">${entry.label}</text>`;
       return out;
     }
     if (entry.id === 'shop') {
-      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#ff9eb5" stroke-width="2" rx="4"/>`;
+      out += `<rect x="0" y="0" width="280" height="193" fill="${entry.color}" stroke="#ff9eb5" stroke-width="3" rx="8"/>`;
       /* \u62db\u724c */
-      out += `<rect x="60" y="60" width="160" height="28" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5" rx="2"/>`;
+      out += `<rect x="60" y="60" width="160" height="28" fill="#ff5c5c" stroke="#a83232" stroke-width="2.6" rx="5"/>`;
       out += `<text x="140" y="80" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">${SHOP_DETAIL.signText}</text>`;
-      out += `<line x1="70" y1="88" x2="70" y2="110" stroke="#7a5a3a" stroke-width="2"/>`;
-      out += `<line x1="210" y1="88" x2="210" y2="110" stroke="#7a5a3a" stroke-width="2"/>`;
+      out += `<line x1="70" y1="88" x2="70" y2="110" stroke="#7a5a3a" stroke-width="3"/>`;
+      out += `<line x1="210" y1="88" x2="210" y2="110" stroke="#7a5a3a" stroke-width="3"/>`;
       /* \u7cd6\u679c\u5899 5 \u8272 */
       SHOP_DETAIL.candyRows.forEach(r => {
         out += `<rect x="${SHOP_DETAIL.candyX}" y="${r.y}" width="${SHOP_DETAIL.candyW}" height="8" fill="${r.color}"/>`;
       });
       /* \u706f\u7b3c */
       SHOP_DETAIL.lanterns.forEach(l => {
-        out += `<ellipse cx="${l.x}" cy="${l.y}" r="6" ry="8" fill="#ff5c5c" stroke="#a83232" stroke-width="1"/>`;
-        out += `<line x1="${l.x}" y1="${l.y - 10}" x2="${l.x}" y2="${l.y - 8}" stroke="#7a5a3a" stroke-width="1"/>`;
+        out += `<ellipse cx="${l.x}" cy="${l.y}" r="6" ry="8" fill="#ff5c5c" stroke="#a83232" stroke-width="2.6"/>`;
+        out += `<line x1="${l.x}" y1="${l.y - 10}" x2="${l.x}" y2="${l.y - 8}" stroke="#7a5a3a" stroke-width="2.6"/>`;
       });
       /* \u6536\u94f6\u53f0 */
-      out += `<rect x="${SHOP_DETAIL.counter[0]}" y="${SHOP_DETAIL.counter[1]}" width="${SHOP_DETAIL.counter[2]}" height="${SHOP_DETAIL.counter[3]}" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="1.2"/>`;
+      out += `<rect x="${SHOP_DETAIL.counter[0]}" y="${SHOP_DETAIL.counter[1]}" width="${SHOP_DETAIL.counter[2]}" height="${SHOP_DETAIL.counter[3]}" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="1.8"/>`;
       /* \u5730\u6bef */
       out += `<rect x="${SHOP_DETAIL.carpet[0]}" y="${SHOP_DETAIL.carpet[1]}" width="${SHOP_DETAIL.carpet[2]}" height="${SHOP_DETAIL.carpet[3]}" fill="#ff8f7a"/>`;
       out += `<text x="140" y="183" text-anchor="middle" font-size="16" font-weight="800" fill="#d96b8a">${entry.label}</text>`;
@@ -395,11 +395,11 @@
         out += `<rect x="${s.x}" y="${s.y}" width="${s.w}" height="3" fill="#bcbcbc"/>`;
         out += `<rect x="${s.x}" y="${s.y + s.h - 3}" width="${s.w}" height="3" fill="#bcbcbc"/>`;
         /* \u4e2d\u95f4\u51c0\u7a7a\u4e0a\u6709\u4eba\u884c\u6a2a\u7ebf */
-        out += `<line x1="${s.x}" y1="${s.y + 15}" x2="${s.x + s.w}" y2="${s.y + 15}" stroke="#fff" stroke-width="1" stroke-dasharray="6 4" opacity=".5"/>`;
+        out += `<line x1="${s.x}" y1="${s.y + 15}" x2="${s.x + s.w}" y2="${s.y + 15}" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>`;
       } else {
         out += `<rect x="${s.x}" y="${s.y}" width="3" height="${s.h}" fill="#bcbcbc"/>`;
         out += `<rect x="${s.x + s.w - 3}" y="${s.y}" width="3" height="${s.h}" fill="#bcbcbc"/>`;
-        out += `<line x1="${s.x + 15}" y1="${s.y}" x2="${s.x + 15}" y2="${s.y + s.h}" stroke="#fff" stroke-width="1" stroke-dasharray="6 4" opacity=".5"/>`;
+        out += `<line x1="${s.x + 15}" y1="${s.y}" x2="${s.x + 15}" y2="${s.y + s.h}" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>`;
       }
     });
     return out;
@@ -419,7 +419,7 @@
       out += `<rect x="${c.cx - 7}" y="${c.cy - 16}" width="3" height="32" fill="#fff"/>`;
       /* \u8def\u706f */
       out += `<rect x="${c.cx - 22}" y="${c.cy - 32}" width="3" height="22" fill="#7a5a3a"/>`;
-      out += `<rect x="${c.cx - 28}" y="${c.cy - 42}" width="14" height="10" fill="#ffd34d" stroke="#a06820" stroke-width="1.2" rx="1.5"/>`;
+      out += `<rect x="${c.cx - 28}" y="${c.cy - 42}" width="14" height="10" fill="#ffd34d" stroke="#a06820" stroke-width="1.8" rx="8"/>`;
       /* \u7ea2\u7eff\u706f */
       out += `<rect x="${c.cx + 18}" y="${c.cy - 32}" width="3" height="32" fill="#2a2a2a"/>`;
       out += `<circle cx="${c.cx + 19.5}" cy="${c.cy - 28}" r="3" fill="#ff5c5c"/>`;
@@ -443,7 +443,7 @@
       </g>
       <!-- \u592a\u9633 -->
       <g transform="translate(60,60)">
-        <circle r="20" fill="#ffd34d" stroke="#ffb830" stroke-width="2.5"/>
+        <circle r="20" fill="#ffd34d" stroke="#ffb830" stroke-width="3"/>
         ${Array.from({length: 8}, (_, i) => {
           const a = i * 45;
           return `<line x1="0" y1="-26" x2="0" y2="-33" stroke="#ffcf4d" stroke-width="3.5" stroke-linecap="round" transform="rotate(${a})"/>`;
@@ -471,10 +471,10 @@ const MAP_CLOSE_SVG = `
   const MAP_BTN_SVG = `
     <svg viewBox="0 0 36 36">
       <!-- 地图图标（卷起的地图） -->
-      <path d="M5,10 Q18,4 32,10 L32,26 Q18,32 5,26 Z" fill="#fff" stroke="#7a4ec9" stroke-width="2.2" stroke-linejoin="round"/>
-      <path d="M5,10 Q12,8 18,11 Q24,14 32,10" fill="none" stroke="#7a4ec9" stroke-width="1.4" opacity=".55"/>
-      <path d="M5,26 Q12,28 18,25 Q24,22 32,26" fill="none" stroke="#7a4ec9" stroke-width="1.4" opacity=".55"/>
-      <line x1="18" y1="11" x2="18" y2="25" stroke="#7a4ec9" stroke-width="1.4" opacity=".55"/>
+      <path d="M5,10 Q18,4 32,10 L32,26 Q18,32 5,26 Z" fill="#fff" stroke="#7a4ec9" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M5,10 Q12,8 18,11 Q24,14 32,10" fill="none" stroke="#7a4ec9" stroke-width="3" opacity=".55"/>
+      <path d="M5,26 Q12,28 18,25 Q24,22 32,26" fill="none" stroke="#7a4ec9" stroke-width="3" opacity=".55"/>
+      <line x1="18" y1="11" x2="18" y2="25" stroke="#7a4ec9" stroke-width="3" opacity=".55"/>
       <!-- 定位点（小红点） -->
       <circle cx="14" cy="17" r="2.4" fill="#ff5c8a"/>
       <circle cx="22" cy="20" r="2.4" fill="#f7b967"/>
@@ -551,7 +551,7 @@ const MAP_CLOSE_SVG = `
   const RESET_ICON_SVG = `
     <svg viewBox="0 0 36 36">
       <path d="M29 18 a11 11 0 1 1 -3.3 -7.8" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <polygon points="21,5 32,9 25,17" fill="#fff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
+      <polygon points="21,5 32,9 25,17" fill="#fff" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/>
     </svg>`;
   const RELAYOUT_ICON_SVG = `
     <svg viewBox="0 0 36 36">
