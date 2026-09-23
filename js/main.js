@@ -274,139 +274,31 @@
       return out;
     }
 
-        if (entry.id === 'house') {
-      /* L3-3 v5: 改回 apple-touch-icon.png（老吴 9-23 指定，PNG 自带房子识别度） */
+    if (entry.id === 'house') {
+      /* L3-3 v6: 改为 mmx 生图 icons/house.png（老吴 9-23 11:42 决定：house 也升级成精致版） */
       const hx = 0, hy = 0, hw = 280, hh = 280;
-      out += '<image href="icons/apple-touch-icon.png" x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" preserveAspectRatio="xMidYMid meet"/>';
+      out += '<image href="icons/house.png" x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" preserveAspectRatio="xMidYMid meet"/>';
       return out;
     }
 
-    if (entry.id === 'yard') {
-      /* L3-3 v3 院子：圆胖精致版 */
+        if (entry.id === 'yard') {
+      /* L3-3 v6: 改为 mmx 生图 icons/yard.png，去掉文字 label（老吴 9-23 决定） */
       const hx = 0, hy = 0, hw = 280, hh = 280;
-      out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#a8e6a1" stroke="#6cc46a" stroke-width="3" rx="20"/>';
-      /* 秋千 */
-      out += '<rect x="55" y="100" width="8" height="80" rx="4" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2.5"/>';
-      out += '<rect x="155" y="100" width="8" height="80" rx="4" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2.5"/>';
-      out += '<line x1="55" y1="100" x2="163" y2="100" stroke="#7a5a3a" stroke-width="3" stroke-linecap="round"/>';
-      out += '<line x1="109" y1="105" x2="109" y2="155" stroke="#5a4a2a" stroke-width="1.5"/>';
-      out += '<rect x="92" y="150" width="34" height="14" rx="6" fill="#ff9eb5" stroke="#c45875" stroke-width="2.5"/>';
-      out += '<ellipse cx="100" cy="155" rx="3" ry="2" fill="#ffd9ea" opacity=".7"/>';
-      /* 沙坑 */
-      out += '<ellipse cx="60" cy="225" rx="40" ry="12" fill="#f7d488" stroke="#c4944f" stroke-width="2.5"/>';
-      out += '<ellipse cx="60" cy="220" rx="32" ry="7" fill="#fff3c9" opacity=".55"/>';
-      /* 邮箱 */
-      out += '<rect x="218" y="100" width="14" height="22" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2"/>';
-      out += '<rect x="210" y="78" width="30" height="32" rx="10" fill="#ff5c5c" stroke="#a83232" stroke-width="3"/>';
-      out += '<rect x="216" y="86" width="18" height="4" rx="2" fill="#fff"/>';
-      out += '<circle cx="225" cy="98" r="2" fill="#fff"/>';
-      /* 花 */
-      out += '<g transform="translate(180, 50)"><ellipse cx="-5" cy="-2" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><ellipse cx="5" cy="-2" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><ellipse cx="0" cy="-8" rx="4" ry="6" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.2"/><circle r="2.5" fill="#ffd34d" stroke="#a06820" stroke-width="1"/></g>';
-      out += '<g transform="translate(40, 170)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 265) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4e9e4a">' + entry.label + '</text>';
+      out += '<image href="icons/yard.png" x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" preserveAspectRatio="xMidYMid meet"/>';
       return out;
     }
 
-    if (entry.id === 'park') {
-      /* L3-3 v3 公园：圆胖精致版 */
+        if (entry.id === 'park') {
+      /* L3-3 v6: 改为 mmx 生图 icons/park.png，去掉文字 label（老吴 9-23 决定） */
       const hx = 0, hy = 0, hw = 280, hh = 280;
-      out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#9ad7f0" stroke="#7ec8e3" stroke-width="3" rx="20"/>';
-      /* 喷泉 */
-      out += '<rect x="120" y="200" width="40" height="30" rx="6" fill="#bcbcbc" stroke="#5a5a5a" stroke-width="3"/>';
-      out += '<rect x="116" y="160" width="48" height="40" rx="6" fill="#dcdcdc" stroke="#3a3a3a" stroke-width="3"/>';
-      out += '<circle cx="140" cy="135" r="26" fill="#fff" stroke="#7ec8e3" stroke-width="3"/>';
-      out += '<ellipse cx="135" cy="130" rx="6" ry="3" fill="#cdf0ff" opacity=".7"/>';
-      out += '<path d="M140,109 Q134,90 142,75 Q150,90 144,109" fill="#9ad7f0" stroke="#7ec8e3" stroke-width="2.5" stroke-linejoin="round"/>';
-      out += '<path d="M125,118 Q115,100 122,85" fill="none" stroke="#9ad7f0" stroke-width="2.5" stroke-linecap="round"/>';
-      out += '<path d="M155,118 Q165,100 158,85" fill="none" stroke="#9ad7f0" stroke-width="2.5" stroke-linecap="round"/>';
-      /* 池塘 */
-      out += '<ellipse cx="60" cy="240" rx="40" ry="14" fill="#5aa0d8" stroke="#2c5a87" stroke-width="3"/>';
-      out += '<ellipse cx="60" cy="235" rx="32" ry="9" fill="#9ad0e8" opacity=".7"/>';
-      out += '<ellipse cx="55" cy="232" rx="10" ry="4" fill="#fff" opacity=".6"/>';
-      /* 大树 */
-      out += '<rect x="220" y="155" width="10" height="50" rx="3" fill="#a07a4a" stroke="#5a3a1a" stroke-width="2.5"/>';
-      out += '<ellipse cx="225" cy="140" rx="28" ry="22" fill="#6cc46a" stroke="#4a9e4a" stroke-width="3"/>';
-      out += '<ellipse cx="215" cy="130" rx="14" ry="10" fill="#8ed47b" opacity=".85"/>';
-      /* 长椅 */
-      out += '<rect x="180" y="245" width="60" height="8" rx="3" fill="#a07a4a" stroke="#5a3a1a" stroke-width="2"/>';
-      out += '<rect x="185" y="252" width="4" height="14" fill="#5a3a1a"/>';
-      out += '<rect x="231" y="252" width="4" height="14" fill="#5a3a1a"/>';
-      /* 花 */
-      out += '<g transform="translate(180, 70)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
-      out += '<g transform="translate(110, 180)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><circle r="2" fill="#ffd34d"/></g>';
-      out += '<g transform="translate(220, 220)">';
-      out += '<ellipse cx="0" cy="0" rx="22" ry="18" fill="#fff" stroke="#c9a89a" stroke-width="2"/>';
-      out += '<ellipse cx="-7" cy="-3" rx="9" ry="6" fill="#ffe9f0" opacity=".6"/>';
-      out += '<ellipse cx="-9" cy="-30" rx="4" ry="14" fill="#fff" stroke="#c9a89a" stroke-width="2"/>';
-      out += '<ellipse cx="-9" cy="-30" rx="2" ry="9" fill="#ffc8d8"/>';
-      out += '<ellipse cx="9" cy="-30" rx="4" ry="14" fill="#fff" stroke="#c9a89a" stroke-width="2"/>';
-      out += '<ellipse cx="9" cy="-30" rx="2" ry="9" fill="#ffc8d8"/>';
-      out += '<ellipse cx="0" cy="-15" rx="14" ry="12" fill="#fff" stroke="#c9a89a" stroke-width="2"/>';
-      out += '<circle cx="-5" cy="-17" r="2" fill="#3a302a"/>';
-      out += '<circle cx="5" cy="-17" r="2" fill="#3a302a"/>';
-      out += '<circle cx="-5.5" cy="-17.5" r="0.7" fill="#fff"/>';
-      out += '<circle cx="4.5" cy="-17.5" r="0.7" fill="#fff"/>';
-      out += '<path d="M-2,-12 L0,-10 L2,-12 Z" fill="#ff9eb5"/>';
-      out += '<path d="M0,-10 Q-3,-8 -5,-9" stroke="#a85a78" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
-      out += '<path d="M0,-10 Q3,-8 5,-9" stroke="#a85a78" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
-      out += '<circle cx="-20" cy="2" r="4" fill="#fff" stroke="#c9a89a" stroke-width="1.5"/>';
-      out += '</g>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 270) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4f9cc0">' + entry.label + '</text>';
+      out += '<image href="icons/park.png" x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" preserveAspectRatio="xMidYMid meet"/>';
       return out;
     }
 
-    if (entry.id === 'shop') {
-      /* L3-3 v4 商店：立体招牌 + 3 层货架 + 冰柜 + 收银台 */
+        if (entry.id === 'shop') {
+      /* L3-3 v6: 改为 mmx 生图 icons/shop.png，去掉文字 label（老吴 9-23 决定） */
       const hx = 0, hy = 0, hw = 280, hh = 280;
-      out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#fff6e8" stroke="#f0c8a4" stroke-width="3" rx="20"/>';
-      /* 立体招牌 */
-      out += '<rect x="50" y="22" width="180" height="48" rx="14" fill="#ff5c5c" stroke="#a83232" stroke-width="3"/>';
-      out += '<rect x="56" y="28" width="168" height="14" rx="6" fill="#ff9e9e" opacity=".6"/>';
-      out += '<rect x="62" y="64" width="6" height="10" fill="#7a5a3a"/>';
-      out += '<rect x="212" y="64" width="6" height="10" fill="#7a5a3a"/>';
-      out += '<text x="140" y="58" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">' + SHOP_DETAIL.signText + '</text>';
-      /* 3 层货架 */
-      out += '<rect x="40" y="92" width="120" height="6" rx="2" fill="#a07a4a" stroke="#5a3a1a" stroke-width="1.5"/>';
-      out += '<rect x="44" y="100" width="14" height="20" rx="3" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1.5"/>';
-      out += '<ellipse cx="51" cy="103" rx="2" ry="3" fill="#fff" opacity=".5"/>';
-      out += '<rect x="62" y="100" width="14" height="20" rx="3" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.5"/>';
-      out += '<ellipse cx="69" cy="103" rx="2" ry="3" fill="#fff" opacity=".5"/>';
-      out += '<rect x="80" y="100" width="14" height="20" rx="3" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.5"/>';
-      out += '<rect x="98" y="100" width="14" height="20" rx="3" fill="#98d8a0" stroke="#5a9e56" stroke-width="1.5"/>';
-      out += '<rect x="40" y="124" width="120" height="6" rx="2" fill="#a07a4a" stroke="#5a3a1a" stroke-width="1.5"/>';
-      out += '<rect x="44" y="132" width="14" height="20" rx="3" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
-      out += '<rect x="62" y="132" width="14" height="20" rx="3" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1.5"/>';
-      out += '<rect x="80" y="132" width="14" height="20" rx="3" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5"/>';
-      out += '<rect x="98" y="132" width="14" height="20" rx="3" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.5"/>';
-      out += '<rect x="40" y="156" width="120" height="6" rx="2" fill="#a07a4a" stroke="#5a3a1a" stroke-width="1.5"/>';
-      out += '<rect x="44" y="164" width="20" height="20" rx="3" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.5"/>';
-      out += '<rect x="68" y="164" width="20" height="20" rx="3" fill="#98d8a0" stroke="#5a9e56" stroke-width="1.5"/>';
-      out += '<rect x="92" y="164" width="20" height="20" rx="3" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
-      /* 冰柜（右上） */
-      out += '<rect x="174" y="92" width="76" height="58" rx="6" fill="#dcdcdc" stroke="#5a5a5a" stroke-width="2.5"/>';
-      out += '<rect x="178" y="98" width="68" height="46" rx="4" fill="#fff"/>';
-      out += '<rect x="184" y="106" width="14" height="14" rx="2" fill="#7ec8e3"/>';
-      out += '<rect x="202" y="106" width="14" height="14" rx="2" fill="#98d8a0"/>';
-      out += '<rect x="220" y="106" width="14" height="14" rx="2" fill="#ffd34d"/>';
-      out += '<rect x="184" y="124" width="50" height="3" rx="1" fill="#a07a4a"/>';
-      out += '<rect x="184" y="131" width="14" height="8" rx="2" fill="#b79ced"/>';
-      out += '<rect x="202" y="131" width="14" height="8" rx="2" fill="#ff9eb5"/>';
-      out += '<rect x="220" y="131" width="14" height="8" rx="2" fill="#7ed47b"/>';
-      /* 收银台（右下） */
-      out += '<rect x="166" y="200" width="92" height="36" rx="6" fill="#9b6b3a" stroke="#5a3a1a" stroke-width="2.5"/>';
-      out += '<rect x="170" y="204" width="84" height="6" rx="3" fill="#dcdcdc"/>';
-      out += '<rect x="194" y="212" width="36" height="20" rx="3" fill="#2a2a2a"/>';
-      out += '<rect x="198" y="216" width="28" height="3" rx="1" fill="#7ed47b"/>';
-      out += '<rect x="198" y="222" width="28" height="3" rx="1" fill="#7ed47b"/>';
-      out += '<circle cx="206" cy="228" r="2" fill="#ffd34d"/>';
-      out += '<circle cx="214" cy="228" r="2" fill="#ffd34d"/>';
-      out += '<circle cx="222" cy="228" r="2" fill="#ffd34d"/>';
-      /* 地毯 */
-      out += '<rect x="80" y="252" width="100" height="14" rx="4" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5"/>';
-      out += '<ellipse cx="100" cy="256" rx="14" ry="2" fill="#ff9e9e" opacity=".5"/>';
-      /* 圆胖花 */
-      out += '<g transform="translate(46, 248)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 270) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#d96b8a">' + entry.label + '</text>';
+      out += '<image href="icons/shop.png" x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" preserveAspectRatio="xMidYMid meet"/>';
       return out;
     }
 
