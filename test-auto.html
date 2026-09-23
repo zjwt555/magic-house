@@ -762,7 +762,9 @@
       /* Phase 2 v5：Toca 风格丰富化 —— 拟物数量检查 */
       const mapAllShapes = $$('#screen-map svg *');
       log('地图屏 SVG 子元素 ≥ 90（v7 街道+4 块+拟物丰富）', mapAllShapes.length >= 90, `n=${mapAllShapes.length}`);
-      log('地图屏大房子含屋顶瓦片', $$('#screen-map .map-house polygon').length >= 1);
+      /* L3-3 v5: 大房子改回 apple-touch-icon.png（无 polygon），兼容旧 polygon 检查 + 新 image 检查 */
+      log('地图屏大房子含屋顶瓦片',
+        $$('#screen-map .map-house polygon').length >= 1 || $$('#screen-map .map-house image').length >= 1);
 
       /* Phase 2 v7: 3x3 网格 + 街道 */
       const mapBlocks = $$('#screen-map .map-room, #screen-map .map-house');
