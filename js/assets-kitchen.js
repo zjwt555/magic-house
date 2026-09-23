@@ -157,13 +157,32 @@
       </svg>`,
     peach: `
       <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="48" r="22" fill="#ffb3c7"/>
-        <path d="M40,28 Q34,42 40,68" stroke="#ff8faa" stroke-width="4" fill="none"/>
+        <defs>
+          <radialGradient id="item-peach-body" cx="35%" cy="30%" r="65%">
+            <stop offset="0%" stop-color="#ffd0dd"/>
+            <stop offset="60%" stop-color="#ffb3c7"/>
+            <stop offset="100%" stop-color="#d63a6a"/>
+          </radialGradient>
+          <radialGradient id="item-peach-leaf" cx="35%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#a8e0a0"/>
+            <stop offset="100%" stop-color="#5a9e56"/>
+          </radialGradient>
+        </defs>
+        <!-- 桃子（粉红渐变 + 描边） -->
+        <circle cx="40" cy="48" r="22" fill="url(#item-peach-body)" stroke="#a8306a" stroke-width="2"/>
+        <!-- 中间分割线（红描边） -->
+        <path d="M40,28 Q34,42 40,68" stroke="#ff8faa" stroke-width="3" fill="none"/>
+        <!-- 桃尖（顶部小尖） -->
+        <circle cx="40" cy="26" r="2" fill="#5a9e56"/>
+        <!-- 粉红高光（左侧） -->
         <circle cx="31" cy="42" r="7" fill="#ffd0dd" opacity=".8"/>
+        <!-- 果柄（木色描边） -->
         <line x1="40" y1="26" x2="40" y2="16" stroke="#8a5a3a" stroke-width="3.5" stroke-linecap="round"/>
-        <ellipse cx="49" cy="18" rx="10" ry="5" fill="#7ec088" transform="rotate(-22 49 18)"/>
-      </svg>`
-  };
+        <!-- 顶部绿叶（绿渐变 + 描边） -->
+        <ellipse cx="49" cy="18" rx="10" ry="5" fill="url(#item-peach-leaf)" stroke="#5a9e56" stroke-width="1.2" transform="rotate(-22 49 18)"/>
+        <!-- 彩蛋：叶高光 -->
+        <path d="M44,16 Q49,18 54,18" stroke="#fff" stroke-width="1" fill="none" opacity=".6" transform="rotate(-22 49 18)"/>
+      </svg>`,  };
 
   /* ---------- 容器（viewBox 0 0 320 300） ---------- */
   const CONTAINERS = {
