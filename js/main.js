@@ -441,27 +441,20 @@
   }
 
   /* 4 \u4e2a\u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3\uff08\u6570\u636e\u9a71\u52a8\uff09 */
+  /* L3-3 v4 hotfix2: 4 horizontal + 4 vertical, full-screen through, 4 corner 30x30 natural cross */
   const STREETS = [
-    /* \u6a2a\u8857\u9053 8 \u6bb5 (y=0/280/590/870) \u7ed5\u5168\u5c4f */
+    /* horizontal 4 (full screen) */
     { x: 0,    y: 0,   w: 900, h: 30,  kind: 'h' },
-    { x: 0,    y: 280, w: 280, h: 30,  kind: 'h' },
-    { x: 310,  y: 280, w: 280, h: 30,  kind: 'h' },
-    { x: 620,  y: 280, w: 280, h: 30,  kind: 'h' },
-    { x: 0,    y: 590, w: 280, h: 30,  kind: 'h' },
-    { x: 310,  y: 590, w: 280, h: 30,  kind: 'h' },
-    { x: 620,  y: 590, w: 280, h: 30,  kind: 'h' },
+    { x: 0,    y: 280, w: 900, h: 30,  kind: 'h' },
+    { x: 0,    y: 590, w: 900, h: 30,  kind: 'h' },
     { x: 0,    y: 870, w: 900, h: 30,  kind: 'h' },
-    /* \u7ad6\u8857\u9053 9 \u6bb5 (x=0/280/590/870) \u7ed5\u5168\u5c4f */
-    { x: 0,    y: 30,  w: 30,  h: 560,  kind: 'v' },
-    { x: 0,    y: 620, w: 30,  h: 250,  kind: 'v' },
-    { x: 280,  y: 0,   w: 30,  h: 280,  kind: 'v' },
-    { x: 280,  y: 310, w: 30,  h: 280,  kind: 'v' },
-    { x: 280,  y: 620, w: 30,  h: 280,  kind: 'v' },
-    { x: 590,  y: 0,   w: 30,  h: 280,  kind: 'v' },
-    { x: 590,  y: 310, w: 30,  h: 280,  kind: 'v' },
-    { x: 590,  y: 620, w: 30,  h: 280,  kind: 'v' },
-    { x: 870,  y: 0,   w: 30,  h: 900,  kind: 'v' }
+    /* vertical 4 (full screen) */
+    { x: 0,    y: 0,   w: 30,  h: 900, kind: 'v' },
+    { x: 280,  y: 0,   w: 30,  h: 900, kind: 'v' },
+    { x: 590,  y: 0,   w: 30,  h: 900, kind: 'v' },
+    { x: 870,  y: 0,   w: 30,  h: 900, kind: 'v' }
   ];
+
     function _renderStreets() {
     let out = '';
     STREETS.forEach(s => {
@@ -486,11 +479,6 @@
         out += '<line x1="' + (s.x + 15) + '" y1="' + s.y + '" x2="' + (s.x + 15) + '" y2="' + (s.y + s.h) + '" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>';
       }
     });
-    /* L3-3 v4: 4 个角落 30x30 油油油油油油油油油填充（中大房与 4 角格子之间） */
-    out += '<rect x="280" y="280" width="30" height="30" fill="#5a5a5a" rx="3"/>';
-    out += '<rect x="590" y="280" width="30" height="30" fill="#5a5a5a" rx="3"/>';
-    out += '<rect x="280" y="590" width="30" height="30" fill="#5a5a5a" rx="3"/>';
-    out += '<rect x="590" y="590" width="30" height="30" fill="#5a5a5a" rx="3"/>';
     return out;
   }
   
