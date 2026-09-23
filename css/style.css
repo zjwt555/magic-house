@@ -1186,10 +1186,15 @@ html, body {
 
 .map-room {
   cursor: pointer;
-  transition: transform .15s cubic-bezier(.34,1.56,.64,1);
+  transition: filter .15s ease;
 }
-.map-room:hover { transform-box: fill-box; transform-origin: center; }
-.map-room:active { transform-box: fill-box; transform-origin: center; transform: scale(1.05); }
+.map-room:hover { filter: brightness(1.05); }
+.map-room:active {
+  /* 不能用 transform: scale — SVG <g> 的 transform="translate(x,y)" 属性会被 CSS transform 覆盖，
+     导致 :active 时 <g> 跑到 (0,0) 附近（fill-box 中心）而非视觉反馈。
+     改用 filter brightness + drop-shadow 提供反馈，不破坏 SVG translate。 */
+  filter: brightness(1.12) drop-shadow(0 3px 6px rgba(255, 158, 181, .35));
+}
 
 /* 室外区点击也响应（和室内一样的 hover/active） */
 .map-outdoor { cursor: pointer; }
