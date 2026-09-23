@@ -1196,23 +1196,27 @@ html, body {
 
 .map-marker {
   position: absolute;
-  width: 22px;
-  height: 22px;
   border-radius: 50%;
-  border: 3px solid #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
   pointer-events: none;
-  transform: translate(-50%, -50%) scale(0.82);
+  /* R1: iPad Safari 上 transform 会让 pointer-events:none 失效使 marker 拦截 click。
+     改用 margin + width/height 同步缩放，避免 transform 。 */
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid #fff;
+  margin: -9px 0 0 -9px;
   z-index: 5;
   opacity: 0;          /* 默认隐藏，等 _placeMarker 定位完再显 */
+  display: none;       /* R1: 默认完全脱离 hit-test，只有显示时才进入检测 */
 }
 .map-marker-girl { background: #ffd0dd; }
 .map-marker-cat  { background: #f7b967; }
-.map-marker[data-target-room] { opacity: 1; }
+.map-marker[data-target-room] { opacity: 1; display: block; }
 .map-marker.pulse { animation: marker-pulse 1.5s ease-in-out 1; }
 @keyframes marker-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(0.82); }
-  50%      { transform: translate(-50%, -50%) scale(1.15); }
+  /* R1: 改用 width/height/margin 同步缩放，不再用 transform */
+  0%, 100% { width: 18px; height: 18px; margin: -9px 0 0 -9px; border-width: 2.5px; }
+  50%      { width: 26px; height: 26px; margin: -13px 0 0 -13px; border-width: 3px; }
 }
 
 .map-hint {
