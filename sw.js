@@ -1,5 +1,5 @@
 /* ============ 魔法小屋 Service Worker：离线可玩 ============ */
-const VERSION = 'magic-house-40379a0c44';
+const VERSION = 'magic-house-3e24a0dba8';
 const CORE = [
   './',
   './index.html',
@@ -16,7 +16,11 @@ const CORE = [
   './js/main.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/apple-touch-icon.png'
+  './icons/apple-touch-icon.png',
+  './icons/house.png',
+  './icons/yard.png',
+  './icons/park.png',
+  './icons/shop.png'
 ];
 
 self.addEventListener('install', e => {
