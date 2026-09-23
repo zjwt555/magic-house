@@ -184,10 +184,11 @@
       log('默认娃娃位置不被 toolbar 遮',
         defaultGirlRect.bottom <= tbRect.top + 4,
         `girl.bottom=${Math.round(defaultGirlRect.bottom)} toolbar.top=${Math.round(tbRect.top)}`);
-      /* walkTo 上限 clamp：传 0.99 应被钳到 0.72 */
+      /* walkTo 上限 clamp：传 0.99 应被钳到 maxCharY()（cap=0.65 大屏兜底，desktop headless 模拟下通常 0.58） */
       window.World.walkTo('girl', 0.5, 0.99);
-      log('走路 y 上限钳到 0.65',
-        Store.state.char.girl.y === 0.65, `y=${Store.state.char.girl.y}`);
+      log('走路 y 上限钳到 maxCharY（≤0.65 cap 且 ≥0.42 下限）',
+        Store.state.char.girl.y <= 0.65 && Store.state.char.girl.y >= 0.42,
+        `y=${Store.state.char.girl.y}`);
       /* 拖到屏幕 90% 高度：clamp 后元素 bottom ≤ toolbar top */
       const stageRect = $('#screen-world .world-stage').getBoundingClientRect();
       window.World.placeChar('girl', 'living', 0.5, (stageRect.top + stageRect.height * 0.9 - stageRect.top) / stageRect.height);
@@ -640,13 +641,13 @@
       log('跳到公园', window.World.currentRoomId === 'park');
       log('公园含滑梯/喷泉/池塘', ['slide', 'fountain', 'pond'].every(id =>
         [...$$('#screen-world .item-card')].some(c => c.dataset.id === id)));
+      /* v0.7+：地图地点的实际命中检查放在地图屏激活后执行。 */
       window.World.jumpTo('shop'); // 商店
       await sleep(180);
       log('跳到商店', window.World.currentRoomId === 'shop');
       log('商店糖果墙默认', Store.state.rooms.shop.wall === 8, Store.state.rooms.shop.wall);
       log('商店含货架/收银台/冰柜', ['shopshelf', 'counter', 'freezer'].every(id =>
         [...$$('#screen-world .item-card')].some(c => c.dataset.id === id)));
-
       /* ---- v0.7：ROOM_SETS 重分配后的抽屉内容验证 ---- */
       window.World.jumpTo('bedroom'); // bedroom（合并后，wardrobe 抽屉已移到这里）
       await sleep(180);
@@ -749,6 +750,27 @@
       log('地图屏 1 大房子轮廓', !!houseEl);
       const outdoors = $$('#screen-map .map-outdoor');
       log('地图屏 3 室外区', outdoors.length === 3, `n=${outdoors.length}`);
+      const mapHit = (id) => {
+        const node = $(`#screen-map .map-room[data-room="${id}"]`);
+        const r = node && node.getBoundingClientRect();
+        const hit = r && document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        const owner = hit && hit.closest ? hit.closest('.map-room') : null;
+        return { ok: !!owner && owner.dataset.room === id, target: hit ? `${hit.tagName}.${hit.getAttribute('class') || ''}` : 'none' };
+      };
+      const clickMapPoint = (id) => {
+        const node = $(`#screen-map .map-room[data-room="${id}"]`);
+        const r = node && node.getBoundingClientRect();
+        if (!r) return false;
+        const x = r.left + r.width / 2, y = r.top + r.height / 2;
+        const target = document.elementFromPoint(x, y);
+        if (!target) return false;
+        target.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: x, clientY: y }));
+        return true;
+      };
+      const parkHit = mapHit('park');
+      const shopHit = mapHit('shop');
+      log('公园地图中心点命中公园热区', parkHit.ok, `target=${parkHit.target}`);
+      log('商店地图中心点命中商店热区', shopHit.ok, `target=${shopHit.target}`);
 
       /* Phase 2 v5：Toca 风格丰富化 —— 拟物数量检查 */
       const mapAllShapes = $$('#screen-map svg *');
@@ -780,12 +802,20 @@
         activeScreen() === 'screen-world' && window.World.currentRoomId === 'bedroom',
         `screen=${activeScreen()} room=${window.World.currentRoomId}`);
 
-      /* 室外 3 区直接跳世界屏 */
-      click($('#screen-map .map-outdoor[data-room="park"]'));
+      /* 室外 3 区：回到地图后，用实际坐标派发点击，模拟用户触摸路径 */
+      showScreen('map');
+      await sleep(220);
+      const parkClickDispatched = clickMapPoint('park');
       await sleep(300);
-      log('地图点公园直接跳世界屏 park',
-        activeScreen() === 'screen-world' && window.World.currentRoomId === 'park',
-        `screen=${activeScreen()} room=${window.World.currentRoomId}`);
+      const parkEntered = activeScreen() === 'screen-world' && window.World.currentRoomId === 'park';
+      showScreen('map');
+      await sleep(220);
+      const shopClickDispatched = clickMapPoint('shop');
+      await sleep(300);
+      const shopEntered = activeScreen() === 'screen-world' && window.World.currentRoomId === 'shop';
+      log('地图实际坐标点公园/商店进入世界屏',
+        parkClickDispatched && shopClickDispatched && parkEntered && shopEntered,
+        `park=${parkEntered} shop=${shopEntered} screen=${activeScreen()} room=${window.World.currentRoomId}`);
 
       /* dots 导航已删除 */
       const dotCount = $$('#screen-world .world-dot').length;
@@ -798,9 +828,12 @@
       click($('#screen-world .btn-rooms'));
       await sleep(80);
       const picker = $('#app .room-picker');
-      log('room-picker 仍可打开（保留）',
-        picker && !picker.classList.contains('hidden'),
-        `hidden=${picker && picker.classList.contains('hidden')}`);
+      const pickRooms = picker ? [...picker.querySelectorAll('.room-pick')].map(n => n.dataset.room) : [];
+      log('room-picker 可打开且只显示真实世界房间',
+        picker && !picker.classList.contains('hidden') &&
+        pickRooms.length === window.RoomAssets.WORLD_ROOMS.length &&
+        pickRooms.every(id => window.RoomAssets.WORLD_ROOMS.includes(id)),
+        `hidden=${picker && picker.classList.contains('hidden')} rooms=${pickRooms.join(',')}`);
 
     } catch (err) {
       results.push('FAIL | 测试异常中断 | ' + (err && err.message) + (err && err.stack ? ' | ' + err.stack.split('\n')[1] : ''));
