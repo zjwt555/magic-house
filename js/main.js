@@ -360,40 +360,82 @@
       /* 花 */
       out += '<g transform="translate(180, 70)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
       out += '<g transform="translate(110, 180)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.2"/><circle r="2" fill="#ffd34d"/></g>';
+      out += '<g transform="translate(220, 220)">';
+      out += '<ellipse cx="0" cy="0" rx="22" ry="18" fill="#fff" stroke="#c9a89a" stroke-width="2"/>';
+      out += '<ellipse cx="-7" cy="-3" rx="9" ry="6" fill="#ffe9f0" opacity=".6"/>';
+      out += '<ellipse cx="-9" cy="-30" rx="4" ry="14" fill="#fff" stroke="#c9a89a" stroke-width="2"/>';
+      out += '<ellipse cx="-9" cy="-30" rx="2" ry="9" fill="#ffc8d8"/>';
+      out += '<ellipse cx="9" cy="-30" rx="4" ry="14" fill="#fff" stroke="#c9a89a" stroke-width="2"/>';
+      out += '<ellipse cx="9" cy="-30" rx="2" ry="9" fill="#ffc8d8"/>';
+      out += '<ellipse cx="0" cy="-15" rx="14" ry="12" fill="#fff" stroke="#c9a89a" stroke-width="2"/>';
+      out += '<circle cx="-5" cy="-17" r="2" fill="#3a302a"/>';
+      out += '<circle cx="5" cy="-17" r="2" fill="#3a302a"/>';
+      out += '<circle cx="-5.5" cy="-17.5" r="0.7" fill="#fff"/>';
+      out += '<circle cx="4.5" cy="-17.5" r="0.7" fill="#fff"/>';
+      out += '<path d="M-2,-12 L0,-10 L2,-12 Z" fill="#ff9eb5"/>';
+      out += '<path d="M0,-10 Q-3,-8 -5,-9" stroke="#a85a78" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
+      out += '<path d="M0,-10 Q3,-8 5,-9" stroke="#a85a78" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
+      out += '<circle cx="-20" cy="2" r="4" fill="#fff" stroke="#c9a89a" stroke-width="1.5"/>';
+      out += '</g>';
       out += '<text x="' + (hx + 140) + '" y="' + (hy + 270) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#4f9cc0">' + entry.label + '</text>';
       return out;
     }
 
     if (entry.id === 'shop') {
-      /* L3-3 v3 商店：圆胖精致版 */
+      /* L3-3 v4 商店：立体招牌 + 3 层货架 + 冰柜 + 收银台 */
       const hx = 0, hy = 0, hw = 280, hh = 280;
       out += '<rect x="' + hx + '" y="' + hy + '" width="' + hw + '" height="' + hh + '" fill="#fff6e8" stroke="#f0c8a4" stroke-width="3" rx="20"/>';
-      /* 招牌 */
-      out += '<rect x="60" y="40" width="160" height="44" rx="14" fill="#ff5c5c" stroke="#a83232" stroke-width="3"/>';
-      out += '<ellipse cx="80" cy="52" rx="14" ry="4" fill="#ff9e9e" opacity=".7"/>';
-      out += '<text x="140" y="72" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">' + SHOP_DETAIL.signText + '</text>';
-      out += '<rect x="65" y="84" width="6" height="22" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2"/>';
-      out += '<rect x="209" y="84" width="6" height="22" fill="#7a5a3a" stroke="#5a3a1a" stroke-width="2"/>';
-      /* 5 色糖果条 */
-      SHOP_DETAIL.candyRows.forEach(r => {
-        out += '<rect x="' + SHOP_DETAIL.candyX + '" y="' + (r.y + 12) + '" width="' + SHOP_DETAIL.candyW + '" height="10" rx="3" fill="' + r.color + '" stroke="#5a3a5a" stroke-width="1.5"/>';
-      });
-      /* 灯笼 */
-      SHOP_DETAIL.lanterns.forEach(l => {
-        out += '<ellipse cx="' + l.x + '" cy="' + (l.y + 12) + '" rx="9" ry="12" fill="#ff5c5c" stroke="#a83232" stroke-width="2.5"/>';
-        out += '<line x1="' + l.x + '" y1="' + l.y + '" x2="' + l.x + '" y2="' + (l.y + 1) + '" stroke="#7a5a3a" stroke-width="2.5"/>';
-        out += '<line x1="' + (l.x - 5) + '" y1="' + (l.y + 22) + '" x2="' + (l.x + 5) + '" y2="' + (l.y + 22) + '" stroke="#a83232" stroke-width="1.5"/>';
-      });
-      /* 柜台 */
-      out += '<rect x="' + SHOP_DETAIL.counter[0] + '" y="' + (SHOP_DETAIL.counter[1] + 12) + '" width="' + SHOP_DETAIL.counter[2] + '" height="' + SHOP_DETAIL.counter[3] + '" rx="6" fill="#9b9b9b" stroke="#5a5a5a" stroke-width="2.5"/>';
-      out += '<line x1="' + (SHOP_DETAIL.counter[0] + 4) + '" y1="' + (SHOP_DETAIL.counter[1] + 18) + '" x2="' + (SHOP_DETAIL.counter[0] + 36) + '" y2="' + (SHOP_DETAIL.counter[1] + 18) + '" stroke="#7a7a7a" stroke-width="1"/>';
+      /* 立体招牌 */
+      out += '<rect x="50" y="22" width="180" height="48" rx="14" fill="#ff5c5c" stroke="#a83232" stroke-width="3"/>';
+      out += '<rect x="56" y="28" width="168" height="14" rx="6" fill="#ff9e9e" opacity=".6"/>';
+      out += '<rect x="62" y="64" width="6" height="10" fill="#7a5a3a"/>';
+      out += '<rect x="212" y="64" width="6" height="10" fill="#7a5a3a"/>';
+      out += '<text x="140" y="58" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">' + SHOP_DETAIL.signText + '</text>';
+      /* 3 层货架 */
+      out += '<rect x="40" y="92" width="120" height="6" rx="2" fill="#a07a4a" stroke="#5a3a1a" stroke-width="1.5"/>';
+      out += '<rect x="44" y="100" width="14" height="20" rx="3" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1.5"/>';
+      out += '<ellipse cx="51" cy="103" rx="2" ry="3" fill="#fff" opacity=".5"/>';
+      out += '<rect x="62" y="100" width="14" height="20" rx="3" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.5"/>';
+      out += '<ellipse cx="69" cy="103" rx="2" ry="3" fill="#fff" opacity=".5"/>';
+      out += '<rect x="80" y="100" width="14" height="20" rx="3" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.5"/>';
+      out += '<rect x="98" y="100" width="14" height="20" rx="3" fill="#98d8a0" stroke="#5a9e56" stroke-width="1.5"/>';
+      out += '<rect x="40" y="124" width="120" height="6" rx="2" fill="#a07a4a" stroke="#5a3a1a" stroke-width="1.5"/>';
+      out += '<rect x="44" y="132" width="14" height="20" rx="3" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
+      out += '<rect x="62" y="132" width="14" height="20" rx="3" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="1.5"/>';
+      out += '<rect x="80" y="132" width="14" height="20" rx="3" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5"/>';
+      out += '<rect x="98" y="132" width="14" height="20" rx="3" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.5"/>';
+      out += '<rect x="40" y="156" width="120" height="6" rx="2" fill="#a07a4a" stroke="#5a3a1a" stroke-width="1.5"/>';
+      out += '<rect x="44" y="164" width="20" height="20" rx="3" fill="#ff9eb5" stroke="#d96a8e" stroke-width="1.5"/>';
+      out += '<rect x="68" y="164" width="20" height="20" rx="3" fill="#98d8a0" stroke="#5a9e56" stroke-width="1.5"/>';
+      out += '<rect x="92" y="164" width="20" height="20" rx="3" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
+      /* 冰柜（右上） */
+      out += '<rect x="174" y="92" width="76" height="58" rx="6" fill="#dcdcdc" stroke="#5a5a5a" stroke-width="2.5"/>';
+      out += '<rect x="178" y="98" width="68" height="46" rx="4" fill="#fff"/>';
+      out += '<rect x="184" y="106" width="14" height="14" rx="2" fill="#7ec8e3"/>';
+      out += '<rect x="202" y="106" width="14" height="14" rx="2" fill="#98d8a0"/>';
+      out += '<rect x="220" y="106" width="14" height="14" rx="2" fill="#ffd34d"/>';
+      out += '<rect x="184" y="124" width="50" height="3" rx="1" fill="#a07a4a"/>';
+      out += '<rect x="184" y="131" width="14" height="8" rx="2" fill="#b79ced"/>';
+      out += '<rect x="202" y="131" width="14" height="8" rx="2" fill="#ff9eb5"/>';
+      out += '<rect x="220" y="131" width="14" height="8" rx="2" fill="#7ed47b"/>';
+      /* 收银台（右下） */
+      out += '<rect x="166" y="200" width="92" height="36" rx="6" fill="#9b6b3a" stroke="#5a3a1a" stroke-width="2.5"/>';
+      out += '<rect x="170" y="204" width="84" height="6" rx="3" fill="#dcdcdc"/>';
+      out += '<rect x="194" y="212" width="36" height="20" rx="3" fill="#2a2a2a"/>';
+      out += '<rect x="198" y="216" width="28" height="3" rx="1" fill="#7ed47b"/>';
+      out += '<rect x="198" y="222" width="28" height="3" rx="1" fill="#7ed47b"/>';
+      out += '<circle cx="206" cy="228" r="2" fill="#ffd34d"/>';
+      out += '<circle cx="214" cy="228" r="2" fill="#ffd34d"/>';
+      out += '<circle cx="222" cy="228" r="2" fill="#ffd34d"/>';
       /* 地毯 */
-      out += '<rect x="' + SHOP_DETAIL.carpet[0] + '" y="' + (SHOP_DETAIL.carpet[1] + 12) + '" width="' + SHOP_DETAIL.carpet[2] + '" height="' + SHOP_DETAIL.carpet[3] + '" rx="4" fill="#ff8f7a" stroke="#a8503a" stroke-width="1.5"/>';
-      /* 花 */
-      out += '<g transform="translate(' + SHOP_DETAIL.flower[0] + ',' + (SHOP_DETAIL.flower[1] + 12) + ')"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
-      out += '<text x="' + (hx + 140) + '" y="' + (hy + 265) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#d96b8a">' + entry.label + '</text>';
+      out += '<rect x="80" y="252" width="100" height="14" rx="4" fill="#ff5c5c" stroke="#a83232" stroke-width="1.5"/>';
+      out += '<ellipse cx="100" cy="256" rx="14" ry="2" fill="#ff9e9e" opacity=".5"/>';
+      /* 圆胖花 */
+      out += '<g transform="translate(46, 248)"><ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="4" cy="-2" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><ellipse cx="0" cy="-6" rx="3" ry="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.2"/><circle r="2" fill="#ff5c5c"/></g>';
+      out += '<text x="' + (hx + 140) + '" y="' + (hy + 270) + '" text-anchor="middle" font-size="18" font-weight="800" fill="#d96b8a">' + entry.label + '</text>';
       return out;
     }
+
 
     return '';
   }
@@ -411,50 +453,33 @@
     { x: 590,  y: 0,   w: 30,  h: 280, kind: 'v' },
     { x: 590,  y: 310, w: 30,  h: 280, kind: 'v' }
   ];
-  function _renderStreets() {
+    function _renderStreets() {
     let out = '';
     STREETS.forEach(s => {
-      /* \u67d3\u6cb9\u8def\u9762 */
-      out += `<rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" fill="#5a5a5a"/>`;
-      /* \u4eba\u884c\u9053\u8fb9 */
+      // 染油路面（圆角）
+      out += '<rect x="' + s.x + '" y="' + s.y + '" width="' + s.w + '" height="' + s.h + '" fill="#5a5a5a" rx="3"/>';
+      // 人行道边
       if (s.kind === 'h') {
-        out += `<rect x="${s.x}" y="${s.y}" width="${s.w}" height="3" fill="#bcbcbc"/>`;
-        out += `<rect x="${s.x}" y="${s.y + s.h - 3}" width="${s.w}" height="3" fill="#bcbcbc"/>`;
-        /* \u4e2d\u95f4\u51c0\u7a7a\u4e0a\u6709\u4eba\u884c\u6a2a\u7ebf */
-        out += `<line x1="${s.x}" y1="${s.y + 15}" x2="${s.x + s.w}" y2="${s.y + 15}" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>`;
+        out += '<rect x="' + s.x + '" y="' + s.y + '" width="' + s.w + '" height="3" fill="#bcbcbc"/>';
+        out += '<rect x="' + s.x + '" y="' + (s.y + s.h - 3) + '" width="' + s.w + '" height="3" fill="#bcbcbc"/>';
+        out += '<line x1="' + s.x + '" y1="' + (s.y + 15) + '" x2="' + (s.x + s.w) + '" y2="' + (s.y + 15) + '" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>';
+        // 路灯（街道左端）
+        out += '<rect x="' + (s.x + 16) + '" y="' + (s.y + 3) + '" width="3" height="14" fill="#7a5a3a"/>';
+        out += '<rect x="' + (s.x + 11) + '" y="' + s.y + '" width="13" height="9" rx="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
+        // 红绿灯（街道右端）
+        out += '<rect x="' + (s.x + s.w - 16) + '" y="' + s.y + '" width="3" height="22" fill="#2a2a2a"/>';
+        out += '<circle cx="' + (s.x + s.w - 14.5) + '" cy="' + (s.y + 4) + '" r="2.6" fill="#ff5c5c"/>';
+        out += '<circle cx="' + (s.x + s.w - 14.5) + '" cy="' + (s.y + 11) + '" r="2.6" fill="#ffd34d"/>';
+        out += '<circle cx="' + (s.x + s.w - 14.5) + '" cy="' + (s.y + 18) + '" r="2.6" fill="#7ed47b"/>';
       } else {
-        out += `<rect x="${s.x}" y="${s.y}" width="3" height="${s.h}" fill="#bcbcbc"/>`;
-        out += `<rect x="${s.x + s.w - 3}" y="${s.y}" width="3" height="${s.h}" fill="#bcbcbc"/>`;
-        out += `<line x1="${s.x + 15}" y1="${s.y}" x2="${s.x + 15}" y2="${s.y + s.h}" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>`;
+        out += '<rect x="' + s.x + '" y="' + s.y + '" width="3" height="' + s.h + '" fill="#bcbcbc"/>';
+        out += '<rect x="' + (s.x + s.w - 3) + '" y="' + s.y + '" width="3" height="' + s.h + '" fill="#bcbcbc"/>';
+        out += '<line x1="' + (s.x + 15) + '" y1="' + s.y + '" x2="' + (s.x + 15) + '" y2="' + (s.y + s.h) + '" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>';
       }
     });
     return out;
   }
-  /* 4 \u4e2a\u5341\u5b57\u8def\u53e3 */
-  const CROSSROADS = [
-    { cx: 295, cy: 295 }, { cx: 605, cy: 295 },
-    { cx: 295, cy: 605 }, { cx: 605, cy: 605 }
-  ];
-  function _renderCrossroads() {
-    let out = '';
-    CROSSROADS.forEach(c => {
-      /* \u4eba\u884c\u6a2a\u9053 (4 \u4e2a\u767d\u6761) */
-      out += `<rect x="${c.cx - 16}" y="${c.cy - 2}" width="32" height="3" fill="#fff"/>`;
-      out += `<rect x="${c.cx - 16}" y="${c.cy + 4}" width="32" height="3" fill="#fff"/>`;
-      out += `<rect x="${c.cx + 4}" y="${c.cy - 16}" width="3" height="32" fill="#fff"/>`;
-      out += `<rect x="${c.cx - 7}" y="${c.cy - 16}" width="3" height="32" fill="#fff"/>`;
-      /* \u8def\u706f */
-      out += `<rect x="${c.cx - 22}" y="${c.cy - 32}" width="3" height="22" fill="#7a5a3a"/>`;
-      out += `<rect x="${c.cx - 28}" y="${c.cy - 42}" width="14" height="10" fill="#ffd34d" stroke="#a06820" stroke-width="1.8" rx="8"/>`;
-      /* \u7ea2\u7eff\u706f */
-      out += `<rect x="${c.cx + 18}" y="${c.cy - 32}" width="3" height="32" fill="#2a2a2a"/>`;
-      out += `<circle cx="${c.cx + 19.5}" cy="${c.cy - 28}" r="3" fill="#ff5c5c"/>`;
-      out += `<circle cx="${c.cx + 19.5}" cy="${c.cy - 20}" r="3" fill="#ffd34d"/>`;
-      out += `<circle cx="${c.cx + 19.5}" cy="${c.cy - 12}" r="3" fill="#7ed47b"/>`;
-    });
-    return out;
-  }
-
+  
   /* MAP_SVG v7\uff1a3\u00d73 \u7f51\u683c + 4 \u5757 + 4 \u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3 + \u62df\u7269 */
   const MAP_SVG = `
     <svg viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
@@ -561,7 +586,6 @@
       }).join('')}
       <!-- 4 \u6bb5\u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3 + \u8def\u706f + \u7ea2\u7eff\u706f + \u8d70\u4eba\u6a2a\u7ebf -->
       ${_renderStreets()}
-      ${_renderCrossroads()}
     </svg>`;
 const MAP_CLOSE_SVG = `
     <svg viewBox="0 0 36 36">
