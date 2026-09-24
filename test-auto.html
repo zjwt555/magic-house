@@ -81,9 +81,9 @@
       log('新游戏各房间默认摆好物品',
         Object.values(Store.state.rooms).every(r => Array.isArray(r.items) && r.items.length >= 4),
         `counts=${Object.entries(Store.state.rooms).map(([k,v])=>`${k}=${v.items.length}`).join(',')}`);
-      log('bedroom 默认 8 件（bed+rug+lamp+catbed+teddy+frame+bmirror+towelrack）',
-        Store.state.rooms.bedroom.items.length === 8 &&
-        ['bed','rug','lamp','catbed','teddy','frame','bmirror','towelrack'].every(id => Store.state.rooms.bedroom.items.some(it => it.id === id)),
+      log('bedroom 默认 9 件（bed+rug+lamp+catbed+teddy+wardrobecab+frame+bmirror+towelrack）',
+        Store.state.rooms.bedroom.items.length === 9 &&
+        ['bed','rug','lamp','catbed','teddy','wardrobecab','frame','bmirror','towelrack'].every(id => Store.state.rooms.bedroom.items.some(it => it.id === id)),
         `items=${Store.state.rooms.bedroom.items.map(it => it.id).join(',')}`);
       log('living 默认 7 件（tv+sofa+coffee+armchair+fishtank+cushion+rug）',
         Store.state.rooms.living.items.length === 7 &&
@@ -379,7 +379,7 @@
       log('世界10个场景', rooms.length === 10, rooms.length);
       log('固定装置:厨房冰箱+灶台', $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length === 2,
         $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length);
-      log('固定装置:卧室衣柜', $$('#screen-world .world-room[data-room="bedroom"] .world-fixture[data-act="wardrobe"]').length === 1);
+      log('卧室衣柜是可移动家具', $$('#screen-world .world-room[data-room="bedroom"] .room-item[data-act="wardrobe"]').length === 1);
       log('角色在场', !!$('#char-girl') && !!$('#char-cat'));
       /* Phase 2：dots 导航已删，验证 .world-room 数 = 10 */
       log('世界屏 10 个场景（dots 已删）',
@@ -465,6 +465,7 @@
       await sleep(150);
       log('跳到厨房', window.World.currentRoomId === 'kitchen');
       const fridge = $('#screen-world .world-fixture[data-act="fridge"]');
+      const fridgeSizeBefore = fridge.getBoundingClientRect();
       const [fx, fy] = center(fridge);
       pe('pointerdown', fridge, fx, fy);
       pe('pointerup', fridge, fx, fy);
@@ -472,6 +473,10 @@
       log('点冰箱出食物抽屉', $$('#screen-world .item-card[data-food]').length === 15,
         $$('#screen-world .item-card[data-food]').length);
       log('冰箱开门视觉', fridge.classList.contains('open'));
+      const fridgeSizeAfter = fridge.getBoundingClientRect();
+      log('冰箱开门后主体不缩小',
+        fridgeSizeAfter.width >= fridgeSizeBefore.width - 1 && fridgeSizeAfter.height >= fridgeSizeBefore.height - 1,
+        `before=${fridgeSizeBefore.width.toFixed(1)}x${fridgeSizeBefore.height.toFixed(1)} after=${fridgeSizeAfter.width.toFixed(1)}x${fridgeSizeAfter.height.toFixed(1)}`);
       click($$('#screen-world .item-card[data-food]')[0]); // 苹果
       await sleep(150);
       log('取出食物道具', Store.state.props.length === 1, Store.state.props.length);
@@ -591,10 +596,21 @@
       /* ---- 8. 衣柜→换装 overlay ---- */
       window.World.jumpTo('bedroom'); // 衣柜已合并到卧室
       await sleep(150);
-      const wcab = $('#screen-world .world-fixture[data-act="wardrobe"]');
+      const wcab = $('#screen-world .room-item[data-act="wardrobe"]');
+      const wardrobeItem = Store.state.rooms.bedroom.items.find(it => it.id === 'wardrobecab');
+      const wardrobeBefore = wardrobeItem ? { x: wardrobeItem.x, y: wardrobeItem.y } : null;
       const [wx2, wy2] = center(wcab);
       pe('pointerdown', wcab, wx2, wy2);
-      pe('pointerup', wcab, wx2, wy2);
+      pe('pointermove', wcab, wx2 + 80, wy2);
+      pe('pointerup', wcab, wx2 + 80, wy2);
+      await sleep(80);
+      const wardrobeAfter = Store.state.rooms.bedroom.items.find(it => it.id === 'wardrobecab');
+      log('衣柜可拖动', !!wardrobeBefore && !!wardrobeAfter && Math.abs(wardrobeAfter.x - wardrobeBefore.x) > 0.03,
+        `x=${wardrobeBefore && wardrobeBefore.x.toFixed(2)}→${wardrobeAfter && wardrobeAfter.x.toFixed(2)}`);
+      const wcabAfter = $('#screen-world .room-item[data-act="wardrobe"]');
+      const [wx3, wy3] = center(wcabAfter);
+      pe('pointerdown', wcabAfter, wx3, wy3);
+      pe('pointerup', wcabAfter, wx3, wy3);
       await sleep(150);
       log('点衣柜开换装面板', $('#screen-dressup').classList.contains('active') && isWorldActive(), activeScreen());
       const dressTab = [...$$('#screen-dressup .tab-btn')].find(t => t.dataset.cat === 'dress');
@@ -603,10 +619,11 @@
       click([...$$('#screen-dressup .item-card')].find(c => c.dataset.key === 'fairy'));
       await sleep(50);
       log('换裙子生效', Store.state.doll.dress === 'fairy', Store.state.doll.dress);
-      /* Phase 2 v4：dressup 关闭 = 直接切回世界屏（主屏已删） */
-      showScreen('world');
+      const backToRoom = $('#screen-dressup .btn-back-world');
+      log('换装页有明确返回房间按钮', !!backToRoom);
+      click(backToRoom);
       await sleep(100);
-      log('dressup 关闭回世界', isWorldActive(), activeScreen());
+      log('点击返回房间按钮回世界', isWorldActive() && !$('#screen-dressup').classList.contains('active'), activeScreen());
 
       /* ---- 9. 墙纸地板（世界版） ---- */
       /* Phase 2 v4：原"点大门"流程已无意义（主屏删），直接确认在世界中，跳 bathroom */
@@ -691,12 +708,15 @@
       /* 跳回 shop 继续后续测试 */
       window.World.jumpTo('shop'); // shop
       await sleep(180);
-      /* 弹出条跳卧室（键名修复验证） */
-      click($('#screen-world .btn-rooms'));
-      await sleep(80);
-      click(document.querySelector('.room-pick[data-room="bedroom"]'));
+      /* 顶部常驻房间导航直接跳卧室（无需先点换房间按钮） */
+      const topRoomNav = $('#screen-world .room-nav');
+      const topBedroom = topRoomNav && topRoomNav.querySelector('.room-nav-item[data-room="bedroom"]');
+      click(topBedroom);
       await sleep(200);
-      log('弹出条跳卧室生效', window.World.currentRoomId === 'bedroom', window.World.currentRoomId);
+      log('顶部房间导航直接跳卧室生效', window.World.currentRoomId === 'bedroom', window.World.currentRoomId);
+      log('顶部房间导航 active 跟随当前房间',
+        !!topRoomNav && topRoomNav.querySelector('.room-nav-item.active')?.dataset.room === 'bedroom',
+        `active=${topRoomNav && topRoomNav.querySelector('.room-nav-item.active')?.dataset.room}`);
       const bedCardVisible = [...$$('#screen-world .item-card')].some(c => c.dataset.id === 'bed');
       log('卧室抽屉已刷新', bedCardVisible);
 
@@ -727,28 +747,17 @@
         `WORLD_ROOMS.length=${window.RoomAssets.WORLD_ROOMS.length}`);
 
       /* ---- 13. Phase 2 v4：世界地图 + 房子内部屏（默认屏=地图，主屏删除）---- */
-      /* Phase 2 v4：默认屏是地图屏（不再有主屏）。当前应在地图屏或世界屏。
-         强制 showScreen('map') 让 Map.onEnter 重新跑一次，刷新角色 marker 位置 */
+      /* Phase 2 v4：默认屏是地图屏（不再有主屏）。当前应在地图屏或世界屏。 */
       showScreen('map');
       await sleep(200);
 
       /* 地图屏内容 */
       const girlMarker = $('#screen-map .map-marker-girl');
       const catMarker = $('#screen-map .map-marker-cat');
-      log('地图屏女娃位置标记存在', !!girlMarker);
-      log('地图屏不再显示黄色小猫 marker', !catMarker);
-
-      const girlRoomExpected = Store.state.char.girl.room;
-      const catRoomExpected = Store.state.char.cat.room;
-      log('地图屏女娃 marker.targetRoom === girl.room',
-        girlMarker && girlMarker.dataset.targetRoom === girlRoomExpected,
-        `marker=${girlMarker && girlMarker.dataset.targetRoom} store=${girlRoomExpected}`);
-      log('地图屏小猫 marker 已移除',
-        !catMarker,
-        `marker=${catMarker ? 'present' : 'none'} catRoom=${catRoomExpected}`);
-
-      log('地图屏女娃 marker.pulse class 已加', girlMarker && girlMarker.classList.contains('pulse'));
-      log('地图屏小猫 marker 不再显示或脉冲', !catMarker);
+      log('地图屏不再显示人物 marker', !girlMarker && !catMarker,
+        `girl=${!!girlMarker} cat=${!!catMarker}`);
+      const mapButterflies = $$('#screen-map svg ellipse[cx="60"][cy="400"], #screen-map svg ellipse[cx="80"][cy="400"], #screen-map svg ellipse[cx="800"][cy="400"], #screen-map svg ellipse[cx="820"][cy="400"]');
+      log('地图空白格蝴蝶装饰已移除', mapButterflies.length === 0, `n=${mapButterflies.length}`);
 
       /* 地图屏 1 大房子 + 3 室外（v4 重写后） */
       const houseEl = $('#screen-map .map-house');
@@ -795,6 +804,27 @@
       /* 街道（深灰柏油） */
       const streetSegs = $$('#screen-map svg rect[fill="#5a5a5a"]');
       log('地图屏有 ≥ 4 段街道', streetSegs.length >= 4, `n=${streetSegs.length}`);
+      const streetLayer = $('#screen-map .map-canvas svg > g[aria-hidden="true"]');
+      const firstMapBlock = $('#screen-map .map-house');
+      const roadsBelowLocations = !!(streetLayer && firstMapBlock &&
+        (streetLayer.compareDocumentPosition(firstMapBlock) & Node.DOCUMENT_POSITION_FOLLOWING));
+      log('地图道路在地点图标下层', roadsBelowLocations,
+        `street=${!!streetLayer} block=${!!firstMapBlock}`);
+      const roadRects = [...streetSegs].map(n => n.getBoundingClientRect());
+      const roadBoxes = [...streetSegs].map(n => n.getBBox());
+      const locationRects = [...mapBlocks].map(n => n.getBoundingClientRect());
+      const rectsOverlap = (a, b) =>
+        a.left < b.right - 2 && a.right > b.left + 2 &&
+        a.top < b.bottom - 2 && a.bottom > b.top + 2;
+      const roadsClearOfLocations = roadRects.every(r =>
+        locationRects.every(b => !rectsOverlap(r, b)));
+      const edgeLeft = roadBoxes.some(b => b.x <= 0.5);
+      const edgeRight = roadBoxes.some(b => b.x + b.width >= 899.5);
+      const edgeTop = roadBoxes.some(b => b.y <= 0.5);
+      const edgeBottom = roadBoxes.some(b => b.y + b.height >= 899.5);
+      const roadsReachAllEdges = edgeLeft && edgeRight && edgeTop && edgeBottom;
+      log('地图道路不压地点且铺到四边', roadsClearOfLocations && roadsReachAllEdges,
+        `clear=${roadsClearOfLocations} edges=${edgeLeft}/${edgeRight}/${edgeTop}/${edgeBottom}`);
 
       /* 红绿灯（红圆） */
       const lights = $$('#screen-map circle[fill="#ff5c5c"]').length;
@@ -840,17 +870,23 @@
       const dotsBox = $('#screen-world .world-dots');
       log('世界屏 .world-dots DOM 已删', !dotsBox);
 
-      /* room-picker 仍可打开（保留作为补充入口） */
-      click($('#screen-world .btn-rooms'));
-      await sleep(80);
-      const picker = $('#app .room-picker');
-      const pickRooms = picker ? [...picker.querySelectorAll('.room-pick')].map(n => n.dataset.room) : [];
-      log('room-picker 只显示 7 个常用房间（学校/公园/商店仅地图）',
-        picker && !picker.classList.contains('hidden') &&
-        pickRooms.length === 7 &&
-        pickRooms.every(id => ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard'].includes(id)) &&
-        !pickRooms.includes('school') && !pickRooms.includes('park') && !pickRooms.includes('shop'),
-        `hidden=${picker && picker.classList.contains('hidden')} rooms=${pickRooms.join(',')}`);
+      /* 世界屏顶部房间导航：无需点击按钮，直接常驻显示。 */
+      const nav = $('#screen-world .room-nav');
+      const navRooms = nav ? [...nav.querySelectorAll('.room-nav-item')].map(n => n.dataset.room) : [];
+      const navRect = nav && nav.getBoundingClientRect();
+      const topRect = $('#screen-world .game-top').getBoundingClientRect();
+      const worldStageRect = $('#screen-world .world-stage').getBoundingClientRect();
+      log('世界屏顶部房间导航常驻且无需按钮',
+        !!nav && !$('#screen-world .btn-rooms') && !$('#screen-world .room-picker'),
+        `nav=${!!nav} button=${!!$('#screen-world .btn-rooms')} modal=${!!$('#screen-world .room-picker')}`);
+      log('顶部房间导航只显示 7 个常用房间（学校/公园/商店仅地图）',
+        navRooms.length === 7 &&
+        navRooms.every(id => ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard'].includes(id)) &&
+        !navRooms.includes('school') && !navRooms.includes('park') && !navRooms.includes('shop'),
+        `rooms=${navRooms.join(',')}`);
+      log('顶部房间导航位于工具栏且不遮挡世界舞台',
+        !!navRect && navRect.top >= topRect.top - 3 && navRect.bottom <= worldStageRect.top + 3,
+        `nav=${navRect ? `${navRect.top.toFixed(0)}..${navRect.bottom.toFixed(0)}` : 'none'} stageTop=${worldStageRect.top.toFixed(0)}`);
 
     } catch (err) {
       results.push('FAIL | 测试异常中断 | ' + (err && err.message) + (err && err.stack ? ' | ' + err.stack.split('\n')[1] : ''));
