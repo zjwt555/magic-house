@@ -143,17 +143,28 @@
     migrateRoomSets() {
       const R = window.RoomAssets;
       if (!R || !R.ROOM_SETS) return { migrated: 0, dropped: 0 };
+      const layouts = R.DEFAULT_LAYOUT || {};
       let migrated = 0, dropped = 0;
       for (const roomId in state.rooms) {
         const allowed = R.ROOM_SETS[roomId];
         if (!allowed) continue;
+        const items = state.rooms[roomId].items;
         const set = new Set(allowed);
-        const before = state.rooms[roomId].items.length;
-        state.rooms[roomId].items = state.rooms[roomId].items.filter(it => set.has(it.id));
+        const before = items.length;
+        state.rooms[roomId].items = items.filter(it => set.has(it.id));
         const after = state.rooms[roomId].items.length;
         if (after < before) {
           migrated++;
           dropped += (before - after);
+        }
+        /* 衣柜以前是固定装置，旧存档的 items 里没有它。
+           转成可移动家具后给旧存档补一个默认位置，避免衣柜消失。 */
+        if (roomId === 'bedroom' && !state.rooms[roomId].items.some(it => it.id === 'wardrobecab')) {
+          const layoutItem = (layouts.bedroom || []).find(it => it.id === 'wardrobecab');
+          if (layoutItem) {
+            state.rooms[roomId].items.push(JSON.parse(JSON.stringify(layoutItem)));
+            migrated++;
+          }
         }
       }
       if (migrated > 0) saveNow();
