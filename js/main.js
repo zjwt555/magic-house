@@ -155,16 +155,30 @@
   /* 房间选择器只列 7 个常用入口；学校、公园、商店仅从地图进入。 */
   const PICK_ORDER = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard'];
 
+  /* 世界屏顶部常驻房间导航：直接显示，不再依赖弹层按钮。 */
+  window.roomNavHTML = `<nav class="room-nav" aria-label="选择房间">${PICK_ORDER.map(id => `
+    <button class="room-nav-item" data-room="${id}" aria-label="${ROOM_ICONS[id].label}">
+      ${ROOM_ICONS[id].svg}<span>${ROOM_ICONS[id].label}</span>
+    </button>`).join('')}</nav>`;
+
+  window.updateRoomNav = function (roomId) {
+    const nav = document.querySelector('#screen-world .room-nav');
+    if (!nav) return;
+    nav.querySelectorAll('.room-nav-item').forEach(item =>
+      item.classList.toggle('active', item.dataset.room === roomId));
+  };
+
   /* ---------- Phase 2 v7：3×3 网格街道 + 家在中央（数据驱动）---------- */
-  /* 网格坐标 (col, row) -> (x, y, w, h)
-     列宽 280, 行高 280, 街道 30 宽
-     列 0: 0-280,  街 280-310,  列 1: 310-590,  街 590-620,  列 2: 620-900
-     行 0: 0-193,  街 193-223,  行 1: 223-416,  街 590-620,  行 2: 620-900 */
+  /* 道路独占 30px 通道：外圈 0-30/870-900，中间 280-310/590-620。
+     地点块从 30px 开始，左右/上下外侧块缩为 250×250，中间块保持 280×280，
+     因此道路既不压住图标，又能一直铺到 SVG 四边。 */
   const COL_W = 280, ROW_H = 280, STREET = 30;
-  function _cellX(col) { return col * (COL_W + STREET); }
-  function _cellY(row) { return row * (ROW_H + STREET); }
-  function _cellW() { return COL_W; }
-  function _cellH() { return ROW_H; }
+  const CELL_X = [STREET, COL_W + STREET, 2 * (COL_W + STREET)];
+  const CELL_Y = [STREET, ROW_H + STREET, 2 * (ROW_H + STREET)];
+  const EDGE_BLOCK = COL_W - STREET;
+  function _cellX(col) { return CELL_X[col]; }
+  function _cellY(row) { return CELL_Y[row]; }
+  function _cellScale(index) { return index === 1 ? 1 : EDGE_BLOCK / COL_W; }
 
   /* 辅助：颜色加深（INTERIOR_SVG 用） */
   function _darken(hex, amt) {
@@ -324,21 +338,23 @@
   /* 4 \u4e2a\u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3\uff08\u6570\u636e\u9a71\u52a8\uff09 */
   /* L3-3 v4 hotfix2: 4 horizontal + 4 vertical, full-screen through, 4 corner 30x30 natural cross */
   const STREETS = [
-    /* horizontal 4 (full screen) */
-    { x: 0,    y: 0,   w: 900, h: 30,  kind: 'h' },
-    { x: 0,    y: 280, w: 900, h: 30,  kind: 'h' },
-    { x: 0,    y: 590, w: 900, h: 30,  kind: 'h' },
-    { x: 0,    y: 870, w: 900, h: 30,  kind: 'h' },
-    /* vertical 4 (full screen) */
-    { x: 0,    y: 0,   w: 30,  h: 900, kind: 'v' },
-    { x: 280,  y: 0,   w: 30,  h: 900, kind: 'v' },
-    { x: 590,  y: 0,   w: 30,  h: 900, kind: 'v' },
-    { x: 870,  y: 0,   w: 30,  h: 900, kind: 'v' }
+    /* horizontal 4 (full screen through) */
+    { x: 0, y: 0,   w: 900, h: 30,  kind: 'h' },
+    { x: 0, y: 280, w: 900, h: 30,  kind: 'h' },
+    { x: 0, y: 590, w: 900, h: 30,  kind: 'h' },
+    { x: 0, y: 870, w: 900, h: 30,  kind: 'h' },
+    /* vertical 4 (full screen through) */
+    { x: 0,   y: 0, w: 30, h: 900, kind: 'v' },
+    { x: 280, y: 0, w: 30, h: 900, kind: 'v' },
+    { x: 590, y: 0, w: 30, h: 900, kind: 'v' },
+    { x: 870, y: 0, w: 30, h: 900, kind: 'v' }
   ];
 
     function _renderStreets() {
     let out = '';
     STREETS.forEach(s => {
+      const visibleLeft = Math.max(0, s.x);
+      const visibleRight = Math.min(900, s.x + s.w);
       // 染油路面（圆角）
       out += '<rect x="' + s.x + '" y="' + s.y + '" width="' + s.w + '" height="' + s.h + '" fill="#5a5a5a" rx="3"/>';
       // 人行道边
@@ -347,20 +363,20 @@
         out += '<rect x="' + s.x + '" y="' + (s.y + s.h - 3) + '" width="' + s.w + '" height="3" fill="#bcbcbc"/>';
         out += '<line x1="' + s.x + '" y1="' + (s.y + 15) + '" x2="' + (s.x + s.w) + '" y2="' + (s.y + 15) + '" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>';
         // 路灯（街道左端）
-        out += '<rect x="' + (s.x + 16) + '" y="' + (s.y + 3) + '" width="3" height="14" fill="#7a5a3a"/>';
-        out += '<rect x="' + (s.x + 11) + '" y="' + s.y + '" width="13" height="9" rx="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
+        out += '<rect x="' + (visibleLeft + 16) + '" y="' + (s.y + 3) + '" width="3" height="14" fill="#7a5a3a"/>';
+        out += '<rect x="' + (visibleLeft + 11) + '" y="' + s.y + '" width="13" height="9" rx="5" fill="#ffd34d" stroke="#a06820" stroke-width="1.5"/>';
         // 红绿灯（街道右端）
-        out += '<rect x="' + (s.x + s.w - 16) + '" y="' + s.y + '" width="3" height="22" fill="#2a2a2a"/>';
-        out += '<circle cx="' + (s.x + s.w - 14.5) + '" cy="' + (s.y + 4) + '" r="2.6" fill="#ff5c5c"/>';
-        out += '<circle cx="' + (s.x + s.w - 14.5) + '" cy="' + (s.y + 11) + '" r="2.6" fill="#ffd34d"/>';
-        out += '<circle cx="' + (s.x + s.w - 14.5) + '" cy="' + (s.y + 18) + '" r="2.6" fill="#7ed47b"/>';
+        out += '<rect x="' + (visibleRight - 16) + '" y="' + s.y + '" width="3" height="22" fill="#2a2a2a"/>';
+        out += '<circle cx="' + (visibleRight - 14.5) + '" cy="' + (s.y + 4) + '" r="2.6" fill="#ff5c5c"/>';
+        out += '<circle cx="' + (visibleRight - 14.5) + '" cy="' + (s.y + 11) + '" r="2.6" fill="#ffd34d"/>';
+        out += '<circle cx="' + (visibleRight - 14.5) + '" cy="' + (s.y + 18) + '" r="2.6" fill="#7ed47b"/>';
       } else {
         out += '<rect x="' + s.x + '" y="' + s.y + '" width="3" height="' + s.h + '" fill="#bcbcbc"/>';
         out += '<rect x="' + (s.x + s.w - 3) + '" y="' + s.y + '" width="3" height="' + s.h + '" fill="#bcbcbc"/>';
         out += '<line x1="' + (s.x + 15) + '" y1="' + s.y + '" x2="' + (s.x + 15) + '" y2="' + (s.y + s.h) + '" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 4" opacity=".5"/>';
       }
     });
-    /* 街道只负责视觉，不参与命中；否则后绘制的街道会盖住 park/shop 热区。 */
+    /* 街道只负责视觉，不参与命中；调用时先于地点块绘制，避免盖住图标。 */
     return `<g pointer-events="none" aria-hidden="true">${out}</g>`;
   }
   
@@ -386,7 +402,7 @@
       </g>
       <!-- 4 \u5757\uff083 \u4e2a\u5ba4\u5916 + \u5927\u623f\u5b50 + \u88c5\u9970\u683c\uff09\u5e95\u8272 + \u62df\u7269 -->
 
-      <!-- L3-2 v2 环境装饰: 3朵额外白云 + 4颗星 + 2只鸟 + 2只蝴蝶 + 2个热气球 + 5朵草地小花 (补足 SVG 元素 ≥90 测试断言) -->
+      <!-- L3-2 v2 环境装饰: 3朵额外白云 + 4颗星 + 2只鸟 + 2个热气球 + 5朵草地小花 (补足 SVG 元素 ≥90 测试断言) -->
       <g opacity=".85">
         <ellipse cx="220" cy="100" rx="36" ry="13" fill="#fff"/>
         <ellipse cx="202" cy="94" rx="20" ry="11" fill="#fff"/>
@@ -410,14 +426,6 @@
       <g fill="none" stroke="#5a4a2a" stroke-width="2.5" stroke-linecap="round">
         <path d="M180,180 q8,-8 16,0 q8,-8 16,0"/>
         <path d="M780,200 q8,-8 16,0 q8,-8 16,0"/>
-      </g>
-      <g>
-        <ellipse cx="60" cy="400" rx="10" ry="7" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1.8" transform="rotate(-25 60 400)"/>
-        <ellipse cx="80" cy="400" rx="10" ry="7" fill="#ff9eb5" stroke="#d96e8e" stroke-width="1.8" transform="rotate(25 80 400)"/>
-        <line x1="70" y1="400" x2="70" y2="408" stroke="#5a4a2a" stroke-width="2"/>
-        <ellipse cx="800" cy="400" rx="9" ry="6" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.8" transform="rotate(-25 800 400)"/>
-        <ellipse cx="820" cy="400" rx="9" ry="6" fill="#b79ced" stroke="#7a4ec9" stroke-width="1.8" transform="rotate(25 820 400)"/>
-        <line x1="810" y1="400" x2="810" y2="408" stroke="#5a4a2a" stroke-width="2"/>
       </g>
       <g>
         <ellipse cx="120" cy="280" rx="22" ry="20" fill="#ff9eb5" stroke="#d96e8e" stroke-width="2"/>
@@ -460,8 +468,12 @@
         </g>
       </g>
 
-            ${MAP_GRID.filter(e => e.id !== '__street__').map(e => {
+      <!-- 道路先画，地点块后画：道路位于图标下层，不再压住学校/公园/商店图标。 -->
+      ${_renderStreets()}
+
+      ${MAP_GRID.filter(e => e.id !== '__street__').map(e => {
         const x = _cellX(e.col), y = _cellY(e.row);
+        const scale = _cellScale(e.col);
         /* house: 大房子；yard/park/shop/school: 地图入口；__empty__: 装饰格（不点） */
         const g = e.id === 'house' ? 'map-house'
                 : e.id === '__empty__' ? 'map-empty'
@@ -472,10 +484,8 @@
         const hitShield = (g === 'map-room map-outdoor' || g === 'map-room map-school')
           ? '<rect x="0" y="0" width="280" height="280" fill="none" pointer-events="all"/>'
           : '';
-        return `<g class="${g}" data-room="${e.id}" transform="translate(${x},${y})" pointer-events="all">${hitShield}${_renderBlock(e)}</g>`;
+        return `<g class="${g}" data-room="${e.id}" transform="translate(${x},${y}) scale(${scale})" pointer-events="all">${hitShield}${_renderBlock(e)}</g>`;
       }).join('')}
-      <!-- 4 \u6bb5\u8857\u9053 + 4 \u5341\u5b57\u8def\u53e3 + \u8def\u706f + \u7ea2\u7eff\u706f + \u8d70\u4eba\u6a2a\u7ebf -->
-      ${_renderStreets()}
     </svg>`;
 const MAP_CLOSE_SVG = `
     <svg viewBox="0 0 36 36">
@@ -607,7 +617,7 @@ const MAP_CLOSE_SVG = `
   const Map = {
     init(el) {
       /* Phase 2 v4：默认屏 = 地图屏，4 按钮（声音/帮助/还原/重新布置）+ 标题"魔法小屋"
-         + 地图屏 SVG（1 大房子 + 室外 3 区 + 角色 marker） */
+         + 地图屏 SVG（1 大房子 + 室外 3 区） */
       el.innerHTML = `
         <div class="map-screen">
           <div class="map-top-bar">
@@ -621,7 +631,6 @@ const MAP_CLOSE_SVG = `
           </div>
           <div class="map-canvas-wrap">
             <div class="map-canvas">${MAP_SVG}</div>
-            <div class="map-marker map-marker-girl" data-for="girl"></div>
           </div>
           <div class="map-hint">点大房子进卧室 · 点学校/院子/公园/商店去世界</div>
           ${HELP_HTML}
@@ -718,58 +727,10 @@ const MAP_CLOSE_SVG = `
         });
       });
 
-      /* Phase 2 v4：默认屏=map，Map.init 也跑一次 marker 定位（onEnter 在 showScreen 才调，
-         但 register 时 init 已跑，默认屏情况下 onEnter 不会自动触发） */
-      const placeInitMap = () => {
-        this._placeMarker('girl', Store.state.char.girl.room);
-      };
-      const placeMap = placeInitMap.bind(this);
-      setTimeout(placeMap, 16);
-      setTimeout(placeMap, 140);
+      /* 地图只保留地点图标，不再显示人物位置 marker。 */
     },
-    onEnter() {
-      /* iPad 兼容性：setTimeout 双轨（不用 requestAnimationFrame） */
-      const place = () => {
-        this._placeMarker('girl', Store.state.char.girl.room);
-      };
-      setTimeout(place, 16);
-      setTimeout(place, 140);
-    },
-    onLeave() {},
-    _placeMarker(who, roomId) {
-      /* Phase 2 v7：3×3 网格 → 10 个世界房间映射到 5 个地图地点 */
-      const positions = {
-        house: '.map-house',
-        /* 7 间室内全部映射到大房子块 */
-        balcony: '.map-house', bedroom: '.map-house', bathroom: '.map-house',
-        living: '.map-house', kitchen: '.map-house', study: '.map-house',
-        wardrobe: '.map-house',
-        /* 3 室外 + 学校地图地点 */
-        yard: '.map-room[data-room="yard"]',
-        park: '.map-room[data-room="park"]',
-        shop: '.map-room[data-room="shop"]',
-        school: '.map-room[data-room="school"]'
-      };
-      const sel = positions[roomId] || '.map-house';
-      const screen = document.getElementById('screen-map');
-      if (!screen) return;
-      const marker = screen.querySelector('.map-marker-' + who);
-      if (!marker) return;
-      marker.dataset.targetRoom = roomId;
-      const canvas = screen.querySelector('.map-canvas');
-      const blockEl = screen.querySelector(sel);
-      if (!canvas || !blockEl) return;
-      const cRect = canvas.getBoundingClientRect();
-      const bRect = blockEl.getBoundingClientRect();
-      const left = bRect.left - cRect.left + bRect.width / 2;
-      const top  = bRect.top  - cRect.top  + bRect.height * 0.35;
-      marker.style.left = left + 'px';
-      marker.style.top  = top + 'px';
-      /* 触发 1.5s 脉动 */
-      marker.classList.remove('pulse');
-      void marker.offsetWidth;
-      marker.classList.add('pulse');
-    }
+    onEnter() {},
+    onLeave() {}
   };
 
   /* ---------- Phase 2 v8：interior 屏已删除（老吴 iPad 实测反馈"图1界面不要了"）---------- */
