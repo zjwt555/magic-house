@@ -622,7 +622,6 @@ const MAP_CLOSE_SVG = `
           <div class="map-canvas-wrap">
             <div class="map-canvas">${MAP_SVG}</div>
             <div class="map-marker map-marker-girl" data-for="girl"></div>
-            <div class="map-marker map-marker-cat" data-for="cat"></div>
           </div>
           <div class="map-hint">点大房子进卧室 · 点学校/院子/公园/商店去世界</div>
           ${HELP_HTML}
@@ -723,7 +722,6 @@ const MAP_CLOSE_SVG = `
          但 register 时 init 已跑，默认屏情况下 onEnter 不会自动触发） */
       const placeInitMap = () => {
         this._placeMarker('girl', Store.state.char.girl.room);
-        this._placeMarker('cat', Store.state.char.cat.room);
       };
       const placeMap = placeInitMap.bind(this);
       setTimeout(placeMap, 16);
@@ -733,7 +731,6 @@ const MAP_CLOSE_SVG = `
       /* iPad 兼容性：setTimeout 双轨（不用 requestAnimationFrame） */
       const place = () => {
         this._placeMarker('girl', Store.state.char.girl.room);
-        this._placeMarker('cat', Store.state.char.cat.room);
       };
       setTimeout(place, 16);
       setTimeout(place, 140);
