@@ -1,5 +1,5 @@
 /* ============ 魔法小屋 Service Worker：离线可玩 ============ */
-const VERSION = 'magic-house-5689a281a9';
+const VERSION = 'magic-house-bb858973d6';
 const CORE = [
   './',
   './index.html',
