@@ -53,7 +53,7 @@
     return [r.left + r.width / 2, r.top + r.height / 2, r];
   };
   const isWorldActive = () => $('#screen-world').classList.contains('active');
-  const ROOM_IDS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'wardrobe', 'yard', 'park', 'shop'];
+  const ROOM_IDS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'school', 'yard', 'park', 'shop'];
   const roomIdx = id => ROOM_IDS.indexOf(id);
 
   async function run() {
@@ -70,7 +70,7 @@
         `items=${mig.rooms.bedroom.items.length} wall=${mig.rooms.bedroom.wall}`);
       log('迁移:老lastRoom→bedroom', mig.lastRoom === 'bedroom', mig.lastRoom);
       log('迁移:角色字段生成', !!(mig.char && mig.char.girl && mig.char.cat), JSON.stringify(mig.char.girl));
-      log('迁移:7房间齐备', Object.keys(mig.rooms).length === 9, Object.keys(mig.rooms).join(','));
+      log('迁移:10房间齐备', Object.keys(mig.rooms).length === 10, Object.keys(mig.rooms).join(','));
       Store.reset();
       await sleep(60);
 
@@ -89,6 +89,10 @@
         Store.state.rooms.living.items.length === 7 &&
         ['tv','sofa','coffee','armchair','fishtank','cushion','rug'].every(id => Store.state.rooms.living.items.some(it => it.id === id)),
         `items=${Store.state.rooms.living.items.map(it => it.id).join(',')}`);
+      log('学校默认 5 件（blackboard+desk+ball+pencilbox+lamp）',
+        Store.state.rooms.school.items.length === 5 &&
+        ['blackboard','desk','ball','pencilbox','lamp'].every(id => Store.state.rooms.school.items.some(it => it.id === id)),
+        `items=${Store.state.rooms.school.items.map(it => it.id).join(',')}`);
       log('Store.relayout()：清空 + 重新按默认摆',
         (() => {
           Store.state.rooms.living.items.push({id: 'junk', x: 0.5, y: 0.5});
@@ -372,14 +376,14 @@
 
       /* ---- 2. 世界结构 ---- */
       const rooms = $$('#screen-world .world-room');
-      log('世界9个场景', rooms.length === 9, rooms.length);
+      log('世界10个场景', rooms.length === 10, rooms.length);
       log('固定装置:厨房冰箱+灶台', $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length === 2,
         $$('#screen-world .world-room[data-room="kitchen"] .world-fixture').length);
       log('固定装置:卧室衣柜', $$('#screen-world .world-room[data-room="bedroom"] .world-fixture[data-act="wardrobe"]').length === 1);
       log('角色在场', !!$('#char-girl') && !!$('#char-cat'));
       /* Phase 2：dots 导航已删，验证 .world-room 数 = 10 */
-      log('世界屏 9 个场景（dots 已删）',
-        $$('#screen-world .world-room').length === 9,
+      log('世界屏 10 个场景（dots 已删）',
+        $$('#screen-world .world-room').length === 10,
         `n=${$$('#screen-world .world-room').length}`);
 
       /* ---- 3. 相机 ---- */
@@ -585,7 +589,7 @@
       await sleep(150);
 
       /* ---- 8. 衣柜→换装 overlay ---- */
-      window.World.jumpTo('wardrobe'); // 换衣间
+      window.World.jumpTo('bedroom'); // 衣柜已合并到卧室
       await sleep(150);
       const wcab = $('#screen-world .world-fixture[data-act="wardrobe"]');
       const [wx2, wy2] = center(wcab);
@@ -699,26 +703,27 @@
       /* ---- 10. 存档完整性 ---- */
       Store.saveNow();
       const saved = JSON.parse(localStorage.getItem('magic-house-v1'));
-      log('存档含角色/道具/9房间（wardrobe 合并到 bedroom）', !!(saved.char && Array.isArray(saved.props) && Object.keys(saved.rooms).length === 9));
+      log('存档含角色/道具/10房间（wardrobe 合并到 bedroom）', !!(saved.char && Array.isArray(saved.props) && Object.keys(saved.rooms).length === 10));
 
-      /* ---- 11. Phase 2 学校场景样品（仅入库未上线） ---- */
+      /* ---- 11. Phase 2 学校场景（已上线，仅地图入口） ---- */
       const items = window.RoomAssets.ITEMS;
-      log('Phase 2 样品:blackboard 在 ITEMS 库', !!items.blackboard && /viewBox="0 0 240 180"/.test(items.blackboard.svg), `存在=${!!items.blackboard}`);
-      log('Phase 2 样品:ball 在 ITEMS 库', !!items.ball && /viewBox="0 0 130 130"/.test(items.ball.svg), `存在=${!!items.ball}`);
-      log('Phase 2 样品:pencilbox 在 ITEMS 库', !!items.pencilbox && /viewBox="0 0 180 110"/.test(items.pencilbox.svg), `存在=${!!items.pencilbox}`);
-      log('Phase 2 样品:width 合理', items.blackboard.w === 0.22 && items.ball.w === 0.10 && items.pencilbox.w === 0.16,
+      log('学校素材:blackboard 在 ITEMS 库', !!items.blackboard && /viewBox="0 0 240 180"/.test(items.blackboard.svg), `存在=${!!items.blackboard}`);
+      log('学校素材:ball 在 ITEMS 库', !!items.ball && /viewBox="0 0 130 130"/.test(items.ball.svg), `存在=${!!items.ball}`);
+      log('学校素材:pencilbox 在 ITEMS 库', !!items.pencilbox && /viewBox="0 0 180 110"/.test(items.pencilbox.svg), `存在=${!!items.pencilbox}`);
+      log('学校素材:width 合理', items.blackboard.w === 0.22 && items.ball.w === 0.10 && items.pencilbox.w === 0.16,
         `blackboard=${items.blackboard.w} ball=${items.ball.w} pencilbox=${items.pencilbox.w}`);
-      log('Phase 2 样品:中精致特征（描边+多层高光+彩蛋）',
+      log('学校素材:中精致特征（描边+多层高光+彩蛋）',
         /stroke=/.test(items.blackboard.svg) && /高光层|高光/.test(items.blackboard.svg) &&
         /stroke-dasharray/.test(items.ball.svg) && /卡扣/.test(items.pencilbox.svg));
-      log('Phase 2 样品:未注册到 WORLD_ROOMS（保持 iPad 当前状态）',
-        !window.RoomAssets.WORLD_ROOMS.includes('school'),
+      log('学校已注册到 WORLD_ROOMS',
+        window.RoomAssets.WORLD_ROOMS.includes('school'),
         `WORLD_ROOMS=${window.RoomAssets.WORLD_ROOMS.join(',')}`);
-      log('Phase 2 样品:未进任何 ROOM_SETS（抽屉看不到）',
-        !Object.values(window.RoomAssets.ROOM_SETS).some(set =>
-          set.includes('blackboard') || set.includes('ball') || set.includes('pencilbox')));
-      log('Phase 2 样品:WORLD_ROOMS 仍 9 个（wardrobe 合并到 bedroom）',
-        window.RoomAssets.WORLD_ROOMS.length === 9,
+      log('学校已进 ROOM_SETS（地图进入后可布置）',
+        Array.isArray(window.RoomAssets.ROOM_SETS.school) &&
+        ['blackboard', 'ball', 'pencilbox', 'chair'].every(id => window.RoomAssets.ROOM_SETS.school.includes(id)),
+        `school=${(window.RoomAssets.ROOM_SETS.school || []).join(',')}`);
+      log('WORLD_ROOMS 10 个（学校上线）',
+        window.RoomAssets.WORLD_ROOMS.length === 10,
         `WORLD_ROOMS.length=${window.RoomAssets.WORLD_ROOMS.length}`);
 
       /* ---- 13. Phase 2 v4：世界地图 + 房子内部屏（默认屏=地图，主屏删除）---- */
@@ -750,6 +755,8 @@
       log('地图屏 1 大房子轮廓', !!houseEl);
       const outdoors = $$('#screen-map .map-outdoor');
       log('地图屏 3 室外区', outdoors.length === 3, `n=${outdoors.length}`);
+      const schoolMapEl = $('#screen-map .map-room[data-room="school"]');
+      log('地图屏学校地点存在', !!schoolMapEl, `school=${schoolMapEl && schoolMapEl.dataset.room}`);
       const mapHit = (id) => {
         const node = $(`#screen-map .map-room[data-room="${id}"]`);
         const r = node && node.getBoundingClientRect();
@@ -769,8 +776,10 @@
       };
       const parkHit = mapHit('park');
       const shopHit = mapHit('shop');
+      const schoolHit = mapHit('school');
       log('公园地图中心点命中公园热区', parkHit.ok, `target=${parkHit.target}`);
       log('商店地图中心点命中商店热区', shopHit.ok, `target=${shopHit.target}`);
+      log('学校地图中心点命中学校热区', schoolHit.ok, `target=${schoolHit.target}`);
 
       /* Phase 2 v5：Toca 风格丰富化 —— 拟物数量检查 */
       const mapAllShapes = $$('#screen-map svg *');
@@ -781,7 +790,7 @@
 
       /* Phase 2 v7: 3x3 网格 + 街道 */
       const mapBlocks = $$('#screen-map .map-room, #screen-map .map-house');
-      log('地图屏 4 块（1 大房子 + 3 室外）', mapBlocks.length === 4, `n=${mapBlocks.length}`);
+      log('地图屏 5 块（1 大房子 + 3 室外 + 学校）', mapBlocks.length === 5, `n=${mapBlocks.length}`);
 
       /* 街道（深灰柏油） */
       const streetSegs = $$('#screen-map svg rect[fill="#5a5a5a"]');
@@ -816,6 +825,13 @@
       log('地图实际坐标点公园/商店进入世界屏',
         parkClickDispatched && shopClickDispatched && parkEntered && shopEntered,
         `park=${parkEntered} shop=${shopEntered} screen=${activeScreen()} room=${window.World.currentRoomId}`);
+      showScreen('map');
+      await sleep(220);
+      const schoolClickDispatched = clickMapPoint('school');
+      await sleep(300);
+      const schoolEntered = activeScreen() === 'screen-world' && window.World.currentRoomId === 'school';
+      log('地图实际坐标点学校进入世界屏', schoolClickDispatched && schoolEntered,
+        `school=${schoolEntered} screen=${activeScreen()} room=${window.World.currentRoomId}`);
 
       /* dots 导航已删除 */
       const dotCount = $$('#screen-world .world-dot').length;
@@ -829,10 +845,11 @@
       await sleep(80);
       const picker = $('#app .room-picker');
       const pickRooms = picker ? [...picker.querySelectorAll('.room-pick')].map(n => n.dataset.room) : [];
-      log('room-picker 可打开且只显示真实世界房间',
+      log('room-picker 只显示 7 个常用房间（学校/公园/商店仅地图）',
         picker && !picker.classList.contains('hidden') &&
-        pickRooms.length === window.RoomAssets.WORLD_ROOMS.length &&
-        pickRooms.every(id => window.RoomAssets.WORLD_ROOMS.includes(id)),
+        pickRooms.length === 7 &&
+        pickRooms.every(id => ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard'].includes(id)) &&
+        !pickRooms.includes('school') && !pickRooms.includes('park') && !pickRooms.includes('shop'),
         `hidden=${picker && picker.classList.contains('hidden')} rooms=${pickRooms.join(',')}`);
 
     } catch (err) {
