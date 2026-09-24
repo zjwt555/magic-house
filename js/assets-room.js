@@ -1547,7 +1547,7 @@
         <!-- 蒸汽（径向渐变） -->
         <path d="M64,40 Q60,30 66,20 M76,38 Q72,28 78,16 M88,40 Q84,30 90,22" stroke="url(#item-stove-steam)" stroke-width="4" fill="none" stroke-linecap="round"/>
       </svg>` },
-    wardrobecab: { fixture: true, w: 0.135, fx: 0.08, act: 'wardrobe', svg: `
+    wardrobecab: { movable: true, noRemove: true, unique: true, w: 0.135, act: 'wardrobe', svg: `
       <svg viewBox="0 0 140 200" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="item-wardrobecab-body" x1="0" y1="0" x2="0" y2="1">
@@ -2458,7 +2458,7 @@
     balcony: ['clothline', 'deckchair', 'flowerstand', 'plant', 'catbed', 'st_flower', 'st_butterfly', 'st_bubble'],
     /* v0.7：卧室精简 —— 去掉 sofa/piano/table/bookshelf（太挤，piano 不属卧室）。
        留 bed + 7 件卧室主题：地毯/灯/绿植/猫床/熊玩偶/相框/钟 + 3 贴纸。 */
-    bedroom: ['bed', 'rug', 'lamp', 'plant', 'catbed', 'teddy', 'frame', 'clock',
+    bedroom: ['bed', 'rug', 'lamp', 'plant', 'catbed', 'teddy', 'wardrobecab', 'frame', 'clock',
       'st_star', 'st_flower', 'st_butterfly'],
     /* v0.7：浴室不动 —— 主题本就很完整（卫浴 4 件 + 镜 + 架 + 垫 + 绿植 + 3 贴纸） */
     bathroom: ['bathtub', 'sink', 'toilet', 'bmirror', 'towelrack', 'bathmat', 'plant',
@@ -2494,12 +2494,13 @@
       { id: 'flowerstand',  x: 0.75, y: 0.78 },
       { id: 'plant',        x: 0.15, y: 0.70 }
     ],
-    bedroom: [                              // 13 件抽屉（含 wardrobe 合并），摆 8 件
+    bedroom: [                              // 12 件抽屉（含可移动衣柜），摆 9 件
       { id: 'bed',       x: 0.50, y: 0.85 },
       { id: 'rug',       x: 0.50, y: 0.92 },
       { id: 'lamp',      x: 0.22, y: 0.80 },
       { id: 'catbed',    x: 0.78, y: 0.85 },
       { id: 'teddy',     x: 0.18, y: 0.92 },
+      { id: 'wardrobecab', x: 0.12, y: 0.68 },
       { id: 'frame',     x: 0.85, y: 0.30 },
       { id: 'bmirror',   x: 0.50, y: 0.42 },
       { id: 'towelrack', x: 0.15, y: 0.55 }
@@ -2565,8 +2566,9 @@
     ]
   };
 
-  /* 固定装置归属（渲染在房间背景层，不可拖不可收） */
-  const FIXTURES = { kitchen: ['fridge', 'stove'], bedroom: ['wardrobecab'] };
+  /* 固定装置归属（渲染在房间背景层，不可拖不可收）。
+     衣柜已改为带独立位置的 room-item，可拖动但不可收走。 */
+  const FIXTURES = { kitchen: ['fridge', 'stove'] };
 
   /* 厨房冰箱里的食物（复用厨房素材库的食材 SVG） */
   const FOODS = ['apple', 'strawberry', 'banana', 'grape', 'orange', 'watermelon', 'milk',
