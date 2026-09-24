@@ -152,8 +152,8 @@
         <circle cx="36" cy="29" r="4" fill="#ffd166"/>
       </svg>` }
   };
-  /* 房间选择器只列真实世界房间；换衣间是 Overlay，不在横向 WORLD_ROOMS 中。 */
-  const PICK_ORDER = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard', 'park', 'shop'];
+  /* 房间选择器只列 7 个常用入口；学校、公园、商店仅从地图进入。 */
+  const PICK_ORDER = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard'];
 
   /* ---------- Phase 2 v7：3×3 网格街道 + 家在中央（数据驱动）---------- */
   /* 网格坐标 (col, row) -> (x, y, w, h)
@@ -193,7 +193,7 @@
       <polygon points="${back} ${rightV} ${rightD} ${backD}" fill="${right}" stroke="${stroke}" stroke-width="3"/>`;
   }
 
-  /* 9 格数据：4 角室外 + 中央大房子 + 4 个街道占位 */
+  /* 9 格数据：4 个地图地点 + 中央大房子 + 4 个街道占位 */
   const MAP_GRID = [
     { id: 'yard',      col: 0, row: 0, label: '\u9662\u5b50', color: '#a8e6a1' },
     { id: '__street__', col: 1, row: 0, kind: 'street' },
@@ -203,8 +203,9 @@
     { id: '__street__', col: 2, row: 1, kind: 'street' },
     { id: 'park',      col: 0, row: 2, label: '\u516c\u56ed', color: '#9ad7f0' },
     { id: '__street__', col: 1, row: 2, kind: 'street' },
-    { id: '__empty__', col: 2, row: 2, label: '\u7a7a\u5730', color: '#daf5d0' }
+    { id: 'school',    col: 2, row: 2, label: '\u5b66\u6821', color: '#dff3ff' }
   ];
+  const MAP_ENTRY_IDS = ['yard', 'park', 'shop', 'school'];
 
   /* 4 角格子里的拟物（绝对坐标） */
   /* YARD_DETAIL deprecated in v3 -- yard rewritten */
@@ -239,9 +240,28 @@
     label: '\u7a7a\u5730'
   };
 
+  /* 学校地图地点：代码绘制，避免新增二进制素材。 */
+  const SCHOOL_TILE_SVG = `
+    <rect x="0" y="0" width="280" height="280" rx="24" fill="#eaf8ff" stroke="#8fcfe8" stroke-width="3"/>
+    <circle cx="228" cy="42" r="20" fill="#ffd34d" stroke="#ffb830" stroke-width="3"/>
+    <path d="M0 222 Q70 198 140 220 T280 214 V280 H0 Z" fill="#bfe7b4"/>
+    <rect x="42" y="92" width="196" height="125" rx="18" fill="#fff4c7" stroke="#d99a62" stroke-width="4"/>
+    <path d="M28 100 L140 42 L252 100 Z" fill="#8f7be8" stroke="#6557b7" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="84" y="66" width="112" height="30" rx="12" fill="#ff9eb5" stroke="#d96a8e" stroke-width="3"/>
+    <text x="140" y="88" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">学校</text>
+    <rect x="68" y="120" width="52" height="46" rx="8" fill="#8fd3e8" stroke="#4f9cc0" stroke-width="3"/>
+    <rect x="160" y="120" width="52" height="46" rx="8" fill="#8fd3e8" stroke="#4f9cc0" stroke-width="3"/>
+    <rect x="122" y="174" width="36" height="43" rx="10" fill="#b79ced" stroke="#7a5ec4" stroke-width="3"/>
+    <circle cx="149" cy="196" r="3" fill="#ffd34d"/>
+    <rect x="62" y="232" width="50" height="12" rx="6" fill="#ff8f9e" stroke="#c45875" stroke-width="2"/>
+    <rect x="168" y="232" width="50" height="12" rx="6" fill="#7ec8e3" stroke="#4f9cc0" stroke-width="2"/>
+    <circle cx="42" cy="244" r="8" fill="#ff9eb5"/>
+    <circle cx="238" cy="244" r="8" fill="#ffd34d"/>
+  `;
+
   /* 渲染单个非街道格子（背景色 + 拟物 + 标签） */
   function _renderBlock(entry) {
-    if (entry.kind === 'street' || entry.id === '__empty__' || entry.id === 'house' || entry.id === 'yard' || entry.id === 'park' || entry.id === 'shop') {
+    if (entry.kind === 'street' || entry.id === '__empty__' || entry.id === 'house' || entry.id === 'yard' || entry.id === 'park' || entry.id === 'shop' || entry.id === 'school') {
       /* \u5c9b\u4e2d\u5927\u623f\u5b50\u5355\u72ec\u5904\u7406\uff08\u9700\u8981\u591a\u7ec6\u8282\uff09 */
     }
     let out = '';
@@ -296,6 +316,7 @@
       return out;
     }
 
+    if (entry.id === 'school') return SCHOOL_TILE_SVG;
 
     return '';
   }
@@ -441,13 +462,14 @@
 
             ${MAP_GRID.filter(e => e.id !== '__street__').map(e => {
         const x = _cellX(e.col), y = _cellY(e.row);
-        /* house: 大房子（点 → interior）；yard/park/shop: 室外（点 → 世界屏）；__empty__: 装饰格（不点） */
+        /* house: 大房子；yard/park/shop/school: 地图入口；__empty__: 装饰格（不点） */
         const g = e.id === 'house' ? 'map-house'
                 : e.id === '__empty__' ? 'map-empty'
+                : e.id === 'school' ? 'map-room map-school'
                 : 'map-room map-outdoor';
         /* 地点块自身负责命中；街道层统一 pointer-events:none，
            透明 shield 覆盖 PNG alpha 透明区域，避免触摸落到街道背景。 */
-        const hitShield = (g === 'map-room map-outdoor')
+        const hitShield = (g === 'map-room map-outdoor' || g === 'map-room map-school')
           ? '<rect x="0" y="0" width="280" height="280" fill="none" pointer-events="all"/>'
           : '';
         return `<g class="${g}" data-room="${e.id}" transform="translate(${x},${y})" pointer-events="all">${hitShield}${_renderBlock(e)}</g>`;
@@ -555,7 +577,7 @@ const MAP_CLOSE_SVG = `
       <div class="help-card">
         <h3>📖 给家长的小指南</h3>
         <ul>
-          <li>🏠 <b>大世界</b>：默认是地图屏。点大房子进入卧室，点换房间按钮可直达其他房间；点院子、公园或商店直接去室外</li>
+          <li>🏠 <b>大世界</b>：默认是地图屏。点大房子进入卧室，点换房间按钮可直达 7 个常用房间；学校、院子、公园或商店从地图进入</li>
           <li>🚶 <b>娃娃会走路</b>：在世界里点一下地板娃娃就走过去；<b>按住娃娃/小猫</b>可以拎到任何房间</li>
           <li>👗 <b>换装</b>：去换衣间点<b>大衣柜</b>，点分类标签再点衣服即可穿上</li>
           <li>🛏️ <b>布置房间</b>：在世界屏点下方家具放进房间，按住拖动换位置；卫生间里<b>点点浴缸</b>会冒泡泡</li>
@@ -602,7 +624,7 @@ const MAP_CLOSE_SVG = `
             <div class="map-marker map-marker-girl" data-for="girl"></div>
             <div class="map-marker map-marker-cat" data-for="cat"></div>
           </div>
-          <div class="map-hint">点大房子进卧室 · 点院子/公园/商店去室外</div>
+          <div class="map-hint">点大房子进卧室 · 点学校/院子/公园/商店去世界</div>
           ${HELP_HTML}
           ${RESET_CONFIRM_HTML}
         </div>`;
@@ -680,11 +702,11 @@ const MAP_CLOSE_SVG = `
         });
       }
 
-      /* 室外 3 区点击 → 直接跳世界屏（地图 → 世界，跳过 interior） */
-      el.querySelectorAll('.map-room.map-outdoor').forEach(room => {
+      /* 地图入口：学校、院子、公园、商店 → 直接跳世界屏（地图 → 世界，跳过 interior） */
+      el.querySelectorAll('.map-room[data-room]').forEach(room => {
         room.addEventListener('click', () => {
           const roomId = room.dataset.room;
-          if (!roomId || !window.World) return;
+          if (!MAP_ENTRY_IDS.includes(roomId) || !window.World) return;
           Sound.door();
           const canvas = el.querySelector('.map-canvas');
           canvas.classList.add('map-leave');
@@ -718,17 +740,18 @@ const MAP_CLOSE_SVG = `
     },
     onLeave() {},
     _placeMarker(who, roomId) {
-      /* Phase 2 v7：3×3 网格 → 10 房间 id 映射到 4 块（house/yard/park/shop） */
+      /* Phase 2 v7：3×3 网格 → 10 个世界房间映射到 5 个地图地点 */
       const positions = {
         house: '.map-house',
         /* 7 间室内全部映射到大房子块 */
         balcony: '.map-house', bedroom: '.map-house', bathroom: '.map-house',
         living: '.map-house', kitchen: '.map-house', study: '.map-house',
         wardrobe: '.map-house',
-        /* 3 室外 */
+        /* 3 室外 + 学校地图地点 */
         yard: '.map-room[data-room="yard"]',
         park: '.map-room[data-room="park"]',
-        shop: '.map-room[data-room="shop"]'
+        shop: '.map-room[data-room="shop"]',
+        school: '.map-room[data-room="school"]'
       };
       const sel = positions[roomId] || '.map-house';
       const screen = document.getElementById('screen-map');
