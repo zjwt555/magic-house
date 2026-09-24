@@ -107,7 +107,16 @@
     init(root) {
       el = root;
       el.innerHTML = `
-        <div class="game-top">${window.homeButtonHTML}${window.roomsButtonHTML}</div>
+        <div class="game-top">
+          <button class="btn-back-world" aria-label="返回房间">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M27 10 L14 23 L27 36" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 23 H37" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+            <span>返回房间</span>
+          </button>
+          ${window.roomsButtonHTML}
+        </div>
         <div class="game-stage">
           <div class="dressup-stage">
             <div class="doll-wrap"></div>
@@ -131,6 +140,11 @@
           </div>
           <div class="item-drawer"></div>
         </div>`;
+
+      el.querySelector('.btn-back-world').addEventListener('click', () => {
+        Sound.door();
+        window.showScreen('world');
+      });
 
       el.querySelectorAll('.tab-btn').forEach(t =>
         t.addEventListener('click', () => { Sound.pop(); openCat(t.dataset.cat); }));
