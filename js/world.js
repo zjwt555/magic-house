@@ -33,8 +33,10 @@
     const right = el && el.querySelector('.world-arrow.right');
     if (left) left.classList.toggle('hidden', cam <= 0);
     if (right) right.classList.toggle('hidden', cam >= R().WORLD_ROOMS.length - 1);
-    Store.state.lastRoom = roomAt(cam);
+    const currentRoom = roomAt(cam);
+    Store.state.lastRoom = currentRoom;
     Store.save();
+    if (typeof window.updateRoomNav === 'function') window.updateRoomNav(currentRoom);
     /* 让世界屏外框跟随当前房间墙色：safe-area padding 让 toolbar 两侧露出一条边，
        之前是 `#app` 浅蓝；现在统一为墙色，肉眼看不到"露蓝"。无 bgColor 时兜底肉色。 */
     if (el) {
@@ -66,16 +68,33 @@
     const def = R().ITEMS[it.id];
     const vb = def.svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
     const div = document.createElement('div');
-    div.className = 'room-item' + (def.flat ? ' flat' : '') + (cleanMode ? ' removable' : '');
+    div.className = 'room-item' + (def.flat ? ' flat' : '') + (def.movable ? ' movable-fixture' : '') +
+      (cleanMode && !def.noRemove ? ' removable' : '');
     div.dataset.i = i;
+    div.dataset.id = it.id;
     div.dataset.room = roomId;
+    if (def.act) div.dataset.act = def.act;
     div.style.left = (it.x * 100) + '%';
     div.style.top = (it.y * 100) + '%';
     div.style.width = (def.w * 100) + '%';
     if (vb) div.style.aspectRatio = vb[1] + ' / ' + vb[2];
-    div.style.zIndex = def.flat ? 1 : 10;
+    div.style.zIndex = def.movable ? 30 : def.flat ? 1 : 10;
     div.innerHTML = def.svg;
     return div;
+  }
+
+  function setFridgeVisual(node, open) {
+    const def = R().ITEMS.fridge;
+    const useOpen = open && !!def.svgOpen;
+    const svg = useOpen ? def.svgOpen : def.svg;
+    const vb = svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)/);
+    const baseVb = def.svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)/);
+    /* 打开图 viewBox 更宽；同步放大容器，保留冰箱主体的视觉高度，避免开门后变小。 */
+    const widthFactor = vb && baseVb ? Number(vb[1]) / Number(baseVb[1]) : 1;
+    node.innerHTML = svg;
+    node.style.width = (def.w * widthFactor * 100) + '%';
+    if (vb) node.style.aspectRatio = vb[1] + ' / ' + vb[2];
+    node.classList.toggle('open', useOpen);
   }
 
   function renderRoom(roomId) {
@@ -86,15 +105,19 @@
     /* 固定装置 */
     (R().FIXTURES[roomId] || []).forEach(id => {
       const def = R().ITEMS[id];
-      const vb = def.svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
       const f = document.createElement('div');
       f.className = 'world-fixture';
       f.dataset.act = def.act;
       f.style.left = (def.fx * 100) + '%';
-      f.style.width = (def.w * 100) + '%';
-      if (vb) f.style.aspectRatio = vb[1] + ' / ' + vb[2];
       f.style.zIndex = 250;
-      f.innerHTML = def.svg;
+      if (id === 'fridge') {
+        setFridgeVisual(f, foodDrawer && roomId === 'kitchen');
+      } else {
+        const vb = def.svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
+        f.style.width = (def.w * 100) + '%';
+        if (vb) f.style.aspectRatio = vb[1] + ' / ' + vb[2];
+        f.innerHTML = def.svg;
+      }
       layer.appendChild(f);
     });
     /* 食物道具（只画本房间的） */
@@ -328,6 +351,10 @@
   function addItem(id) {
     const def = R().ITEMS[id];
     const r = roomState(roomAt(cam));
+    if (def.unique && r.items.some(it => it.id === id)) {
+      Sound.praise('这里已经有一个啦');
+      return;
+    }
     const it = {
       id,
       x: 0.5 + (Math.random() - 0.5) * 0.14,
@@ -387,6 +414,9 @@
       FX.bubbles(el, cx, rect.top + rect.height * 0.35, 6);
       Sound.blub();
       Sound.praiseRandom(['小鱼游游～', '咕噜咕噜～']);
+    } else if (act === 'wardrobe') {
+      Sound.chime();
+      window.showScreen('dressup');
     } else if (act === 'swing') {
       node.animate([
         { transform: 'rotate(0deg)' },
@@ -437,14 +467,8 @@
     else if (act === 'pot') { Sound.chime(); window.showScreen('kitchen'); }
     else if (act === 'fridge') {
       foodDrawer = !foodDrawer;
-      /* 开门视觉：关门图 ↔ 开门图 */
-      const def = R().ITEMS.fridge;
-      if (def.svgOpen) {
-        node.innerHTML = foodDrawer ? def.svgOpen : def.svg;
-        const vb = (foodDrawer ? def.svgOpen : def.svg).match(/viewBox="0 0 ([\d.]+) ([\d.]+)/);
-        if (vb) node.style.aspectRatio = vb[1] + ' / ' + vb[2];
-        node.classList.toggle('open', foodDrawer);
-      }
+      /* 开门视觉：关门图 ↔ 开门图；setFridgeVisual 保持主体尺寸不变。 */
+      setFridgeVisual(node, foodDrawer);
       renderToolbar();
       Sound.praise(foodDrawer ? '冰箱开门啦，想吃点什么？' : '把冰箱关好啦');
     }
@@ -487,7 +511,16 @@
       propNode.style.zIndex = 900;
       propNode.style.pointerEvents = 'none';
     } else if (itemNode) {
-      if (cleanMode) { removeItem(itemNode); return; }
+      if (cleanMode) {
+        const itemDef = R().ITEMS[itemNode.dataset.id];
+        if (itemDef && itemDef.noRemove) {
+          Sound.pop();
+          Sound.praise('这个要留在房间里哦');
+          return;
+        }
+        removeItem(itemNode);
+        return;
+      }
       const roomId = itemNode.dataset.room;
       const sec = track.querySelector(`.world-room[data-room="${roomId}"]`).getBoundingClientRect();
       const it = roomState(roomId).items[+itemNode.dataset.i];
@@ -836,7 +869,7 @@
       Store.migrateRoomSets();
       const N = R().WORLD_ROOMS.length;
       el.innerHTML = `
-        <div class="game-top">${window.homeButtonHTML}${window.roomsButtonHTML}</div>
+        <div class="game-top">${window.homeButtonHTML}${window.roomNavHTML}</div>
         <div class="game-stage world-stage">
           <div class="world-track">
             ${R().WORLD_ROOMS.map(id => `
@@ -896,6 +929,16 @@
       stage = el.querySelector('.world-stage');
       track = el.querySelector('.world-track');
       basket = el.querySelector('.drop-basket');   // 缓存一次，拖动时不再每个 move 事件查 DOM
+
+      const roomNav = el.querySelector('.room-nav');
+      if (roomNav) {
+        roomNav.addEventListener('click', e => {
+          const item = e.target.closest('.room-nav-item');
+          if (!item) return;
+          Sound.door();
+          jumpTo(item.dataset.room);
+        });
+      }
 
       /* 箭头 */
       el.querySelector('.world-arrow.left').addEventListener('click', () => {
