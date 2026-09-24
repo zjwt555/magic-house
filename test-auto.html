@@ -736,19 +736,19 @@
       const girlMarker = $('#screen-map .map-marker-girl');
       const catMarker = $('#screen-map .map-marker-cat');
       log('地图屏女娃位置标记存在', !!girlMarker);
-      log('地图屏小猫位置标记存在', !!catMarker);
+      log('地图屏不再显示黄色小猫 marker', !catMarker);
 
       const girlRoomExpected = Store.state.char.girl.room;
       const catRoomExpected = Store.state.char.cat.room;
       log('地图屏女娃 marker.targetRoom === girl.room',
         girlMarker && girlMarker.dataset.targetRoom === girlRoomExpected,
         `marker=${girlMarker && girlMarker.dataset.targetRoom} store=${girlRoomExpected}`);
-      log('地图屏小猫 marker.targetRoom === cat.room',
-        catMarker && catMarker.dataset.targetRoom === catRoomExpected,
-        `marker=${catMarker && catMarker.dataset.targetRoom} store=${catRoomExpected}`);
+      log('地图屏小猫 marker 已移除',
+        !catMarker,
+        `marker=${catMarker ? 'present' : 'none'} catRoom=${catRoomExpected}`);
 
       log('地图屏女娃 marker.pulse class 已加', girlMarker && girlMarker.classList.contains('pulse'));
-      log('地图屏小猫 marker.pulse class 已加', catMarker && catMarker.classList.contains('pulse'));
+      log('地图屏小猫 marker 不再显示或脉冲', !catMarker);
 
       /* 地图屏 1 大房子 + 3 室外（v4 重写后） */
       const houseEl = $('#screen-map .map-house');
