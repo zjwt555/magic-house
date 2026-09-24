@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 样品预览 · 学校场景</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --card: #ffffff;
+    --line: #e9e3d6;
+    --ink: #14171e;
+    --ink-2: #3a4256;
+    --muted: #7c7a72;
+    --accent: #c97b3f;
+    --accent-2: #2f6f5e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Outfit', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    line-height: 1.55;
+    padding: 56px 24px 96px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  header { text-align: left; margin-bottom: 48px; }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 34px;
+    font-weight: 400;
+    margin: 0 0 12px;
+    letter-spacing: -0.005em;
+  }
+  .lede { color: var(--ink-2); font-size: 15px; margin: 0; }
+  .meta {
+    margin-top: 16px;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 6px 12px;
+    background: rgba(201, 123, 63, 0.08);
+    border-radius: 999px;
+  }
+  .stage {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  .stage h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .stage .sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 24px;
+  }
+  .preview-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  @media (max-width: 720px) {
+    .preview-row { grid-template-columns: 1fr; gap: 24px; }
+    h1 { font-size: 28px; }
+  }
+  .canvas {
+    background: linear-gradient(180deg, #e3f4ff 0%, #f7e8d2 100%);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .canvas svg { width: 80%; height: 80%; }
+  .details .kv {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    row-gap: 8px;
+    column-gap: 16px;
+    margin: 0 0 16px;
+    font-size: 14px;
+  }
+  .details .kv dt { color: var(--muted); }
+  .details .kv dd { margin: 0; color: var(--ink); }
+  .eggs {
+    background: rgba(47, 111, 94, 0.06);
+    border-left: 2px solid var(--accent-2);
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .eggs strong { color: var(--accent-2); display: block; margin-bottom: 6px; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .eggs ul { margin: 0; padding-left: 18px; }
+  .eggs li { margin-bottom: 4px; }
+  .eggs li:last-child { margin-bottom: 0; }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 12px;
+  }
+  .compare-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+  }
+  .compare-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    margin: 0 0 4px;
+  }
+  .compare-card .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .tag-old { background: rgba(124, 122, 114, 0.12); color: var(--muted); }
+  .tag-new { background: rgba(47, 111, 94, 0.12); color: var(--accent-2); }
+  .compare-card svg { width: 70%; height: 110px; margin: 8px 0 12px; }
+  .compare-card .note { font-size: 12px; color: var(--muted); margin: 0; }
+
+  .next {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 24px 32px;
+    margin-top: 32px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .next strong { color: var(--accent); font-weight: 600; }
+  .next ol { margin: 8px 0 0; padding-left: 20px; }
+  .next li { margin-bottom: 6px; }
+
+  /* radial corners (report mode) */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 12% 6%, rgba(201, 123, 63, 0.05), transparent 50%),
+      radial-gradient(ellipse at 88% 94%, rgba(47, 111, 94, 0.05), transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Phase 2 样品预览 · 学校场景</h1>
+  <p class="lede">3 件样品先入库，未注册到 WORLD_ROOMS/ROOM_SETS。iPad 上当前状态不变。</p>
+  <div class="meta">中精致 · 描边 + 多层高光 + 细节彩蛋 + 锐利几何</div>
+</header>
+
+<!-- 1. blackboard -->
+<section class="stage">
+  <h2>blackboard · 黑板</h2>
+  <p class="sub">w = 0.22（房间宽度 22%），可挂墙或立地板。核心物件，给女儿"上课"玩。</p>
+  <div class="preview-row">
+    <div class="canvas">
+      <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="8" width="224" height="164" rx="6" fill="#8b6f47" stroke="#5a3f1f" stroke-width="2"/>
+        <line x1="12" y1="14" x2="20" y2="170" stroke="#a4845a" stroke-width="1" opacity=".7"/>
+        <line x1="228" y1="14" x2="220" y2="170" stroke="#a4845a" stroke-width="1" opacity=".7"/>
+        <line x1="10" y1="100" x2="230" y2="98" stroke="#6b4f2e" stroke-width="1" opacity=".5"/>
+        <rect x="20" y="20" width="200" height="120" rx="3" fill="#3a6a4d" stroke="#2a4f37" stroke-width="1.5"/>
+        <ellipse cx="62" cy="40" rx="48" ry="14" fill="rgba(255,255,255,.14)"/>
+        <ellipse cx="180" cy="130" rx="60" ry="10" fill="rgba(0,0,0,.10)"/>
+        <text x="40" y="68" font-family="Comic Sans MS, cursive" font-size="34" font-weight="800" fill="#fff" opacity=".95">A</text>
+        <text x="84" y="74" font-family="Comic Sans MS, cursive" font-size="32" font-weight="800" fill="#ffd166">B</text>
+        <text x="128" y="68" font-family="Comic Sans MS, cursive" font-size="32" font-weight="800" fill="#ff9eb5">C</text>
+        <text x="40" y="118" font-family="Comic Sans MS, cursive" font-size="22" font-weight="700" fill="#fff" opacity=".85">1 + 1 = ?</text>
+        <rect x="174" y="36" width="22" height="22" rx="3" fill="#ffd166" stroke="#c69418" stroke-width="1.5"/>
+        <text x="185" y="52" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="800" fill="#7a4d1d">A</text>
+        <rect x="196" y="44" width="20" height="20" rx="3" fill="#98d8a0" stroke="#5a9e56" stroke-width="1.5"/>
+        <text x="206" y="58" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="#2a6b2a">B</text>
+        <rect x="20" y="142" width="200" height="10" rx="2" fill="#a4845a" stroke="#5a3f1f" stroke-width="1"/>
+        <rect x="38" y="144" width="22" height="6" rx="2" fill="#fff"/>
+        <rect x="38" y="144" width="22" height="6" rx="2" fill="rgba(0,0,0,0)" stroke="#ddd" stroke-width=".5"/>
+        <rect x="68" y="144" width="20" height="6" rx="2" fill="#ffd166"/>
+        <rect x="68" y="144" width="20" height="6" rx="2" fill="rgba(0,0,0,0)" stroke="#c69418" stroke-width=".5"/>
+        <rect x="96" y="144" width="18" height="6" rx="2" fill="#ff9eb5"/>
+        <rect x="96" y="144" width="18" height="6" rx="2" fill="rgba(0,0,0,0)" stroke="#c4738a" stroke-width=".5"/>
+        <rect x="180" y="144" width="28" height="18" rx="3" fill="#3a3026" stroke="#1a1410" stroke-width="1.2"/>
+        <rect x="180" y="144" width="28" height="4" rx="2" fill="#5a4a36"/>
+        <rect x="10" y="172" width="220" height="6" rx="3" fill="rgba(0,0,0,.10)"/>
+      </svg>
+    </div>
+    <div class="details">
+      <dl class="kv">
+        <dt>id</dt><dd>blackboard</dd>
+        <dt>w</dt><dd>0.22（房间宽 22%）</dd>
+        <dt>层数</dt><dd>木框 + 板面 + 高光 + 文字 + 磁铁 + 粉笔托 + 板擦 = 7 层</dd>
+        <dt>svg 行数</dt><dd>~30 行</dd>
+      </dl>
+      <div class="eggs">
+        <strong>细节彩蛋</strong>
+        <ul>
+          <li>粉笔字 "ABC" 三色（白/黄/粉），歪歪扭扭手写感</li>
+          <li>数学题 "1 + 1 = ?"</li>
+          <li>磁铁字母 A/B（彩色描边方块）</li>
+          <li>粉笔托上 3 段不同色粉笔头</li>
+          <li>右下挂一块小黑板擦</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. ball -->
+<section class="stage">
+  <h2>ball · 球</h2>
+  <p class="sub">w = 0.10（房间宽 10%），可携带、可滚动。4 岁娃最常玩的玩具。</p>
+  <div class="preview-row">
+    <div class="canvas">
+      <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="65" cy="116" rx="40" ry="6" fill="rgba(0,0,0,.18)"/>
+        <circle cx="65" cy="62" r="50" fill="#e07a96"/>
+        <path d="M65,12 A50,50 0 0,0 65,112 Z" fill="#ff9eb5"/>
+        <circle cx="65" cy="62" r="50" fill="none" stroke="#c45875" stroke-width="2"/>
+        <path d="M16,62 Q65,72 114,62" fill="none" stroke="#a83057" stroke-width="1.5" stroke-dasharray="4 3" opacity=".75"/>
+        <path d="M65,12 Q75,62 65,112" fill="none" stroke="#a83057" stroke-width="1.5" stroke-dasharray="4 3" opacity=".75"/>
+        <ellipse cx="48" cy="44" rx="18" ry="10" fill="rgba(255,255,255,.55)" transform="rotate(-30 48 44)"/>
+        <ellipse cx="42" cy="38" rx="6" ry="4" fill="rgba(255,255,255,.85)" transform="rotate(-30 42 38)"/>
+        <path d="M65,112 A50,50 0 0,0 114,62 Q90,90 65,112 Z" fill="rgba(0,0,0,.10)"/>
+      </svg>
+    </div>
+    <div class="details">
+      <dl class="kv">
+        <dt>id</dt><dd>ball</dd>
+        <dt>w</dt><dd>0.10（房间宽 10%）</dd>
+        <dt>层数</dt><dd>投影 + 右半暗 + 左半亮 + 描边 + 横缝线 + 竖缝线 + 大高光 + 小高光点 + 右下半暗 = 9 层</dd>
+        <dt>svg 行数</dt><dd>~15 行</dd>
+      </dl>
+      <div class="eggs">
+        <strong>细节彩蛋</strong>
+        <ul>
+          <li>左右半球色差（左浅右深 → 体积感）</li>
+          <li>横竖双缝线（虚线，模拟真实球缝）</li>
+          <li>双层高光（大椭圆 + 小圆点）</li>
+          <li>下方投影（贴地感）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. pencilbox -->
+<section class="stage">
+  <h2>pencilbox · 铅笔盒</h2>
+  <p class="sub">w = 0.16（房间宽 16%），含 6 根铅笔头露出。可打开/合上（待 Phase 3 做交互）。</p>
+  <div class="preview-row">
+    <div class="canvas">
+      <svg viewBox="0 0 180 110" xmlns="http://www.w3.org/2000/svg">
+        <rect x="14" y="44" width="152" height="54" rx="6" fill="#6c8ebf" stroke="#3a5a87" stroke-width="2"/>
+        <path d="M16,44 L166,44 L160,14 Q90,8 20,14 Z" fill="#8aabe0" stroke="#3a5a87" stroke-width="2"/>
+        <rect x="28" y="18" width="124" height="4" rx="2" fill="rgba(255,255,255,.6)"/>
+        <circle cx="60" cy="30" r="2.5" fill="#ffd166"/>
+        <circle cx="90" cy="26" r="2.5" fill="#ff9eb5"/>
+        <circle cx="120" cy="30" r="2.5" fill="#98d8a0"/>
+        <line x1="22" y1="78" x2="158" y2="78" stroke="rgba(255,255,255,.4)" stroke-width="2"/>
+        <rect x="80" y="40" width="20" height="14" rx="3" fill="#f7b967" stroke="#a06820" stroke-width="1.5"/>
+        <rect x="84" y="44" width="12" height="6" rx="2" fill="rgba(255,255,255,.5)"/>
+        <rect x="40" y="38" width="6" height="20" rx="2" fill="#ffd166" stroke="#a06820" stroke-width="1"/>
+        <polygon points="40,38 46,38 43,32" fill="#3a3026"/>
+        <rect x="56" y="38" width="6" height="20" rx="2" fill="#ff9eb5" stroke="#c4738a" stroke-width="1"/>
+        <polygon points="56,38 62,38 59,32" fill="#3a3026"/>
+        <rect x="72" y="38" width="6" height="20" rx="2" fill="#98d8a0" stroke="#5a9e56" stroke-width="1"/>
+        <polygon points="72,38 78,38 75,32" fill="#3a3026"/>
+        <rect x="104" y="38" width="6" height="20" rx="2" fill="#7ec8e3" stroke="#3a6a8a" stroke-width="1"/>
+        <polygon points="104,38 110,38 107,32" fill="#3a3026"/>
+        <rect x="120" y="38" width="6" height="20" rx="2" fill="#b79ced" stroke="#5a3a87" stroke-width="1"/>
+        <polygon points="120,38 126,38 123,32" fill="#3a3026"/>
+        <rect x="136" y="38" width="6" height="20" rx="2" fill="#ffd166" stroke="#a06820" stroke-width="1"/>
+        <polygon points="136,38 142,38 139,32" fill="#3a3026"/>
+        <ellipse cx="90" cy="104" rx="76" ry="4" fill="rgba(0,0,0,.15)"/>
+      </svg>
+    </div>
+    <div class="details">
+      <dl class="kv">
+        <dt>id</dt><dd>pencilbox</dd>
+        <dt>w</dt><dd>0.16（房间宽 16%）</dd>
+        <dt>层数</dt><dd>盒底 + 盒盖(半开) + 高光条 + 装饰星点 + 装饰线 + 卡扣 + 卡扣高光 + 6 根铅笔 = 13 层</dd>
+        <dt>svg 行数</dt><dd>~25 行</dd>
+      </dl>
+      <div class="eggs">
+        <strong>细节彩蛋</strong>
+        <ul>
+          <li>盒盖半开（左侧稍翘）→ 露出内部铅笔头</li>
+          <li>6 根彩色铅笔头（黄/粉/绿/蓝/紫/黄）</li>
+          <li>金属卡扣（金色描边方块 + 高光）</li>
+          <li>盒面 3 颗装饰星点</li>
+          <li>盒底装饰横线 + 下方投影</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 对比 -->
+<section class="stage">
+  <h2>新旧对比 · 视觉差异</h2>
+  <p class="sub">左侧 cushion（现有 44 个，含小爱心，精致度代表中上）vs 右侧 ball（Phase 2 样品）。</p>
+  <div class="compare">
+    <div class="compare-card">
+      <h3>cushion · 现有</h3>
+      <span class="tag tag-old">v0.7 · 标准线条</span>
+      <svg viewBox="0 0 130 105" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="65" cy="62" rx="56" ry="36" fill="#ff9eb5"/>
+        <ellipse cx="65" cy="62" rx="56" ry="36" fill="rgba(255,255,255,.15)"/>
+        <ellipse cx="65" cy="68" rx="40" ry="24" fill="#ffd9ea"/>
+        <ellipse cx="65" cy="68" rx="40" ry="24" fill="rgba(255,255,255,.2)"/>
+        <path d="M65,46 C56,38 48,46 52,54 C56,62 65,54 65,46 Z" fill="#e05c86"/>
+        <path d="M65,46 C74,38 82,46 78,54 C74,62 65,54 65,46 Z" fill="#e05c86"/>
+        <circle cx="65" cy="50" r="2.4" fill="#a83057"/>
+      </svg>
+      <p class="note">两层椭圆 + 1 处彩蛋（爱心）。简洁，立体感靠基础渐变。</p>
+    </div>
+    <div class="compare-card">
+      <h3>ball · Phase 2</h3>
+      <span class="tag tag-new">Phase 2 · 中精致</span>
+      <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="65" cy="116" rx="40" ry="6" fill="rgba(0,0,0,.18)"/>
+        <circle cx="65" cy="62" r="50" fill="#e07a96"/>
+        <path d="M65,12 A50,50 0 0,0 65,112 Z" fill="#ff9eb5"/>
+        <circle cx="65" cy="62" r="50" fill="none" stroke="#c45875" stroke-width="2"/>
+        <path d="M16,62 Q65,72 114,62" fill="none" stroke="#a83057" stroke-width="1.5" stroke-dasharray="4 3" opacity=".75"/>
+        <path d="M65,12 Q75,62 65,112" fill="none" stroke="#a83057" stroke-width="1.5" stroke-dasharray="4 3" opacity=".75"/>
+        <ellipse cx="48" cy="44" rx="18" ry="10" fill="rgba(255,255,255,.55)" transform="rotate(-30 48 44)"/>
+        <ellipse cx="42" cy="38" rx="6" ry="4" fill="rgba(255,255,255,.85)" transform="rotate(-30 42 38)"/>
+        <path d="M65,112 A50,50 0 0,0 114,62 Q90,90 65,112 Z" fill="rgba(0,0,0,.10)"/>
+      </svg>
+      <p class="note">9 层结构（投影 / 暗半 / 亮半 / 描边 / 双缝线 / 大高光 / 小高光 / 暗半）。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 下一步 -->
+<section class="next">
+  <strong>预览状态</strong>
+  <ol>
+    <li>3 件样品已入库 <code>js/assets-room.js</code>，<strong>未注册</strong>到 <code>WORLD_ROOMS</code> / <code>ROOM_SETS</code> / <code>DEFAULT_LAYOUT</code></li>
+    <li>iPad 当前状态不变（10 个房间、52 个物品、5 种食物）</li>
+    <li>测试 <strong>102 / 102 PASS</strong>（run2/run3 全过，run1 有 2 条 Phase 1.3 偶发 flaky，与本次改动无关）</li>
+    <li>看完效果 OK → 我做剩下 7 件（desk/book/schoolbag/ruler/painting/classroom-clock 等），并把学校注册成第 11 个场景</li>
+  </ol>
+</section>
+
+</div>
+</body>
+</html>
