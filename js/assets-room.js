@@ -2451,7 +2451,7 @@
   };
 
   /* 世界房间顺序（横向大房子从左到右，最右是室外） */
-  const WORLD_ROOMS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'yard', 'park', 'shop'];
+  const WORLD_ROOMS = ['balcony', 'bedroom', 'bathroom', 'living', 'kitchen', 'study', 'school', 'yard', 'park', 'shop'];
 
   /* 各房间的家具清单顺序 */
   const ROOM_SETS = {
@@ -2472,6 +2472,8 @@
     /* v0.7：书房不动 —— 主题本就很合理 */
     study: ['desk', 'globe', 'bookshelf', 'armchair', 'lamp', 'plant', 'frame', 'clock',
       'rug', 'st_star', 'st_flower'],
+    /* v0.8：学校房间（仅地图入口） */
+    school: ['blackboard', 'ball', 'pencilbox', 'chair', 'desk', 'lamp', 'plant', 'st_star', 'st_flower', 'st_butterfly'],
 
     yard: ['swing', 'sandbox', 'tent', 'fence', 'mailbox', 'bigtree', 'plant', 'catbed',
       'st_flower', 'st_butterfly', 'st_duck', 'st_star'],
@@ -2531,6 +2533,13 @@
       { id: 'bookshelf', x: 0.18, y: 0.45 },
       { id: 'frame',     x: 0.85, y: 0.45 },
       { id: 'rug',       x: 0.50, y: 0.93 }
+    ],
+    school: [                                 // 10 件抽屉，摆 5 件
+      { id: 'blackboard', x: 0.50, y: 0.30 },
+      { id: 'desk',       x: 0.18, y: 0.50 },
+      { id: 'ball',       x: 0.30, y: 0.85 },
+      { id: 'pencilbox',  x: 0.75, y: 0.85 },
+      { id: 'lamp',       x: 0.82, y: 0.45 }
     ],
 
     yard: [                                  // 12 件抽屉，摆 5 件
