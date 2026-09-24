@@ -1215,7 +1215,6 @@ html, body {
   display: none;       /* R1: 默认完全脱离 hit-test，只有显示时才进入检测 */
 }
 .map-marker-girl { background: #ffd0dd; }
-.map-marker-cat  { background: #f7b967; }
 .map-marker[data-target-room] { opacity: 1; display: block; }
 .map-marker.pulse { animation: marker-pulse 1.5s ease-in-out 1; }
 @keyframes marker-pulse {
