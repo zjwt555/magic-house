@@ -1,6 +1,6 @@
 /* ============ 魔法小屋 Service Worker:离线可玩 ============
    路线 B(整房间图 + 物品可拖)主代码整合后版本(2026-09-25) */
-const VERSION = 'magic-house-2110e7c067';
+const VERSION = 'magic-house-2dcee4e07b';
 const CORE = [
   './',
   './index.html',
