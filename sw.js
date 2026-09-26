@@ -1,5 +1,6 @@
-/* ============ 魔法小屋 Service Worker：离线可玩 ============ */
-const VERSION = 'magic-house-fb8cca218a';
+/* ============ 魔法小屋 Service Worker:离线可玩 ============
+   路线 B(整房间图 + 物品可拖)主代码整合后版本(2026-09-25) */
+const VERSION = 'magic-house-2110e7c067';
 const CORE = [
   './',
   './index.html',
@@ -7,13 +8,25 @@ const CORE = [
   './js/store.js',
   './js/audio.js',
   './js/fx.js',
-  './js/assets-doll.js',
-  './js/assets-room.js',
-  './js/assets-kitchen.js',
-  './js/dressup.js',
-  './js/world.js',
-  './js/kitchen.js',
-  './js/main.js',
+  // 房间 + 主角 + 物品(Sticker 风格去白底版)
+  './assets-gen/rooms/bedroom-empty-nobg.png',
+  './assets-gen/chars/char-base-nobg.png',
+  './assets-gen/chars/char-style-sport-nobg.png',
+  './assets-gen/chars/char-style-princess-nobg.png',
+  './assets-gen/chars/char-style-school-nobg.png',
+  './assets-gen/chars/char-style-pajamas-nobg.png',
+  './assets-gen/chars/char-style-summer-nobg.png',
+  './assets-gen/items/item-bed-nobg.png',
+  './assets-gen/items/item-nightstand-on-nobg.png',
+  './assets-gen/items/item-nightstand-off-nobg.png',
+  './assets-gen/items/item-teddy-nobg.png',
+  './assets-gen/items/item-curtain-closed-nobg.png',
+  './assets-gen/items/item-curtain-open-nobg.png',
+  './assets-gen/items/item-bookshelf-nobg.png',
+  './assets-gen/items/item-rug-nobg.png',
+  './assets-gen/items/item-mirror-nobg.png',
+  './assets-gen/items/item-stringlights-nobg.png',
+  // 图标
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
