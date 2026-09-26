@@ -20,7 +20,12 @@
       school:   { wall: 4, floor: 0, items: clone(layout.school)   },   // 学校：蜜桃墙+木地板（仅地图入口）
       yard:     { wall: 1, floor: 3, items: clone(layout.yard)     },   // 院子：蓝天云朵+草地
       park:     { wall: 1, floor: 7, items: clone(layout.park)     },   // 公园：蓝天+石板路
-      shop:     { wall: 8, floor: 5, items: clone(layout.shop)     }    // 商店：糖果条纹+格子地板
+      shop:     { wall: 8, floor: 5, items: clone(layout.shop)     },   // 商店：糖果条纹+格子地板
+      /* v0.9：4 个中央十字路口新场景（仅地图入口，顶部常驻导航不放） */
+      playground: { wall: 1, floor: 3, items: clone(layout.playground) }, // 游乐场：蓝天云朵+草地
+      petstore: { wall: 4, floor: 0, items: clone(layout.petstore) },    // 宠物店：蜜桃墙+木地板
+      bakery:    { wall: 8, floor: 5, items: clone(layout.bakery)    }, // 烘焙坊：糖果条纹+蜂蜜黄
+      dollhouse: { wall: 0, floor: 1, items: clone(layout.dollhouse) }  // 娃娃屋：粉条纹+粉地毯
     };
   };
 
