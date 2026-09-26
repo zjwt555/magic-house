@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Magic House · 托卡感卧室(空房间 + 可拖物品 + 可互动 + 换装)</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;font-family:sans-serif}
+  body{background:#fff}
+  #app{position:fixed;inset:0}
+  canvas{display:block;width:100%;height:100%;touch-action:none;background:transparent}
+  #hud{position:fixed;top:8px;left:8px;font-size:12px;color:#a87a8e;background:rgba(255,255,255,.88);padding:6px 10px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);z-index:10;max-width:60%}
+  #hud b{color:#7c4a64}
+  #reset{position:fixed;top:8px;right:8px;font-size:13px;background:#ffb3c7;color:#fff;border:0;padding:6px 12px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);cursor:pointer;z-index:10}
+  #wardrobe{position:fixed;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:8px;padding:8px;z-index:10;pointer-events:none}
+  #wardrobe .slot{width:60px;height:76px;border-radius:10px;background:rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(0,0,0,.12);border:2px solid transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;overflow:hidden;position:relative}
+  #wardrobe .slot.active{border-color:#ff7fa9;background:rgba(255,231,242,.95)}
+  #wardrobe .slot img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+  #wardrobe .slot span{position:absolute;bottom:1px;left:0;right:0;font-size:9px;color:#a87a8e;text-align:center;background:rgba(255,255,255,.7);padding:1px 0}
+</style>
+</head>
+<body>
+<div id="app"><canvas id="room"></canvas></div>
+<div id="hud"><b>托卡感卧室</b> · 拖物品/主角 · 点床头灯切灯 · 点下方换装</div>
+<button id="reset">还原</button>
+<div id="wardrobe"></div>
+<script>
+(function(){
+  'use strict';
+  // ---- 资产 ----
+  var ASSETS = {
+    background: 'assets-gen/rooms/bedroom-empty-nobg.png',
+    chars: [
+      { id: 'base',     label: '默认', src: 'assets-gen/chars/char-base-nobg.png' },
+      { id: 'sport',    label: '运动', src: 'assets-gen/chars/char-style-sport-nobg.png' },
+      { id: 'princess', label: '公主', src: 'assets-gen/chars/char-style-princess-nobg.png' },
+      { id: 'school',   label: '学校', src: 'assets-gen/chars/char-style-school-nobg.png' },
+      { id: 'pajamas',  label: '睡衣', src: 'assets-gen/chars/char-style-pajamas-nobg.png' },
+      { id: 'summer',   label: '夏日', src: 'assets-gen/chars/char-style-summer-nobg.png' }
+    ]
+  };
+  // 物品 (x/y/w/h 是画布百分比;states 数组 = 状态 PNG 路径,null 表示无状态)
+  var ITEM_DEFAULTS = [
+    { id: 'rug',     x: 0.30, y: 0.78, w: 0.35, h: 0.18, draggable: true,  states: null, z: 1 },
+    { id: 'bed',     x: 0.10, y: 0.50, w: 0.32, h: 0.30, draggable: true,  states: null, z: 2 },
+    { id: 'mirror',  x: 0.86, y: 0.28, w: 0.08, h: 0.40, draggable: true,  states: null, z: 2 },
+    { id: 'shelf',   x: 0.73, y: 0.28, w: 0.10, h: 0.35, draggable: true,  states: null, z: 2 },
+    { id: 'light',   x: 0.42, y: 0.55, w: 0.10, h: 0.22, draggable: true,
+      states: ['assets-gen/items/item-nightstand-on-nobg.png', 'assets-gen/items/item-nightstand-off-nobg.png'], z: 2 },
+    { id: 'teddy',   x: 0.55, y: 0.75, w: 0.08, h: 0.10, draggable: true,  states: null, z: 3 },
+    { id: 'lights',  x: 0.20, y: 0.16, w: 0.40, h: 0.10, draggable: false,
+      states: null, z: 4 } // 串灯固定
+  ];
+  // ---- 加载图片 ----
+  var bg = new Image();
+  bg.onload = tryDraw;
+  bg.onerror = function(){ console.error('failed bg'); };
+  bg.src = ASSETS.background;
+
+  var charImgs = {};
+  var itemImgs = {};
+  var loadCount = 0;
+  var total = 1 + ASSETS.chars.length + ITEM_DEFAULTS.length;
+
+  function tryDraw(){ loadCount++; if (loadCount >= total) draw(); }
+
+  ASSETS.chars.forEach(function(c){
+    var img = new Image();
+    img.onload = tryDraw;
+    img.src = c.src;
+    charImgs[c.id] = img;
+  });
+  ITEM_DEFAULTS.forEach(function(it){
+    var imgs = [];
+    var done = 0;
+    var totalStates = it.states ? it.states.length : 1;
+    if (!it.states) {
+      var img = new Image();
+      img.onload = function(){ done++; tryDraw(); };
+      var defaultSrc = 'assets-gen/items/item-' + it.id + '-nobg.png';
+      img.onerror = function(){ console.error('failed', defaultSrc); };
+      img.src = defaultSrc;
+      imgs.push(img);
+    } else {
+      it.states.forEach(function(src){
+        var img = new Image();
+        img.onload = function(){ done++; tryDraw(); };
+        img.onerror = function(){ console.error('failed', src); };
+        img.src = src;
+        imgs.push(img);
+      });
+    }
+    itemImgs[it.id] = imgs;
+  });
+  setTimeout(function(){ draw(); }, 1500);
+
+  var pollHandle = setInterval(function(){ draw(); }, 400);
+  function stopPolling(){ if (pollHandle){ clearInterval(pollHandle); pollHandle = null; } }
+  function startPolling(){ if (pollHandle) return; pollHandle = setInterval(function(){ draw(); }, 400); }
+
+  var canvas = document.getElementById('room');
+  var ctx = canvas.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+  function fit(){
+    DPR = window.devicePixelRatio || 1;
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    draw();
+  }
+  window.addEventListener('resize', fit);
+
+  // ---- 主角 ----
+  var girl = { x: 0.50, y: 0.65, w: 0.16, h: 0.21, style: 'base', lifted: false };
+
+  // ---- 物品实例(深拷贝默认值,可被拖动修改) ----
+  var items = [];
+  function resetLayout(){
+    items = ITEM_DEFAULTS.map(function(d){
+      return { id: d.id, x: d.x, y: d.y, w: d.w, h: d.h, z: d.z,
+               draggable: d.draggable, states: d.states, state: 0, lifted: false };
+    });
+    girl.x = 0.50; girl.y = 0.65; girl.style = 'base';
+  }
+  resetLayout();
+
+  // ---- 画 ----
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    if (bg.complete && bg.naturalWidth) {
+      ctx.drawImage(bg, 0, 0, W, H);
+    }
+    // 物品按 z 排序
+    var all = items.slice().sort(function(a, b){ return a.z - b.z; });
+    for (var i = 0; i < all.length; i++){
+      var it = all[i];
+      var img = itemImgs[it.id][it.state];
+      if (!img || !img.complete || !img.naturalWidth) continue;
+      var iw = W * it.w;
+      var ih = H * it.h;
+      var lift = it.lifted ? 0.6 : 0;
+      var dw = iw, dh = ih * (1 - lift*0.20);
+      var dx = W * it.x - dw/2;
+      var dy = H * it.y - dh/2 - dh * lift * 0.5;
+      ctx.save();
+      ctx.globalAlpha = it.lifted ? 0.92 : 1;
+      ctx.shadowColor = it.lifted ? 'rgba(0,0,0,.20)' : 'rgba(0,0,0,.08)';
+      ctx.shadowBlur = it.lifted ? 14 : 4;
+      ctx.shadowOffsetY = it.lifted ? 4 : 1;
+      ctx.drawImage(img, dx, dy, dw, dh);
+      ctx.restore();
+    }
+    // 主角
+    var cimg = charImgs[girl.style];
+    if (cimg && cimg.complete && cimg.naturalWidth){
+      var cw = W * girl.w, ch = W * girl.h;
+      var lift = girl.lifted ? 0.6 : 0;
+      var dw = cw, dh = ch * (1 - lift*0.20);
+      var dx = W * girl.x - dw/2;
+      var dy = H * girl.y - dh/2 - dh * lift * 0.5;
+      ctx.save();
+      ctx.globalAlpha = girl.lifted ? 0.92 : 1;
+      ctx.shadowColor = girl.lifted ? 'rgba(0,0,0,.20)' : 'rgba(0,0,0,.10)';
+      ctx.shadowBlur = girl.lifted ? 14 : 6;
+      ctx.shadowOffsetY = girl.lifted ? 4 : 2;
+      ctx.drawImage(cimg, dx, dy, dw, dh);
+      ctx.restore();
+    }
+  }
+
+  function eventXY(e){
+    var r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+  function hit(item, x, y){
+    var iw = W * item.w, ih = H * item.h;
+    return Math.abs(x - W * item.x) < iw/2 && Math.abs(y - H * item.y) < ih/2;
+  }
+  function hitGirl(x, y){
+    var cw = W * girl.w, ch = W * girl.h;
+    return Math.abs(x - W * girl.x) < cw/2 && Math.abs(y - H * girl.y) < ch/2;
+  }
+
+  var drag = null;
+  function tryGrab(x, y){
+    if (hitGirl(x, y)) return { type: 'girl', target: girl };
+    // 物品按 z 高到低优先级(主角应该被物品遮挡优先)
+    var sorted = items.slice().sort(function(a, b){ return b.z - a.z; });
+    for (var i = 0; i < sorted.length; i++){
+      var it = sorted[i];
+      if (hit(it, x, y)) return { type: 'item', target: it };
+    }
+    return null;
+  }
+
+  canvas.addEventListener('pointerdown', function(e){
+    stopPolling();
+    var p = eventXY(e);
+    var g = tryGrab(p.x, p.y);
+    if (!g) return;
+    var target = g.target;
+    if (g.type === 'girl') {
+      drag = { type: 'girl', dx: p.x - W * girl.x, dy: p.y - H * girl.y };
+      girl.lifted = true;
+    } else if (target.draggable) {
+      drag = { type: 'item', target: target, dx: p.x - W * target.x, dy: p.y - H * target.y };
+      target.lifted = true;
+    } else if (target.states) {
+      // 不可拖但有状态(串灯):点击切状态
+      target.state = (target.state + 1) % target.states.length;
+      draw();
+      return;
+    }
+    canvas.setPointerCapture(e.pointerId);
+    draw();
+  });
+  canvas.addEventListener('pointermove', function(e){
+    if (!drag) return;
+    var p = eventXY(e);
+    if (drag.type === 'girl'){
+      girl.x = (p.x - drag.dx) / W;
+      girl.y = (p.y - drag.dy) / H;
+      girl.x = Math.max(0.05, Math.min(0.95, girl.x));
+      girl.y = Math.max(0.10, Math.min(0.95, girl.y));
+    } else {
+      var it = drag.target;
+      it.x = (p.x - drag.dx) / W;
+      it.y = (p.y - drag.dy) / H;
+      it.x = Math.max(0.05, Math.min(0.95, it.x));
+      it.y = Math.max(0.10, Math.min(0.95, it.y));
+    }
+    draw();
+  });
+  canvas.addEventListener('pointerup', function(){
+    if (drag){
+      if (drag.type === 'girl') girl.lifted = false;
+      else drag.target.lifted = false;
+      drag = null;
+      draw();
+    }
+    startPolling();
+  });
+  canvas.addEventListener('pointercancel', function(){
+    if (drag){
+      if (drag.type === 'girl') girl.lifted = false;
+      else drag.target.lifted = false;
+      drag = null;
+      draw();
+    }
+    startPolling();
+  });
+
+  // ---- 换装 ----
+  var wardrobeEl = document.getElementById('wardrobe');
+  ASSETS.chars.forEach(function(c){
+    var div = document.createElement('div');
+    div.className = 'slot' + (c.id === girl.style ? ' active' : '');
+    div.dataset.style = c.id;
+    div.innerHTML = '<img src="' + c.src + '" alt="' + c.label + '"><span>' + c.label + '</span>';
+    div.addEventListener('click', function(){
+      girl.style = c.id;
+      Array.prototype.forEach.call(wardrobeEl.children, function(el){
+        el.classList.toggle('active', el.dataset.style === c.id);
+      });
+      draw();
+    });
+    wardrobeEl.appendChild(div);
+  });
+
+  document.getElementById('reset').addEventListener('click', function(){
+    resetLayout();
+    Array.prototype.forEach.call(wardrobeEl.children, function(el){
+      el.classList.toggle('active', el.dataset.style === 'base');
+    });
+    draw();
+  });
+
+  fit();
+})();
+</script>
+</body>
+</html>
