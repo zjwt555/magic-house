@@ -39,16 +39,17 @@
       { id: 'summer',   label: '夏日', src: 'assets-gen/chars/char-style-summer-nobg.png' }
     ]
   };
-  // 物品 (x/y/w/h 是画布百分比;states 数组 = 状态 PNG 路径,null 表示无状态)
+  // 物品 (x/y/w/h 是画布百分比;groundOffset=PNG 视觉底部相对 PNG 高度的位置 0~1;
+  //       1=贴地/贴墙底,0=挂顶/挂墙顶,0.5=中心;states 数组 = 状态 PNG 路径)
   var ITEM_DEFAULTS = [
-    { id: 'rug',     x: 0.30, y: 0.78, w: 0.35, h: 0.18, draggable: true,  states: null, z: 1 },
-    { id: 'bed',     x: 0.10, y: 0.50, w: 0.32, h: 0.30, draggable: true,  states: null, z: 2 },
-    { id: 'mirror',  x: 0.86, y: 0.28, w: 0.08, h: 0.40, draggable: true,  states: null, z: 2 },
-    { id: 'shelf',   x: 0.73, y: 0.28, w: 0.10, h: 0.35, draggable: true,  states: null, z: 2 },
-    { id: 'light',   x: 0.42, y: 0.55, w: 0.10, h: 0.22, draggable: true,
+    { id: 'rug',     x: 0.42, y: 0.86, w: 0.32, h: 0.16, groundOffset: 0.55, draggable: true,  states: null, z: 1 },
+    { id: 'bed',     x: 0.10, y: 0.66, w: 0.30, h: 0.24, groundOffset: 1.00, draggable: true,  states: null, z: 2 },
+    { id: 'mirror',  x: 0.88, y: 0.60, w: 0.07, h: 0.32, groundOffset: 1.00, draggable: true,  states: null, z: 2 },
+    { id: 'shelf',   x: 0.78, y: 0.55, w: 0.09, h: 0.28, groundOffset: 1.00, draggable: true,  states: null, z: 2 },
+    { id: 'light',   x: 0.42, y: 0.66, w: 0.09, h: 0.20, groundOffset: 1.00, draggable: true,
       states: ['assets-gen/items/item-nightstand-on-nobg.png', 'assets-gen/items/item-nightstand-off-nobg.png'], z: 2 },
-    { id: 'teddy',   x: 0.55, y: 0.75, w: 0.08, h: 0.10, draggable: true,  states: null, z: 3 },
-    { id: 'lights',  x: 0.20, y: 0.16, w: 0.40, h: 0.10, draggable: false,
+    { id: 'teddy',   x: 0.60, y: 0.78, w: 0.07, h: 0.10, groundOffset: 1.00, draggable: true,  states: null, z: 3 },
+    { id: 'lights',  x: 0.30, y: 0.20, w: 0.40, h: 0.08, groundOffset: 0.00, draggable: false,
       states: null, z: 4 } // 串灯固定
   ];
   // ---- 加载图片 ----
@@ -115,7 +116,7 @@
   window.addEventListener('resize', fit);
 
   // ---- 主角 ----
-  var girl = { x: 0.50, y: 0.65, w: 0.16, h: 0.21, style: 'base', lifted: false };
+  var girl = { x: 0.50, y: 0.75, w: 0.16, h: 0.21, style: 'base', lifted: false };
 
   // ---- 物品实例(深拷贝默认值,可被拖动修改) ----
   var items = [];
@@ -129,10 +130,30 @@
   resetLayout();
 
   // ---- 画 ----
+  // 房间图内坐标 -> 画布坐标(letterbox 等比缩放,4:3 视口下房间保持 16:9 比例,物品按房间图相对位置不拉伸)
+  var bgRect = { x: 0, y: 0, w: 0, h: 0, scale: 1 };
+  function computeBgRect() {
+    if (!bg.naturalWidth) return;
+    var scale = Math.min(W / bg.naturalWidth, H / bg.naturalHeight);
+    bgRect.w = bg.naturalWidth * scale;
+    bgRect.h = bg.naturalHeight * scale;
+    bgRect.x = (W - bgRect.w) / 2;
+    bgRect.y = (H - bgRect.h) / 2;
+    bgRect.scale = scale;
+  }
+  function r2cX(rx) { return bgRect.x + rx * bgRect.w; }  // 房间图内 x 0~1 -> 画布 x
+  function r2cY(ry) { return bgRect.y + ry * bgRect.h; }  // 房间图内 y 0~1 -> 画布 y
+  function r2cW(rw) { return rw * bgRect.w; }  // 房间图相对宽 -> 画布 px
+  function r2cH(rh) { return rh * bgRect.h; }  // 房间图相对高 -> 画布 px
+
   function draw(){
     ctx.clearRect(0, 0, W, H);
     if (bg.complete && bg.naturalWidth) {
-      ctx.drawImage(bg, 0, 0, W, H);
+      computeBgRect();
+      // letterbox 黑边(米色,匹配地板,避免突兀)
+      ctx.fillStyle = '#fde6d5';
+      ctx.fillRect(0, 0, W, H);
+      ctx.drawImage(bg, bgRect.x, bgRect.y, bgRect.w, bgRect.h);
     }
     // 物品按 z 排序
     var all = items.slice().sort(function(a, b){ return a.z - b.z; });
@@ -140,12 +161,14 @@
       var it = all[i];
       var img = itemImgs[it.id][it.state];
       if (!img || !img.complete || !img.naturalWidth) continue;
-      var iw = W * it.w;
-      var ih = H * it.h;
+      var iw = r2cW(it.w);
+      var ih = r2cH(it.h);
       var lift = it.lifted ? 0.6 : 0;
       var dw = iw, dh = ih * (1 - lift*0.20);
-      var dx = W * it.x - dw/2;
-      var dy = H * it.y - dh/2 - dh * lift * 0.5;
+      var dx = r2cX(it.x) - dw/2;
+      // groundOffset: 1=PNG 底部贴 y(贴地),0=PNG 顶部贴 y(挂墙顶)
+      var gOff = it.groundOffset != null ? it.groundOffset : 1.0;
+      var dy = r2cY(it.y) - dh * gOff + dh * lift * 0.5;
       ctx.save();
       ctx.globalAlpha = it.lifted ? 0.92 : 1;
       ctx.shadowColor = it.lifted ? 'rgba(0,0,0,.20)' : 'rgba(0,0,0,.08)';
@@ -157,11 +180,13 @@
     // 主角
     var cimg = charImgs[girl.style];
     if (cimg && cimg.complete && cimg.naturalWidth){
-      var cw = W * girl.w, ch = W * girl.h;
+      var cw = r2cW(girl.w);
+      var ch = r2cH(girl.h);
       var lift = girl.lifted ? 0.6 : 0;
       var dw = cw, dh = ch * (1 - lift*0.20);
-      var dx = W * girl.x - dw/2;
-      var dy = H * girl.y - dh/2 - dh * lift * 0.5;
+      var dx = r2cX(girl.x) - dw/2;
+      // 主角贴地(groundOffset=1)
+      var dy = r2cY(girl.y) - dh + dh * lift * 0.5;
       ctx.save();
       ctx.globalAlpha = girl.lifted ? 0.92 : 1;
       ctx.shadowColor = girl.lifted ? 'rgba(0,0,0,.20)' : 'rgba(0,0,0,.10)';
@@ -177,12 +202,20 @@
     return { x: e.clientX - r.left, y: e.clientY - r.top };
   }
   function hit(item, x, y){
-    var iw = W * item.w, ih = H * item.h;
-    return Math.abs(x - W * item.x) < iw/2 && Math.abs(y - H * item.y) < ih/2;
+    var iw = r2cW(item.w);
+    var ih = r2cH(item.h);
+    // hitbox 按 PNG 视觉位置:1=贴地时命中下半部,0=挂墙时命中上部
+    var gOff = item.groundOffset != null ? item.groundOffset : 1.0;
+    var cx = r2cX(item.x);
+    var cy = r2cY(item.y) - ih * gOff + ih / 2;
+    return Math.abs(x - cx) < iw/2 && Math.abs(y - cy) < ih/2;
   }
   function hitGirl(x, y){
-    var cw = W * girl.w, ch = W * girl.h;
-    return Math.abs(x - W * girl.x) < cw/2 && Math.abs(y - H * girl.y) < ch/2;
+    var cw = r2cW(girl.w);
+    var ch = r2cH(girl.h);
+    // 主角贴地,hitbox 偏下半部
+    var cy = r2cY(girl.y) - ch + ch / 2;
+    return Math.abs(x - r2cX(girl.x)) < cw/2 && Math.abs(y - cy) < ch/2;
   }
 
   var drag = null;
@@ -204,10 +237,10 @@
     if (!g) return;
     var target = g.target;
     if (g.type === 'girl') {
-      drag = { type: 'girl', dx: p.x - W * girl.x, dy: p.y - H * girl.y };
+      drag = { type: 'girl', dx: p.x - r2cX(girl.x), dy: p.y - r2cY(girl.y) };
       girl.lifted = true;
     } else if (target.draggable) {
-      drag = { type: 'item', target: target, dx: p.x - W * target.x, dy: p.y - H * target.y };
+      drag = { type: 'item', target: target, dx: p.x - r2cX(target.x), dy: p.y - r2cY(target.y) };
       target.lifted = true;
     } else if (target.states) {
       // 不可拖但有状态(串灯):点击切状态
@@ -222,16 +255,24 @@
     if (!drag) return;
     var p = eventXY(e);
     if (drag.type === 'girl'){
-      girl.x = (p.x - drag.dx) / W;
-      girl.y = (p.y - drag.dy) / H;
-      girl.x = Math.max(0.05, Math.min(0.95, girl.x));
-      girl.y = Math.max(0.10, Math.min(0.95, girl.y));
+      // 拖动偏移转回房间图坐标
+      girl.x = (p.x - bgRect.x - drag.dx) / bgRect.w;
+      girl.y = (p.y - bgRect.y - drag.dy) / bgRect.h;
+      girl.x = Math.max(0.06, Math.min(0.94, girl.x));
+      girl.y = Math.max(0.40, Math.min(0.92, girl.y));
     } else {
       var it = drag.target;
-      it.x = (p.x - drag.dx) / W;
-      it.y = (p.y - drag.dy) / H;
-      it.x = Math.max(0.05, Math.min(0.95, it.x));
-      it.y = Math.max(0.10, Math.min(0.95, it.y));
+      it.x = (p.x - bgRect.x - drag.dx) / bgRect.w;
+      it.y = (p.y - bgRect.y - drag.dy) / bgRect.h;
+      it.x = Math.max(0.04, Math.min(0.96, it.x));
+      var gOff = it.groundOffset != null ? it.groundOffset : 1.0;
+      if (gOff >= 0.9) {
+        it.y = Math.max(0.45, Math.min(0.92, it.y));
+      } else if (gOff <= 0.2) {
+        it.y = Math.max(0.12, Math.min(0.40, it.y));
+      } else {
+        it.y = Math.max(0.20, Math.min(0.80, it.y));
+      }
     }
     draw();
   });
